@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>collin stilwell</title>
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --black: #000;
+      --white: #fff;
+      --glass-bg: rgba(255, 255, 255, 0.015);
+      --glass-bg-hover: rgba(255, 255, 255, 0.035);
+      --glass-bg-strong: rgba(255, 255, 255, 0.025);
+      --glass-border: rgba(255, 255, 255, 0.06);
+      --glass-border-hover: rgba(255, 255, 255, 0.12);
+      --glass-border-strong: rgba(255, 255, 255, 0.08);
+      --text-primary: rgba(255, 255, 255, 0.7);
+      --text-secondary: rgba(255, 255, 255, 0.32);
+      --text-tertiary: rgba(255, 255, 255, 0.15);
+      --text-ghost: rgba(255, 255, 255, 0.05);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', Roboto, sans-serif;
+      background: var(--black);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.6s ease, color 0.6s ease;
+    }
+
+    /* ── Easter egg: inverted mode ── */
+    body.inverted {
+      background: var(--white);
+      --glass-bg: rgba(0, 0, 0, 0.015);
+      --glass-bg-hover: rgba(0, 0, 0, 0.035);
+      --glass-bg-strong: rgba(0, 0, 0, 0.025);
+      --glass-border: rgba(0, 0, 0, 0.07);
+      --glass-border-hover: rgba(0, 0, 0, 0.12);
+      --glass-border-strong: rgba(0, 0, 0, 0.09);
+      --text-primary: rgba(0, 0, 0, 0.7);
+      --text-secondary: rgba(0, 0, 0, 0.35);
+      --text-tertiary: rgba(0, 0, 0, 0.18);
+      --text-ghost: rgba(0, 0, 0, 0.06);
+    }
+
+    body.inverted .hero h1 { color: rgba(0, 0, 0, 0.72); }
+    body.inverted .cursor-glow { background: radial-gradient(circle, rgba(0, 0, 0, 0.03) 0%, transparent 70%); }
+    body.inverted nav { background: rgba(0, 0, 0, 0.015); }
+    body.inverted ::selection { background: rgba(0, 0, 0, 0.08); }
+    body.inverted .progress-bar { background: rgba(0, 0, 0, 0.12); }
+
+    /* ── Progress bar ── */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.12);
+      z-index: 200;
+      width: 0%;
+    }
+
+    /* ── Dot grid ── */
+    .dot-grid {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .dot-grid canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── Cursor glow ── */
+    .cursor-glow {
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 1;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .cursor-glow.active {
+      opacity: 1;
+    }
+
+    /* ══════════════════════════════════════
+       LIQUID GLASS SYSTEM
+       Clear water pooled on black surface.
+       Refraction, caustic edges, specular.
+       ══════════════════════════════════════ */
+
+    .glass {
+      background: var(--glass-bg);
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+
+      /* The border is the meniscus — brighter at top where light catches the water edge */
+      border: 1px solid var(--glass-border);
+      border-top-color: rgba(255, 255, 255, 0.10);
+
+      /* Deep blur = looking through clear water */
+      backdrop-filter: blur(40px) saturate(120%) brightness(1.02);
+      -webkit-backdrop-filter: blur(40px) saturate(120%) brightness(1.02);
+
+      /* Layered shadows: caustic light underneath + soft pool shadow */
+      box-shadow:
+        /* inner top edge catch — like light refracting at the water surface */
+        0 1px 0 0 rgba(255, 255, 255, 0.06) inset,
+        /* inner glow — the water is slightly luminous from refracted light */
+        0 0 40px 0 rgba(255, 255, 255, 0.01) inset,
+        /* caustic light spill below the glass — light passes through and concentrates */
+        0 20px 50px -12px rgba(255, 255, 255, 0.018),
+        /* main depth shadow */
+        0 12px 40px rgba(0, 0, 0, 0.25),
+        0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Specular highlight — the bright reflection on the surface of the water */
+    .glass::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      border-radius: 20px 20px 0 0;
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.04) 0%,
+        rgba(255, 255, 255, 0.015) 30%,
+        transparent 100%
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Caustic refraction pattern — subtle light ripple inside the glass */
+    .glass::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 10%, rgba(255, 255, 255, 0.025), transparent 50%),
+        radial-gradient(ellipse 60% 40% at 75% 20%, rgba(255, 255, 255, 0.015), transparent 50%);
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.7;
+      mix-blend-mode: screen;
+    }
+
+    /* Mouse shimmer — light that ripples across the water surface */
+    .glass .shimmer {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      z-index: 3;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 1.5s ease;
+    }
+
+    .glass .shimmer.active {
+      opacity: 1;
+    }
+
+    .glass .shimmer:not(.active) {
+      transition: opacity 2.5s ease;
+    }
+
+    .glass .shimmer-light {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.012) 0%,
+        rgba(255, 255, 255, 0.004) 30%,
+        rgba(255, 255, 255, 0.001) 50%,
+        transparent 70%
+      );
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      filter: blur(30px);
+    }
+
+    .glass .shimmer-caustic {
+      position: absolute;
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.006) 0%,
+        rgba(255, 255, 255, 0.002) 40%,
+        transparent 65%
+      );
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      filter: blur(40px);
+    }
+
+    .glass-strong {
+      background: var(--glass-bg-strong);
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--glass-border-strong);
+      border-top-color: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(60px) saturate(130%) brightness(1.03);
+      -webkit-backdrop-filter: blur(60px) saturate(130%) brightness(1.03);
+      box-shadow:
+        0 1px 0 0 rgba(255, 255, 255, 0.08) inset,
+        0 0 60px 0 rgba(255, 255, 255, 0.015) inset,
+        0 24px 60px -16px rgba(255, 255, 255, 0.02),
+        0 16px 48px rgba(0, 0, 0, 0.3),
+        0 6px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .glass-strong::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 45%;
+      border-radius: 20px 20px 0 0;
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.05) 0%,
+        rgba(255, 255, 255, 0.02) 25%,
+        transparent 100%
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .glass-strong::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      background:
+        radial-gradient(ellipse 70% 50% at 25% 15%, rgba(255, 255, 255, 0.03), transparent 50%),
+        radial-gradient(ellipse 50% 40% at 70% 25%, rgba(255, 255, 255, 0.02), transparent 50%);
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.8;
+      mix-blend-mode: screen;
+    }
+
+    .glass-strong .shimmer-light {
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.015) 0%,
+        rgba(255, 255, 255, 0.005) 30%,
+        rgba(255, 255, 255, 0.001) 50%,
+        transparent 70%
+      );
+    }
+
+    .glass-strong .shimmer-caustic {
+      width: 800px;
+      height: 800px;
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    section {
+      padding: 140px 0;
+      position: relative;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      padding: 12px 24px;
+      border-radius: 100px;
+      background: rgba(255, 255, 255, 0.015);
+      border: 1px solid var(--glass-border);
+      border-top-color: rgba(255, 255, 255, 0.09);
+      backdrop-filter: blur(40px) saturate(120%) brightness(1.02);
+      -webkit-backdrop-filter: blur(40px) saturate(120%) brightness(1.02);
+      box-shadow:
+        0 1px 0 0 rgba(255, 255, 255, 0.05) inset,
+        0 8px 32px rgba(0, 0, 0, 0.2),
+        0 12px 40px -8px rgba(255, 255, 255, 0.012);
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    nav .logo {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    nav .divider {
+      width: 1px;
+      height: 14px;
+      background: var(--glass-border-strong);
+    }
+
+    nav .nav-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    nav .nav-links a {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    nav .nav-links a:hover {
+      color: var(--text-primary);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 80px;
+    }
+
+    .hero-content {
+      width: 100%;
+    }
+
+    .hero h1 {
+      font-size: clamp(72px, 14vw, 160px);
+      font-weight: 700;
+      letter-spacing: -0.05em;
+      line-height: 0.88;
+      color: rgba(255, 255, 255, 0.72);
+      position: relative;
+    }
+
+    .hero h1 .ghost {
+      display: block;
+      color: var(--text-ghost);
+      font-size: 0.35em;
+      letter-spacing: 0.08em;
+      font-weight: 400;
+      text-transform: uppercase;
+      margin-top: 8px;
+      font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+    }
+
+    .hero .subtitle {
+      margin-top: 32px;
+      font-size: clamp(15px, 2vw, 18px);
+      color: var(--text-secondary);
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      max-width: 400px;
+      min-height: 1.6em;
+    }
+
+    .hero .subtitle .typed-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: var(--text-secondary);
+      margin-left: 2px;
+      vertical-align: text-bottom;
+      animation: blink 0.8s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .hero .scroll-cue {
+      position: absolute;
+      bottom: 48px;
+      left: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-tertiary);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+    }
+
+    .scroll-cue .scroll-line {
+      width: 24px;
+      height: 1px;
+      background: var(--text-tertiary);
+      animation: scroll-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes scroll-pulse {
+      0%, 100% { width: 24px; opacity: 0.4; }
+      50% { width: 40px; opacity: 0.8; }
+    }
+
+    /* ── Section label ── */
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 56px;
+      font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, var(--glass-border), transparent);
+    }
+
+    /* ── Projects ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      position: relative;
+    }
+
+    .project-card {
+      padding: 32px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 220px;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                  background 0.3s ease,
+                  border-color 0.3s ease,
+                  box-shadow 0.4s ease;
+    }
+
+    .project-card:hover {
+      background: var(--glass-bg-hover);
+      border-color: var(--glass-border-hover);
+      border-top-color: rgba(255, 255, 255, 0.15);
+      box-shadow:
+        0 1px 0 0 rgba(255, 255, 255, 0.08) inset,
+        0 0 60px 0 rgba(255, 255, 255, 0.015) inset,
+        0 24px 60px -16px rgba(255, 255, 255, 0.025),
+        0 20px 60px rgba(0, 0, 0, 0.3),
+        0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .project-card .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      position: relative;
+      z-index: 2;
+    }
+
+    .project-card .tag {
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      border: 1px solid var(--glass-border);
+      border-top-color: rgba(255, 255, 255, 0.08);
+      padding: 5px 12px;
+      border-radius: 100px;
+      font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.01);
+    }
+
+    .project-card .arrow {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: var(--text-tertiary);
+      border: 1px solid var(--glass-border);
+      border-top-color: rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.01);
+      transition: all 0.3s ease;
+    }
+
+    .project-card:hover .arrow {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.04);
+      border-color: var(--glass-border-hover);
+      transform: translate(2px, -2px);
+    }
+
+    .project-card .card-bottom {
+      position: relative;
+      z-index: 2;
+    }
+
+    .project-card h3 {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .project-card p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 8px;
+      line-height: 1.55;
+    }
+
+    .project-card .card-meta {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+      margin-top: 12px;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .project-card:hover .card-meta {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Currently ── */
+    .currently-section {
+      padding: 80px 0;
+    }
+
+    .currently-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .currently-card {
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    /* Override border-radius for currently cards */
+    .currently-card.glass {
+      border-radius: 16px;
+    }
+
+    .currently-card.glass::before,
+    .currently-card.glass::after {
+      border-radius: 16px;
+    }
+
+    .currently-card.glass::before {
+      border-radius: 16px 16px 0 0;
+    }
+
+    .currently-card .currently-label {
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .currently-card .currently-value {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      position: relative;
+      z-index: 2;
+    }
+
+    .currently-card .currently-value strong {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    /* ── About ── */
+    .about-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .about-text p {
+      font-size: 17px;
+      line-height: 1.75;
+      color: var(--text-secondary);
+    }
+
+    .about-text p strong {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .about-card {
+      padding: 32px;
+    }
+
+    .about-card .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--glass-border);
+      position: relative;
+      z-index: 2;
+    }
+
+    .about-card .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .about-card .detail-row:first-child {
+      padding-top: 0;
+    }
+
+    .about-card .detail-label {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+    }
+
+    .about-card .detail-value {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* ── Divider glass strip ── */
+    .glass-strip {
+      margin: 0 auto;
+      max-width: 1080px;
+      padding: 0 24px;
+    }
+
+    .glass-strip-inner {
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--glass-border-strong), transparent);
+    }
+
+    /* ── Footer ── */
+    footer {
+      padding: 48px 0 40px;
+      position: relative;
+      z-index: 2;
+    }
+
+    footer .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 8px;
+    }
+
+    .footer-links a {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 100px;
+      border: 1px solid transparent;
+      transition: all 0.3s ease;
+      font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+    }
+
+    .footer-links a:hover {
+      color: var(--text-primary);
+      border-color: var(--glass-border);
+      background: var(--glass-bg);
+    }
+
+    .snoopy-wrap {
+      position: absolute;
+      top: -44px;
+      right: 24px;
+      z-index: 10;
+      pointer-events: none;
+      opacity: 0.14;
+      transition: opacity 0.6s ease;
+    }
+
+    .projects-grid:hover .snoopy-wrap {
+      opacity: 0.3;
+    }
+
+    .footer-sign-off {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      section {
+        padding: 100px 0;
+      }
+
+      nav {
+        left: 16px;
+        right: 16px;
+        transform: none;
+        justify-content: space-between;
+      }
+
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .currently-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .about-layout {
+        grid-template-columns: 1fr;
+      }
+
+      footer .container {
+        flex-direction: column;
+        gap: 24px;
+        text-align: center;
+      }
+
+      .hero .scroll-cue {
+        display: none;
+      }
+
+      nav .nav-links {
+        gap: 16px;
+      }
+
+      nav .nav-links a {
+        font-size: 10px;
+      }
+
+      nav .divider {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 0 16px;
+      }
+
+      .hero h1 {
+        font-size: 56px;
+      }
+
+      .project-card {
+        padding: 24px;
+        min-height: 180px;
+      }
+
+      nav {
+        padding: 10px 16px;
+        gap: 16px;
+      }
+    }
+
+    /* ── Selection ── */
+    ::selection {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-primary);
+    }
+
+    /* ── Staggered animation ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="progress-bar" id="progressBar"></div>
+
+  <div class="dot-grid" id="dotGrid">
+    <canvas id="dotCanvas"></canvas>
+  </div>
+
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <nav>
+    <a href="#" class="logo">collin stilwell</a>
+    <span class="divider"></span>
+    <ul class="nav-links">
+      <li><a href="#projects">Work</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero" id="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1>
+          hi, i'm collin:
+          <span class="ghost">Software Developer</span>
+        </h1>
+        <p class="subtitle" id="subtitle"></p>
+      </div>
+    </div>
+    <div class="scroll-cue">
+      <span class="scroll-line"></span>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="container">
+      <div class="section-label fade-up">Projects</div>
+      <div class="projects-grid">
+        <div class="snoopy-wrap" title="Good grief.">
+          <img src="data:image/png;base64,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" alt="Snoopy" width="44" height="44" style="filter: invert(1) brightness(2);">
+        </div>
+
+        <a href="#" class="project-card glass fade-up" data-tech="React, Node.js, PostgreSQL" data-year="2025">
+          <div class="shimmer"><div class="shimmer-light"></div><div class="shimmer-caustic"></div></div>
+          <div class="card-top">
+            <span class="tag">Web App</span>
+            <span class="arrow">&nearr;</span>
+          </div>
+          <div class="card-bottom">
+            <h3>Project Alpha</h3>
+            <p>A brief description of the project and what makes it interesting.</p>
+            <div class="card-meta"></div>
+          </div>
+        </a>
+
+        <a href="#" class="project-card glass fade-up" data-tech="Rust, CLI" data-year="2025">
+          <div class="shimmer"><div class="shimmer-light"></div><div class="shimmer-caustic"></div></div>
+          <div class="card-top">
+            <span class="tag">CLI Tool</span>
+            <span class="arrow">&nearr;</span>
+          </div>
+          <div class="card-bottom">
+            <h3>Project Beta</h3>
+            <p>Another project with a concise, compelling one-liner.</p>
+            <div class="card-meta"></div>
+          </div>
+        </a>
+
+        <a href="#" class="project-card glass fade-up" data-tech="TypeScript, Open Source" data-year="2024">
+          <div class="shimmer"><div class="shimmer-light"></div><div class="shimmer-caustic"></div></div>
+          <div class="card-top">
+            <span class="tag">Open Source</span>
+            <span class="arrow">&nearr;</span>
+          </div>
+          <div class="card-bottom">
+            <h3>Project Gamma</h3>
+            <p>Something you built that you're proud of. Keep it short.</p>
+            <div class="card-meta"></div>
+          </div>
+        </a>
+
+        <a href="#" class="project-card glass fade-up" data-tech="Canvas, WebGL" data-year="2024">
+          <div class="shimmer"><div class="shimmer-light"></div><div class="shimmer-caustic"></div></div>
+          <div class="card-top">
+            <span class="tag">Experiment</span>
+            <span class="arrow">&nearr;</span>
+          </div>
+          <div class="card-bottom">
+            <h3>Project Delta</h3>
+            <p>A side project, experiment, or creative exploration.</p>
+            <div class="card-meta"></div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="glass-strip"><div class="glass-strip-inner"></div></div>
+
+  <section class="currently-section">
+    <div class="container">
+      <div class="section-label fade-up">Currently</div>
+      <div class="currently-grid">
+        <div class="currently-card glass fade-up">
+          <div class="shimmer"><div class="shimmer-light"></div><div class="shimmer-caustic"></div></div>
+          <div class="currently-label">Working on</div>
+          <div class="currently-value"><strong>Something new</strong> — still in the early stages.</div>
+        </div>
+        <div class="currently-card glass fade-up">
+          <div class="shimmer"><div class="shimmer-light"></div><div class="shimmer-caustic"></div></div>
+          <div class="currently-label">Reading</div>
+          <div class="currently-value"><strong>Designing Data-Intensive Applications</strong> by Martin Kleppmann</div>
+        </div>
+        <div class="currently-card glass fade-up">
+          <div class="shimmer"><div class="shimmer-light"></div><div class="shimmer-caustic"></div></div>
+          <div class="currently-label">Listening to</div>
+          <div class="currently-value"><strong>Tycho</strong> — Dive</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="glass-strip"><div class="glass-strip-inner"></div></div>
+
+  <section id="about">
+    <div class="container">
+      <div class="section-label fade-up">About</div>
+      <div class="about-layout">
+        <div class="about-text fade-up">
+          <p>
+            <strong>I'm Collin</strong> — a developer who cares about craft.
+            I like building things that feel good to use, where every detail
+            is considered and nothing is accidental. Currently interested in
+            developer tools, design systems, and the space between code and art.
+          </p>
+        </div>
+        <div class="about-card glass-strong fade-up">
+          <div class="shimmer"><div class="shimmer-light"></div><div class="shimmer-caustic"></div></div>
+          <div class="detail-row">
+            <span class="detail-label">Location</span>
+            <span class="detail-value">Earth</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Focus</span>
+            <span class="detail-value">Full-stack</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Interest</span>
+            <span class="detail-value">Design Engineering</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Status</span>
+            <span class="detail-value">Building</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="glass-strip"><div class="glass-strip-inner"></div></div>
+
+  <footer id="contact">
+    <div class="container">
+      <div class="footer-links">
+        <a href="mailto:hello@collin.dev">Email</a>
+        <a href="https://github.com/collin" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://twitter.com/collin" target="_blank" rel="noopener">Twitter</a>
+      </div>
+      <span class="footer-sign-off">&copy; 2026 collin stilwell</span>
+    </div>
+  </footer>
+
+  <script>
+    // ── Interactive dot grid on canvas ──
+    const canvas = document.getElementById('dotCanvas');
+    const ctx = canvas.getContext('2d');
+    let dots = [];
+    let mouse = { x: -1000, y: -1000 };
+    const DOT_GAP = 24;
+    const DOT_RADIUS = 0.8;
+    const INFLUENCE = 120;
+    const BASE_ALPHA = 0.035;
+    const HOVER_ALPHA = 0.18;
+    let isInverted = false;
+
+    function initDots() {
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      dots = [];
+      const cols = Math.ceil(window.innerWidth / DOT_GAP) + 1;
+      const rows = Math.ceil(window.innerHeight / DOT_GAP) + 1;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          dots.push({
+            originX: c * DOT_GAP,
+            originY: r * DOT_GAP,
+            x: c * DOT_GAP,
+            y: r * DOT_GAP,
+            alpha: BASE_ALPHA
+          });
+        }
+      }
+    }
+
+    function drawDots() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const rgb = isInverted ? '0, 0, 0' : '255, 255, 255';
+
+      for (let i = 0; i < dots.length; i++) {
+        const dot = dots[i];
+        const dx = mouse.x - dot.originX;
+        const dy = mouse.y - dot.originY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < INFLUENCE) {
+          const factor = 1 - (dist / INFLUENCE);
+          const eased = factor * factor;
+          dot.x += (dot.originX - dx * eased * 0.15 - dot.x) * 0.12;
+          dot.y += (dot.originY - dy * eased * 0.15 - dot.y) * 0.12;
+          dot.alpha += (BASE_ALPHA + (HOVER_ALPHA - BASE_ALPHA) * eased - dot.alpha) * 0.12;
+        } else {
+          dot.x += (dot.originX - dot.x) * 0.08;
+          dot.y += (dot.originY - dot.y) * 0.08;
+          dot.alpha += (BASE_ALPHA - dot.alpha) * 0.08;
+        }
+
+        ctx.beginPath();
+        ctx.arc(dot.x, dot.y, DOT_RADIUS, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${rgb}, ${dot.alpha})`;
+        ctx.fill();
+      }
+
+      requestAnimationFrame(drawDots);
+    }
+
+    window.addEventListener('resize', initDots);
+    initDots();
+    drawDots();
+
+    // ── Cursor glow ──
+    const glow = document.getElementById('cursorGlow');
+    let glowX = 0, glowY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      glow.classList.add('active');
+    });
+
+    document.addEventListener('mouseleave', () => {
+      mouse.x = -1000;
+      mouse.y = -1000;
+      glow.classList.remove('active');
+    });
+
+    function animateGlow() {
+      glowX += (mouse.x - glowX) * 0.07;
+      glowY += (mouse.y - glowY) * 0.07;
+      glow.style.left = glowX + 'px';
+      glow.style.top = glowY + 'px';
+      requestAnimationFrame(animateGlow);
+    }
+    animateGlow();
+
+    // ── Progress bar ──
+    const progressBar = document.getElementById('progressBar');
+    window.addEventListener('scroll', () => {
+      const scrollTop = document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+      progressBar.style.width = progress + '%';
+    });
+
+    // ── Typing effect ──
+    const subtitleEl = document.getElementById('subtitle');
+    const phrases = [
+      'Building things for the internet.',
+      'Thoughtfully, with care for craft.',
+      'Details matter.'
+    ];
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+
+    function type() {
+      const current = phrases[phraseIndex];
+      if (!isDeleting) {
+        charIndex++;
+        subtitleEl.innerHTML = current.substring(0, charIndex) + '<span class="typed-cursor"></span>';
+        if (charIndex === current.length) {
+          setTimeout(() => { isDeleting = true; type(); }, 2400);
+          return;
+        }
+        setTimeout(type, 45 + Math.random() * 35);
+      } else {
+        charIndex--;
+        subtitleEl.innerHTML = current.substring(0, charIndex) + '<span class="typed-cursor"></span>';
+        if (charIndex === 0) {
+          isDeleting = false;
+          phraseIndex = (phraseIndex + 1) % phrases.length;
+          setTimeout(type, 400);
+          return;
+        }
+        setTimeout(type, 25);
+      }
+    }
+    setTimeout(type, 800);
+
+    // ── Scroll fade-in with stagger ──
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.fade-up').forEach((el, i) => {
+      el.style.transitionDelay = `${i * 0.06}s`;
+      observer.observe(el);
+    });
+
+    // ── Project cards: tilt + meta reveal ──
+    document.querySelectorAll('.project-card').forEach((card) => {
+      const meta = card.querySelector('.card-meta');
+      const tech = card.dataset.tech;
+      const year = card.dataset.year;
+      if (meta && tech) {
+        meta.textContent = `${tech} · ${year}`;
+      }
+
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        card.style.transform = `translateY(-4px) perspective(600px) rotateX(${y * -4}deg) rotateY(${x * 4}deg)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+
+    // ── Water shimmer on all glass panels ──
+    // Tracks mouse globally and lights up whichever glass panel the cursor is near
+    const allGlass = document.querySelectorAll('.glass, .glass-strong');
+    const shimmerState = new Map();
+
+    allGlass.forEach((panel) => {
+      const shimmer = panel.querySelector('.shimmer');
+      const light = panel.querySelector('.shimmer-light');
+      const caustic = panel.querySelector('.shimmer-caustic');
+      if (!shimmer || !light || !caustic) return;
+
+      shimmerState.set(panel, { lx: 0, ly: 0, cx: 0, cy: 0 });
+    });
+
+    function updateShimmers() {
+      allGlass.forEach((panel) => {
+        const shimmer = panel.querySelector('.shimmer');
+        const light = panel.querySelector('.shimmer-light');
+        const caustic = panel.querySelector('.shimmer-caustic');
+        if (!shimmer || !light || !caustic) return;
+
+        const rect = panel.getBoundingClientRect();
+        const state = shimmerState.get(panel);
+
+        // Mouse position relative to the panel
+        const relX = mouse.x - rect.left;
+        const relY = mouse.y - rect.top;
+
+        // Is the mouse near this panel? (within 40px outside)
+        const nearX = mouse.x > rect.left - 40 && mouse.x < rect.right + 40;
+        const nearY = mouse.y > rect.top - 40 && mouse.y < rect.bottom + 40;
+        const isNear = nearX && nearY;
+
+        if (isNear) {
+          shimmer.classList.add('active');
+
+          // Lerp the light position — very slow, melted
+          state.lx += (relX - state.lx) * 0.035;
+          state.ly += (relY - state.ly) * 0.035;
+
+          // Caustic is almost ambient — barely tracks
+          state.cx += (relX - state.cx) * 0.015;
+          state.cy += (relY - state.cy) * 0.015;
+
+          light.style.left = state.lx + 'px';
+          light.style.top = state.ly + 'px';
+          caustic.style.left = state.cx + 'px';
+          caustic.style.top = state.cy + 'px';
+        } else {
+          shimmer.classList.remove('active');
+        }
+      });
+
+      requestAnimationFrame(updateShimmers);
+    }
+    updateShimmers();
+
+    // ── Magnetic snap: cards pull toward cursor when nearby ──
+    function magneticPull() {
+      const cards = document.querySelectorAll('.project-card');
+      cards.forEach((card) => {
+        const rect = card.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const dx = mouse.x - centerX;
+        const dy = mouse.y - centerY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const threshold = 200;
+
+        if (dist < threshold && !card.matches(':hover')) {
+          const pull = (1 - dist / threshold) * 6;
+          const moveX = (dx / dist) * pull;
+          const moveY = (dy / dist) * pull;
+          card.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        } else if (!card.matches(':hover')) {
+          const current = card.style.transform;
+          if (current && current.startsWith('translate') && !current.includes('perspective')) {
+            card.style.transform = '';
+          }
+        }
+      });
+      requestAnimationFrame(magneticPull);
+    }
+    magneticPull();
+
+    // ── Easter egg: Konami code → invert palette ──
+    const konami = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+    let konamiIndex = 0;
+    document.addEventListener('keydown', (e) => {
+      if (e.keyCode === konami[konamiIndex]) {
+        konamiIndex++;
+        if (konamiIndex === konami.length) {
+          konamiIndex = 0;
+          isInverted = !isInverted;
+          document.body.classList.toggle('inverted');
+        }
+      } else {
+        konamiIndex = 0;
+      }
+    });
+  </script>
+
+</body>
+</html>
