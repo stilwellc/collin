@@ -830,6 +830,188 @@
       color: var(--text-primary);
     }
 
+    /* ── Modal ── */
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 150;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+
+    .modal-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      width: 90%;
+      max-width: 520px;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 36px;
+      transform: scale(0.96) translateY(12px);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.35s ease;
+      opacity: 0;
+    }
+
+    .modal-backdrop.active .modal-card {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 10;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--glass-border);
+      border-top-color: rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.01);
+      color: var(--text-secondary);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      line-height: 1;
+    }
+
+    .modal-close:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.04);
+      border-color: var(--glass-border-hover);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .modal-header h2 {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .modal-header .tag {
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      border: 1px solid var(--glass-border);
+      border-top-color: rgba(255, 255, 255, 0.08);
+      padding: 5px 12px;
+      border-radius: 100px;
+      font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+      background: rgba(255, 255, 255, 0.01);
+    }
+
+    .modal-section {
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .modal-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .modal-section-label {
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+      margin-bottom: 10px;
+    }
+
+    .modal-section p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    .modal-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .modal-stack-pill {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      border: 1px solid var(--glass-border);
+      border-top-color: rgba(255, 255, 255, 0.08);
+      padding: 5px 14px;
+      border-radius: 100px;
+      font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+      background: rgba(255, 255, 255, 0.01);
+    }
+
+    .modal-footer {
+      margin-top: 32px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .modal-visit-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 100px;
+      border: 1px solid var(--glass-border-strong);
+      border-top-color: rgba(255, 255, 255, 0.10);
+      background: rgba(255, 255, 255, 0.02);
+      font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+      transition: all 0.3s ease;
+    }
+
+    .modal-visit-link:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--glass-border-hover);
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 480px) {
+      .modal-card {
+        padding: 24px;
+        max-height: 90vh;
+      }
+
+      .modal-header h2 {
+        font-size: 20px;
+      }
+    }
+
     /* ── Staggered animation ── */
     .fade-up {
       opacity: 0;
@@ -888,7 +1070,7 @@
           <img src="data:image/png;base64,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" alt="Snoopy" width="44" height="44" style="filter: invert(1) brightness(2);">
         </div>
 
-        <a href="https://soiree.today" target="_blank" class="project-card glass fade-up" data-tech="Node.js, PostgreSQL, Cheerio" data-year="2025">
+        <a href="https://soiree.today" target="_blank" class="project-card glass fade-up" data-project="soiree" data-tech="Node.js, PostgreSQL, Cheerio" data-year="2025">
           <div class="shimmer"><div class="shimmer-light"></div><div class="shimmer-caustic"></div></div>
           <div class="card-top">
             <span class="tag">Web App</span>
@@ -901,7 +1083,7 @@
           </div>
         </a>
 
-        <a href="#" class="project-card glass fade-up" data-tech="Rust, CLI" data-year="2025">
+        <a href="#" class="project-card glass fade-up" data-project="beta" data-tech="Rust, CLI" data-year="2025">
           <div class="shimmer"><div class="shimmer-light"></div><div class="shimmer-caustic"></div></div>
           <div class="card-top">
             <span class="tag">CLI Tool</span>
@@ -914,7 +1096,7 @@
           </div>
         </a>
 
-        <a href="#" class="project-card glass fade-up" data-tech="TypeScript, Open Source" data-year="2024">
+        <a href="#" class="project-card glass fade-up" data-project="gamma" data-tech="TypeScript, Open Source" data-year="2024">
           <div class="shimmer"><div class="shimmer-light"></div><div class="shimmer-caustic"></div></div>
           <div class="card-top">
             <span class="tag">Open Source</span>
@@ -927,7 +1109,7 @@
           </div>
         </a>
 
-        <a href="#" class="project-card glass fade-up" data-tech="Canvas, WebGL" data-year="2024">
+        <a href="#" class="project-card glass fade-up" data-project="delta" data-tech="Canvas, WebGL" data-year="2024">
           <div class="shimmer"><div class="shimmer-light"></div><div class="shimmer-caustic"></div></div>
           <div class="card-top">
             <span class="tag">Experiment</span>
@@ -1018,6 +1200,34 @@
       <span class="footer-sign-off">&copy; 2026 collin stilwell</span>
     </div>
   </footer>
+
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal-card glass-strong" id="modalCard">
+      <div class="shimmer"><div class="shimmer-light"></div><div class="shimmer-caustic"></div></div>
+      <button class="modal-close" id="modalClose">&times;</button>
+      <div class="modal-header">
+        <h2 id="modalTitle"></h2>
+        <span class="tag" id="modalTag"></span>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section">
+          <div class="modal-section-label">About</div>
+          <p id="modalAbout"></p>
+        </div>
+        <div class="modal-section">
+          <div class="modal-section-label">Stack</div>
+          <div class="modal-stack" id="modalStack"></div>
+        </div>
+        <div class="modal-section">
+          <div class="modal-section-label">Usage</div>
+          <p id="modalUsage"></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" target="_blank" rel="noopener" class="modal-visit-link" id="modalVisitLink">Visit Project &nearr;</a>
+      </div>
+    </div>
+  </div>
 
   <script>
     // ── Interactive dot grid on canvas ──
@@ -1277,6 +1487,107 @@
       requestAnimationFrame(magneticPull);
     }
     magneticPull();
+
+    // ── Project detail modal ──
+    const projectData = {
+      soiree: {
+        name: 'Soirée',
+        tag: 'Web App',
+        about: 'A curated event aggregator for New York City. Soirée scrapes five different sources — venue calendars, community boards, and listing sites — normalizes the data, and sorts everything by real dates so you can actually find what\'s happening tonight or this weekend.',
+        stack: ['Node.js', 'PostgreSQL', 'Cheerio', 'Express', 'Cron'],
+        usage: 'Visit soiree.today to browse upcoming events in NYC. Filter by date, neighborhood, or vibe. No account needed.',
+        url: 'https://soiree.today'
+      },
+      beta: {
+        name: 'Project Beta',
+        tag: 'CLI Tool',
+        about: 'Another project with a concise, compelling one-liner. Update this with real details when ready.',
+        stack: ['Rust', 'CLI'],
+        usage: 'Install via cargo and run from your terminal.',
+        url: '#'
+      },
+      gamma: {
+        name: 'Project Gamma',
+        tag: 'Open Source',
+        about: 'Something you built that you\'re proud of. Update this with real details when ready.',
+        stack: ['TypeScript', 'Open Source'],
+        usage: 'Install from npm or clone the repo to get started.',
+        url: '#'
+      },
+      delta: {
+        name: 'Project Delta',
+        tag: 'Experiment',
+        about: 'A side project, experiment, or creative exploration. Update this with real details when ready.',
+        stack: ['Canvas', 'WebGL'],
+        usage: 'Open in any modern browser to explore.',
+        url: '#'
+      }
+    };
+
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const modalCard = document.getElementById('modalCard');
+    const modalClose = document.getElementById('modalClose');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalTag = document.getElementById('modalTag');
+    const modalAbout = document.getElementById('modalAbout');
+    const modalStack = document.getElementById('modalStack');
+    const modalUsage = document.getElementById('modalUsage');
+    const modalVisitLink = document.getElementById('modalVisitLink');
+
+    function openModal(projectKey) {
+      const data = projectData[projectKey];
+      if (!data) return;
+
+      modalTitle.textContent = data.name;
+      modalTag.textContent = data.tag;
+      modalAbout.textContent = data.about;
+      modalUsage.textContent = data.usage;
+      modalVisitLink.href = data.url;
+
+      modalStack.innerHTML = '';
+      data.stack.forEach(tech => {
+        const pill = document.createElement('span');
+        pill.className = 'modal-stack-pill';
+        pill.textContent = tech;
+        modalStack.appendChild(pill);
+      });
+
+      // Register modal shimmer
+      const shimmer = modalCard.querySelector('.shimmer');
+      const light = modalCard.querySelector('.shimmer-light');
+      const caustic = modalCard.querySelector('.shimmer-caustic');
+      if (shimmer && light && caustic && !shimmerState.has(modalCard)) {
+        shimmerState.set(modalCard, { lx: 0, ly: 0, cx: 0, cy: 0 });
+      }
+
+      document.body.classList.add('modal-open');
+      modalBackdrop.classList.add('active');
+    }
+
+    function closeModal() {
+      modalBackdrop.classList.remove('active');
+      document.body.classList.remove('modal-open');
+    }
+
+    // Intercept project card clicks
+    document.querySelectorAll('.project-card[data-project]').forEach(card => {
+      card.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal(card.dataset.project);
+      });
+    });
+
+    modalClose.addEventListener('click', closeModal);
+
+    modalBackdrop.addEventListener('click', (e) => {
+      if (e.target === modalBackdrop) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modalBackdrop.classList.contains('active')) {
+        closeModal();
+      }
+    });
 
     // ── Easter egg: Konami code → invert palette ──
     const konami = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
