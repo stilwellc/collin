@@ -4,6 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>collin stilwell</title>
+  <meta name="description" content="Collin Stilwell — security engineer & design-minded builder.">
+  <meta property="og:title" content="collin stilwell">
+  <meta property="og:description" content="Security engineer & design-minded builder.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://collinstilwell.vercel.app">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="collin stilwell">
+  <meta name="twitter:description" content="Security engineer & design-minded builder.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%23c45a2d'/></svg>">
   <style>
     *, *::before, *::after {
       margin: 0;
@@ -330,7 +339,7 @@
     }
 
     #professional-projects {
-      padding-top: 0;
+      padding-top: 32px;
     }
 
     /* ── Nav ── */
@@ -363,12 +372,30 @@
       text-transform: uppercase;
       color: var(--text-primary);
       text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.3s ease;
+    }
+
+    nav .logo::after {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0.8;
+      flex-shrink: 0;
+    }
+
+    nav .logo:hover {
+      color: var(--accent);
     }
 
     nav .divider {
       width: 1px;
       height: 14px;
-      background: var(--glass-border-strong);
+      background: var(--accent-subtle);
     }
 
     nav .nav-links {
@@ -400,6 +427,29 @@
 
     .hero-content {
       width: 100%;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-glyph {
+      position: absolute;
+      right: -40px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 420px;
+      height: 420px;
+      opacity: 0.07;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    @media (max-width: 768px) {
+      .hero-glyph {
+        width: 280px;
+        height: 280px;
+        right: -20px;
+        opacity: 0.05;
+      }
     }
 
     .hero h1 {
@@ -464,7 +514,8 @@
     .scroll-cue .scroll-line {
       width: 24px;
       height: 1px;
-      background: var(--text-tertiary);
+      background: var(--accent);
+      opacity: 0.6;
       animation: scroll-pulse 2s ease-in-out infinite;
     }
 
@@ -509,7 +560,7 @@
       flex-direction: column;
       justify-content: space-between;
       min-height: 220px;
-      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
                   background 0.3s ease,
                   border-color 0.3s ease,
                   box-shadow 0.4s ease;
@@ -592,11 +643,13 @@
 
     .project-card .card-meta {
       font-size: 10px;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
       color: var(--text-tertiary);
       font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
       margin-top: 12px;
+      padding-left: 10px;
+      border-left: 2px solid var(--accent-subtle);
       opacity: 0;
       transform: translateY(6px);
       transition: opacity 0.3s ease, transform 0.3s ease;
@@ -607,9 +660,26 @@
       transform: translateY(0);
     }
 
+    /* ── Featured project card ── */
+    .project-featured {
+      grid-column: 1 / -1;
+      min-height: 280px;
+      padding: 40px;
+    }
+
+    .project-featured h3 {
+      font-size: 28px;
+      letter-spacing: -0.03em;
+    }
+
+    .project-featured p {
+      font-size: 15px;
+      max-width: 480px;
+    }
+
     /* ── Currently ── */
     .currently-section {
-      padding: 56px 0;
+      padding: 48px 0;
     }
 
     .currently-grid {
@@ -619,37 +689,38 @@
     }
 
     .currently-card {
-      border-radius: 16px;
-      padding: 24px;
+      border-radius: 12px;
+      padding: 20px 24px;
     }
 
     /* Override border-radius for currently cards */
     .currently-card.glass {
-      border-radius: 16px;
+      border-radius: 12px;
     }
 
     .currently-card.glass::before,
     .currently-card.glass::after {
-      border-radius: 16px;
+      border-radius: 12px;
     }
 
     .currently-card.glass::before {
-      border-radius: 16px 16px 0 0;
+      border-radius: 12px 12px 0 0;
     }
 
     .currently-card .currently-label {
-      font-size: 9px;
-      letter-spacing: 0.14em;
+      font-size: 8px;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: var(--text-tertiary);
+      color: var(--accent);
+      opacity: 0.7;
       font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       position: relative;
       z-index: 2;
     }
 
     .currently-card .currently-value {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-secondary);
       line-height: 1.5;
       position: relative;
@@ -669,8 +740,21 @@
       align-items: start;
     }
 
+    .about-text .about-headline {
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.3;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+
+    .about-text .about-headline span {
+      color: var(--accent);
+    }
+
     .about-text p {
-      font-size: 17px;
+      font-size: 16px;
       line-height: 1.75;
       color: var(--text-secondary);
     }
@@ -713,6 +797,7 @@
     .about-card .detail-value {
       font-size: 14px;
       color: var(--text-secondary);
+      font-weight: 450;
     }
 
     /* ── Divider glass strip ── */
@@ -729,16 +814,28 @@
 
     /* ── Footer ── */
     footer {
-      padding: 48px 0 40px;
+      padding: 64px 0 48px;
       position: relative;
       z-index: 2;
     }
 
     footer .container {
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
       align-items: center;
-      gap: 16px;
+      gap: 24px;
+    }
+
+    .footer-cta {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      text-align: center;
+    }
+
+    .footer-cta span {
+      color: var(--accent);
     }
 
     .footer-links {
@@ -760,9 +857,9 @@
     }
 
     .footer-links a:hover {
-      color: var(--text-primary);
-      border-color: var(--glass-border);
-      background: var(--glass-bg);
+      color: var(--accent);
+      border-color: var(--accent-subtle);
+      background: rgba(196, 90, 45, 0.04);
     }
 
     .snoopy-wrap {
@@ -812,9 +909,11 @@
       }
 
       footer .container {
-        flex-direction: column;
-        gap: 24px;
-        text-align: center;
+        gap: 20px;
+      }
+
+      .footer-cta {
+        font-size: 18px;
       }
 
       .hero .scroll-cue {
@@ -851,6 +950,30 @@
       nav {
         padding: 10px 16px;
         gap: 16px;
+      }
+    }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      .fade-up {
+        opacity: 1;
+        transform: none;
+      }
+
+      .hero-glyph,
+      .shimmer,
+      .cursor-glow {
+        display: none;
+      }
+
+      html {
+        scroll-behavior: auto;
       }
     }
 
@@ -1055,6 +1178,35 @@
       opacity: 1;
       transform: translateY(0);
     }
+
+    /* Variant: section labels — faster, shorter distance */
+    .section-label.fade-up {
+      transform: translateY(12px);
+      transition-duration: 0.5s;
+    }
+
+    /* Variant: project cards — more travel, springier */
+    .project-card.fade-up {
+      transform: translateY(32px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  background 0.3s ease,
+                  border-color 0.3s ease,
+                  box-shadow 0.4s ease;
+    }
+
+    /* Variant: currently cards — subtle slide */
+    .currently-card.fade-up {
+      transform: translateY(16px);
+      transition-duration: 0.6s;
+    }
+
+    /* Variant: about card — slow reveal */
+    .about-card.fade-up,
+    .about-text.fade-up {
+      transform: translateY(20px);
+      transition-duration: 0.9s;
+    }
   </style>
 </head>
 <body>
@@ -1078,7 +1230,8 @@
   </nav>
 
   <section class="hero" id="hero">
-    <div class="container">
+    <div class="container" style="position:relative;">
+      <canvas class="hero-glyph" id="heroGlyph"></canvas>
       <div class="hero-content">
         <h1>
           hi, i'm collin:
@@ -1101,7 +1254,7 @@
           <img src="data:image/png;base64,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" alt="Snoopy" width="44" height="44" style="filter: invert(1) brightness(2);">
         </div>
 
-        <a href="https://soiree.today" target="_blank" class="project-card glass fade-up" data-project="soiree" data-tech="Node.js, PostgreSQL, Cheerio" data-year="2025">
+        <a href="https://soiree.today" target="_blank" class="project-card project-featured glass-strong fade-up" data-project="soiree" data-tech="Node.js, PostgreSQL, Cheerio" data-year="2025">
           <div class="shimmer"><div class="shimmer-light"></div><div class="shimmer-caustic"></div></div>
           <div class="card-top">
             <span class="tag">Web App</span>
@@ -1198,8 +1351,8 @@
       <div class="section-label fade-up">About</div>
       <div class="about-layout">
         <div class="about-text fade-up">
+          <div class="about-headline">Security engineer who cares about <span>craft</span>.</div>
           <p>
-            <strong>I'm Collin</strong> — a security engineer who cares about craft.
             I like building things that feel good to use, where every detail
             is considered and nothing is accidental. Currently interested in
             security tooling, design systems, and the space between code and art.
@@ -1232,10 +1385,11 @@
 
   <footer id="contact">
     <div class="container">
+      <div class="footer-cta">Let's build something<span>.</span></div>
       <div class="footer-links">
         <a href="mailto:hello@collin.dev">Email</a>
         <a href="https://github.com/collin" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://twitter.com/collin" target="_blank" rel="noopener">Twitter</a>
+        <a href="https://linkedin.com/in/collin-stilwell" target="_blank" rel="noopener">LinkedIn</a>
       </div>
       <span class="footer-sign-off">&copy; 2026 collin stilwell</span>
     </div>
@@ -1619,6 +1773,65 @@
         closeModal();
       }
     });
+
+    // ── Hero generative glyph ──
+    const glyphCanvas = document.getElementById('heroGlyph');
+    const glyphCtx = glyphCanvas.getContext('2d');
+    let glyphAngle = 0;
+
+    function initGlyph() {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = glyphCanvas.getBoundingClientRect();
+      glyphCanvas.width = rect.width * dpr;
+      glyphCanvas.height = rect.height * dpr;
+      glyphCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function drawGlyph() {
+      const w = glyphCanvas.getBoundingClientRect().width;
+      const h = glyphCanvas.getBoundingClientRect().height;
+      const cx = w / 2;
+      const cy = h / 2;
+      glyphCtx.clearRect(0, 0, w, h);
+
+      const rings = 3;
+      const dotsPerRing = [32, 24, 16];
+      const radii = [w * 0.42, w * 0.3, w * 0.18];
+      const speeds = [1, -0.7, 0.4];
+      const rgb = isInverted ? '179, 74, 30' : '196, 90, 45';
+
+      for (let r = 0; r < rings; r++) {
+        const count = dotsPerRing[r];
+        const radius = radii[r];
+        const speed = speeds[r];
+        for (let i = 0; i < count; i++) {
+          const angle = (Math.PI * 2 / count) * i + glyphAngle * speed;
+          const wobble = Math.sin(glyphAngle * 2 + i * 0.5) * (w * 0.015);
+          const x = cx + Math.cos(angle) * (radius + wobble);
+          const y = cy + Math.sin(angle) * (radius + wobble);
+          const size = 1.2 + Math.sin(glyphAngle + i) * 0.4;
+          const alpha = 0.3 + Math.sin(glyphAngle * 1.5 + i * 0.8) * 0.2;
+          glyphCtx.beginPath();
+          glyphCtx.arc(x, y, size, 0, Math.PI * 2);
+          glyphCtx.fillStyle = `rgba(${rgb}, ${alpha})`;
+          glyphCtx.fill();
+        }
+      }
+
+      // Center ring (thin line)
+      glyphCtx.beginPath();
+      glyphCtx.arc(cx, cy, w * 0.25 + Math.sin(glyphAngle * 0.8) * 4, 0, Math.PI * 2);
+      glyphCtx.strokeStyle = `rgba(${rgb}, 0.08)`;
+      glyphCtx.lineWidth = 0.5;
+      glyphCtx.stroke();
+
+      glyphAngle += 0.004;
+      requestAnimationFrame(drawGlyph);
+    }
+
+    initGlyph();
+    drawGlyph();
+    window.addEventListener('resize', initGlyph);
 
     // ── Easter egg: Konami code → invert palette ──
     const konami = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
