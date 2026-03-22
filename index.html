@@ -863,7 +863,7 @@
       transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
                   opacity 0.35s ease;
       opacity: 0;
-      overflow: clip;
+      overflow: visible;
     }
 
     .modal-backdrop.active .modal-card {
@@ -1204,7 +1204,6 @@
 
   <div class="modal-backdrop" id="modalBackdrop">
     <div class="modal-card glass-strong" id="modalCard">
-      <div class="shimmer"><div class="shimmer-light"></div><div class="shimmer-caustic"></div></div>
       <button class="modal-close" id="modalClose">&times;</button>
       <div class="modal-header">
         <h2 id="modalTitle"></h2>
@@ -1552,14 +1551,6 @@
         pill.textContent = tech;
         modalStack.appendChild(pill);
       });
-
-      // Register modal shimmer
-      const shimmer = modalCard.querySelector('.shimmer');
-      const light = modalCard.querySelector('.shimmer-light');
-      const caustic = modalCard.querySelector('.shimmer-caustic');
-      if (shimmer && light && caustic && !shimmerState.has(modalCard)) {
-        shimmerState.set(modalCard, { lx: 0, ly: 0, cx: 0, cy: 0 });
-      }
 
       document.body.classList.add('modal-open');
       modalBackdrop.classList.add('active');
