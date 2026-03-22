@@ -12,7 +12,7 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="collin stilwell">
   <meta name="twitter:description" content="Security engineer & design-minded builder.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%23c45a2d'/></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%23c9a55a'/></svg>">
   <style>
     *, *::before, *::after {
       margin: 0;
@@ -33,9 +33,9 @@
       --text-secondary: rgba(255, 255, 255, 0.58);
       --text-tertiary: rgba(255, 255, 255, 0.35);
       --text-ghost: rgba(255, 255, 255, 0.08);
-      --accent: #c45a2d;
-      --accent-glow: rgba(196, 90, 45, 0.25);
-      --accent-subtle: rgba(196, 90, 45, 0.12);
+      --accent: #c9a55a;
+      --accent-glow: rgba(201, 165, 90, 0.2);
+      --accent-subtle: rgba(201, 165, 90, 0.1);
     }
 
     html {
@@ -65,9 +65,9 @@
       --text-secondary: rgba(0, 0, 0, 0.58);
       --text-tertiary: rgba(0, 0, 0, 0.35);
       --text-ghost: rgba(0, 0, 0, 0.08);
-      --accent: #b34a1e;
-      --accent-glow: rgba(179, 74, 30, 0.2);
-      --accent-subtle: rgba(179, 74, 30, 0.1);
+      --accent: #a08340;
+      --accent-glow: rgba(160, 131, 64, 0.18);
+      --accent-subtle: rgba(160, 131, 64, 0.1);
     }
 
     body.inverted .hero h1 { color: rgba(0, 0, 0, 0.72); }
@@ -619,7 +619,7 @@
     .project-card:hover .arrow {
       color: var(--accent);
       background: var(--accent-subtle);
-      border-color: rgba(196, 90, 45, 0.2);
+      border-color: rgba(201, 165, 90, 0.18);
       transform: translate(2px, -2px);
     }
 
@@ -859,7 +859,7 @@
     .footer-links a:hover {
       color: var(--accent);
       border-color: var(--accent-subtle);
-      background: rgba(196, 90, 45, 0.04);
+      background: rgba(201, 165, 90, 0.04);
     }
 
     .snoopy-wrap {
@@ -1142,15 +1142,15 @@
       padding: 10px 20px;
       border-radius: 100px;
       border: 1px solid var(--accent-subtle);
-      border-top-color: rgba(196, 90, 45, 0.18);
-      background: rgba(196, 90, 45, 0.04);
+      border-top-color: rgba(201, 165, 90, 0.16);
+      background: rgba(201, 165, 90, 0.04);
       font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
       transition: all 0.3s ease;
     }
 
     .modal-visit-link:hover {
       background: var(--accent-subtle);
-      border-color: rgba(196, 90, 45, 0.3);
+      border-color: rgba(201, 165, 90, 0.25);
       color: var(--accent);
       transform: translateY(-1px);
     }
@@ -1798,7 +1798,7 @@
       const dotsPerRing = [32, 24, 16];
       const radii = [w * 0.42, w * 0.3, w * 0.18];
       const speeds = [1, -0.7, 0.4];
-      const rgb = isInverted ? '179, 74, 30' : '196, 90, 45';
+      const rgb = isInverted ? '160, 131, 64' : '201, 165, 90';
 
       for (let r = 0; r < rings; r++) {
         const count = dotsPerRing[r];
