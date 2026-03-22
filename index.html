@@ -55,7 +55,7 @@
       --text-ghost: rgba(0, 0, 0, 0.08);
     }
 
-    body.inverted .hero h1 { color: rgba(0, 0, 0, 0.9); }
+    body.inverted .hero h1 { color: rgba(0, 0, 0, 0.72); }
     body.inverted .cursor-glow { background: radial-gradient(circle, rgba(0, 0, 0, 0.03) 0%, transparent 70%); }
     body.inverted nav { background: rgba(0, 0, 0, 0.015); }
     body.inverted ::selection { background: rgba(0, 0, 0, 0.08); }
@@ -272,6 +272,25 @@
       mix-blend-mode: screen;
     }
 
+    .glass-strong .shimmer {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      z-index: 3;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 1.5s ease;
+    }
+
+    .glass-strong .shimmer.active {
+      opacity: 1;
+    }
+
+    .glass-strong .shimmer:not(.active) {
+      transition: opacity 2.5s ease;
+    }
+
     .glass-strong .shimmer-light {
       width: 700px;
       height: 700px;
@@ -301,6 +320,10 @@
     section {
       padding: 80px 0;
       position: relative;
+    }
+
+    #professional-projects {
+      padding-top: 0;
     }
 
     /* ── Nav ── */
@@ -377,7 +400,7 @@
       font-weight: 700;
       letter-spacing: -0.05em;
       line-height: 0.88;
-      color: rgba(255, 255, 255, 0.9);
+      color: rgba(255, 255, 255, 0.72);
       position: relative;
     }
 
@@ -634,8 +657,8 @@
     /* ── About ── */
     .about-layout {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
+      grid-template-columns: 3fr 2fr;
+      gap: 32px;
       align-items: start;
     }
 
@@ -1052,7 +1075,7 @@
       <div class="hero-content">
         <h1>
           hi, i'm collin:
-          <span class="ghost">Software Developer</span>
+          <span class="ghost">Security Engineer</span>
         </h1>
         <p class="subtitle" id="subtitle"></p>
       </div>
@@ -1065,7 +1088,7 @@
 
   <section id="projects">
     <div class="container">
-      <div class="section-label fade-up">Projects</div>
+      <div class="section-label fade-up">Personal</div>
       <div class="projects-grid">
         <div class="snoopy-wrap" title="Good grief.">
           <img src="data:image/png;base64,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" alt="Snoopy" width="44" height="44" style="filter: invert(1) brightness(2);">
@@ -1083,6 +1106,28 @@
             <div class="card-meta"></div>
           </div>
         </a>
+
+        <a href="#" class="project-card glass fade-up" data-project="delta" data-tech="Canvas, WebGL" data-year="2024">
+          <div class="shimmer"><div class="shimmer-light"></div><div class="shimmer-caustic"></div></div>
+          <div class="card-top">
+            <span class="tag">Experiment</span>
+            <span class="arrow">&nearr;</span>
+          </div>
+          <div class="card-bottom">
+            <h3>Project Delta</h3>
+            <p>A side project, experiment, or creative exploration.</p>
+            <div class="card-meta"></div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="professional-projects">
+    <div class="container">
+      <div class="section-label fade-up">Professional</div>
+      <div class="projects-grid">
 
         <a href="#" class="project-card glass fade-up" data-project="beta" data-tech="Rust, CLI" data-year="2025">
           <div class="shimmer"><div class="shimmer-light"></div><div class="shimmer-caustic"></div></div>
@@ -1110,19 +1155,6 @@
           </div>
         </a>
 
-        <a href="#" class="project-card glass fade-up" data-project="delta" data-tech="Canvas, WebGL" data-year="2024">
-          <div class="shimmer"><div class="shimmer-light"></div><div class="shimmer-caustic"></div></div>
-          <div class="card-top">
-            <span class="tag">Experiment</span>
-            <span class="arrow">&nearr;</span>
-          </div>
-          <div class="card-bottom">
-            <h3>Project Delta</h3>
-            <p>A side project, experiment, or creative exploration.</p>
-            <div class="card-meta"></div>
-          </div>
-        </a>
-
       </div>
     </div>
   </section>
@@ -1135,18 +1167,18 @@
       <div class="currently-grid">
         <div class="currently-card glass fade-up">
           <div class="shimmer"><div class="shimmer-light"></div><div class="shimmer-caustic"></div></div>
-          <div class="currently-label">Working on</div>
-          <div class="currently-value"><strong>Something new</strong> — still in the early stages.</div>
+          <div class="currently-label">Working at</div>
+          <div class="currently-value"><strong>Thirty Madison</strong> — Senior Product Security Engineer</div>
         </div>
         <div class="currently-card glass fade-up">
           <div class="shimmer"><div class="shimmer-light"></div><div class="shimmer-caustic"></div></div>
-          <div class="currently-label">Reading</div>
-          <div class="currently-value"><strong>Designing Data-Intensive Applications</strong> by Martin Kleppmann</div>
+          <div class="currently-label">Previously</div>
+          <div class="currently-value"><strong>Podium</strong> — Application Security Engineer</div>
         </div>
         <div class="currently-card glass fade-up">
           <div class="shimmer"><div class="shimmer-light"></div><div class="shimmer-caustic"></div></div>
-          <div class="currently-label">Listening to</div>
-          <div class="currently-value"><strong>Tycho</strong> — Dive</div>
+          <div class="currently-label">Studied at</div>
+          <div class="currently-value"><strong>NYU</strong> — M.S. Cyber Security, Cyber Fellowship</div>
         </div>
       </div>
     </div>
@@ -1160,10 +1192,10 @@
       <div class="about-layout">
         <div class="about-text fade-up">
           <p>
-            <strong>I'm Collin</strong> — a developer who cares about craft.
+            <strong>I'm Collin</strong> — a security engineer who cares about craft.
             I like building things that feel good to use, where every detail
             is considered and nothing is accidental. Currently interested in
-            developer tools, design systems, and the space between code and art.
+            security tooling, design systems, and the space between code and art.
           </p>
         </div>
         <div class="about-card glass-strong fade-up">
@@ -1174,7 +1206,7 @@
           </div>
           <div class="detail-row">
             <span class="detail-label">Focus</span>
-            <span class="detail-value">Full-stack</span>
+            <span class="detail-value">Security</span>
           </div>
           <div class="detail-row">
             <span class="detail-label">Interest</span>
