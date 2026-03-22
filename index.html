@@ -24,6 +24,9 @@
       --text-secondary: rgba(255, 255, 255, 0.58);
       --text-tertiary: rgba(255, 255, 255, 0.35);
       --text-ghost: rgba(255, 255, 255, 0.08);
+      --accent: #c45a2d;
+      --accent-glow: rgba(196, 90, 45, 0.25);
+      --accent-subtle: rgba(196, 90, 45, 0.12);
     }
 
     html {
@@ -53,13 +56,16 @@
       --text-secondary: rgba(0, 0, 0, 0.58);
       --text-tertiary: rgba(0, 0, 0, 0.35);
       --text-ghost: rgba(0, 0, 0, 0.08);
+      --accent: #b34a1e;
+      --accent-glow: rgba(179, 74, 30, 0.2);
+      --accent-subtle: rgba(179, 74, 30, 0.1);
     }
 
     body.inverted .hero h1 { color: rgba(0, 0, 0, 0.72); }
     body.inverted .cursor-glow { background: radial-gradient(circle, rgba(0, 0, 0, 0.03) 0%, transparent 70%); }
     body.inverted nav { background: rgba(0, 0, 0, 0.015); }
-    body.inverted ::selection { background: rgba(0, 0, 0, 0.08); }
-    body.inverted .progress-bar { background: rgba(0, 0, 0, 0.12); }
+    body.inverted ::selection { background: var(--accent-glow); }
+    body.inverted .progress-bar { background: var(--accent); }
 
     /* ── Progress bar ── */
     .progress-bar {
@@ -67,9 +73,10 @@
       top: 0;
       left: 0;
       height: 1px;
-      background: rgba(255, 255, 255, 0.12);
+      background: var(--accent);
       z-index: 200;
       width: 0%;
+      opacity: 0.7;
     }
 
     /* ── Dot grid ── */
@@ -429,7 +436,7 @@
       display: inline-block;
       width: 2px;
       height: 1em;
-      background: var(--text-secondary);
+      background: var(--accent);
       margin-left: 2px;
       vertical-align: text-bottom;
       animation: blink 0.8s step-end infinite;
@@ -483,7 +490,7 @@
       content: '';
       flex: 1;
       height: 1px;
-      background: linear-gradient(to right, var(--glass-border), transparent);
+      background: linear-gradient(to right, var(--accent-subtle), transparent);
     }
 
     /* ── Projects ── */
@@ -559,9 +566,9 @@
     }
 
     .project-card:hover .arrow {
-      color: var(--text-primary);
-      background: rgba(255, 255, 255, 0.04);
-      border-color: var(--glass-border-hover);
+      color: var(--accent);
+      background: var(--accent-subtle);
+      border-color: rgba(196, 90, 45, 0.2);
       transform: translate(2px, -2px);
     }
 
@@ -849,7 +856,7 @@
 
     /* ── Selection ── */
     ::selection {
-      background: rgba(255, 255, 255, 0.08);
+      background: var(--accent-glow);
       color: var(--text-primary);
     }
 
@@ -1007,21 +1014,21 @@
       font-size: 11px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.8);
+      color: var(--accent);
       text-decoration: none;
       padding: 10px 20px;
       border-radius: 100px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-top-color: rgba(255, 255, 255, 0.18);
-      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--accent-subtle);
+      border-top-color: rgba(196, 90, 45, 0.18);
+      background: rgba(196, 90, 45, 0.04);
       font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
       transition: all 0.3s ease;
     }
 
     .modal-visit-link:hover {
-      background: rgba(255, 255, 255, 0.07);
-      border-color: rgba(255, 255, 255, 0.2);
-      color: rgba(255, 255, 255, 0.95);
+      background: var(--accent-subtle);
+      border-color: rgba(196, 90, 45, 0.3);
+      color: var(--accent);
       transform: translateY(-1px);
     }
 
