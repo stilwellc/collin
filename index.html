@@ -677,6 +677,82 @@
       max-width: 480px;
     }
 
+    /* ── Writing ── */
+    #writing {
+      padding: 48px 0;
+    }
+
+    .writing-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .writing-card {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      padding: 28px 32px;
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  background 0.3s ease,
+                  border-color 0.3s ease,
+                  box-shadow 0.4s ease;
+    }
+
+    .writing-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--glass-border-hover);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .writing-card-inner {
+      position: relative;
+      z-index: 2;
+    }
+
+    .writing-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .writing-date {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: var(--text-tertiary);
+      font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+    }
+
+    .writing-card h3 {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+      color: var(--text-primary);
+    }
+
+    .writing-card p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 0;
+    }
+
+    .writing-card .arrow {
+      position: absolute;
+      top: 0;
+      right: 0;
+      font-size: 18px;
+      color: var(--text-ghost);
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    .writing-card:hover .arrow {
+      color: var(--accent);
+      transform: translate(2px, -2px);
+    }
+
     /* ── Currently ── */
     .currently-section {
       padding: 48px 0;
@@ -1319,6 +1395,28 @@
     </div>
   </section>
 
+  <section id="writing">
+    <div class="container">
+      <div class="section-label fade-up">Writing</div>
+      <div class="writing-grid">
+
+        <a href="https://collinsthoughts.substack.com/p/building-an-application-security" target="_blank" class="writing-card glass fade-up">
+          <div class="shimmer"><div class="shimmer-light"></div><div class="shimmer-caustic"></div></div>
+          <div class="writing-card-inner">
+            <div class="writing-meta">
+              <span class="tag">Substack</span>
+              <span class="writing-date">May 2026</span>
+            </div>
+            <h3>Building an Application Security Program That Actually Works</h3>
+            <p>A four-legged framework for shifting security from a blocking function into an enabler of engineering speed.</p>
+            <span class="arrow">&nearr;</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
   <div class="glass-strip"><div class="glass-strip-inner"></div></div>
 
   <section class="currently-section">
@@ -1390,6 +1488,7 @@
         <a href="mailto:hello@collin.dev">Email</a>
         <a href="https://github.com/collin" target="_blank" rel="noopener">GitHub</a>
         <a href="https://www.linkedin.com/in/collin-stilwell/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://collinsthoughts.substack.com" target="_blank" rel="noopener">Substack</a>
       </div>
       <span class="footer-sign-off">&copy; 2026 collin stilwell</span>
     </div>
