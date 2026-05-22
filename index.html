@@ -1181,6 +1181,17 @@
       line-height: 1.65;
     }
 
+    .modal-section p a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      transition: color 0.2s ease;
+    }
+
+    .modal-section p a:hover {
+      color: var(--text-primary);
+    }
+
     .modal-stack {
       display: flex;
       flex-wrap: wrap;
@@ -1378,15 +1389,15 @@
       <div class="section-label fade-up">Professional</div>
       <div class="projects-grid">
 
-        <a href="#" class="project-card glass fade-up" data-project="gamma" data-tech="TypeScript, Open Source" data-year="2024">
+        <a href="#" class="project-card glass fade-up" data-project="elixir-security" data-tech="Elixir, Semgrep, Livebook" data-year="2025">
           <div class="shimmer"><div class="shimmer-light"></div><div class="shimmer-caustic"></div></div>
           <div class="card-top">
             <span class="tag">Open Source</span>
             <span class="arrow">&nearr;</span>
           </div>
           <div class="card-bottom">
-            <h3>Project Gamma</h3>
-            <p>Something you built that you're proud of. Keep it short.</p>
+            <h3>Elixir Security</h3>
+            <p>Semgrep rules for Ash Framework auth and contributions to Elixir secure coding training.</p>
             <div class="card-meta"></div>
           </div>
         </a>
@@ -1798,13 +1809,13 @@
         usage: 'Browse artist profiles and auction data to stay informed about market trends and pricing.',
         url: 'https://mobi-lovat.vercel.app/digital/ray'
       },
-      gamma: {
-        name: 'Project Gamma',
+      'elixir-security': {
+        name: 'Elixir Security',
         tag: 'Open Source',
-        about: 'Something you built that you\'re proud of. Update this with real details when ready.',
-        stack: ['TypeScript', 'Open Source'],
-        usage: 'Install from npm or clone the repo to get started.',
-        url: '#'
+        about: 'Custom Semgrep rules that detect authorization and policy misconfigurations in Ash Framework applications — catching missing policies, unsafe bypasses, and execution without actor context. Also contributed to <a href="https://github.com/stilwellc/elixir-secure-coding" target="_blank" rel="noopener">Elixir Secure Coding</a>, an interactive security curriculum built on Livebook for developer onboarding.',
+        stack: ['Elixir', 'Semgrep', 'Ash Framework', 'Livebook'],
+        usage: 'Clone the repo and point Semgrep at your Ash codebase to start catching auth misconfigurations.',
+        url: 'https://github.com/stilwellc/ash-semgrep-rules'
       },
       delta: {
         name: 'Project Delta',
@@ -1832,7 +1843,7 @@
 
       modalTitle.textContent = data.name;
       modalTag.textContent = data.tag;
-      modalAbout.textContent = data.about;
+      modalAbout.innerHTML = data.about;
       modalUsage.textContent = data.usage;
       modalVisitLink.href = data.url;
 
