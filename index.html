@@ -1420,17 +1420,18 @@
           </div>
         </a>
 
-        <div class="project-card glass fade-up project-coming-soon">
+        <a href="#" class="project-card glass fade-up" data-project="secmcphub" data-tech="Claude Code, MCP, HTML, JavaScript" data-year="2025">
           <div class="shimmer"><div class="shimmer-light"></div><div class="shimmer-caustic"></div></div>
           <div class="card-top">
-            <span class="tag">Coming Soon</span>
+            <span class="tag">Open Source</span>
+            <span class="arrow">&nearr;</span>
           </div>
           <div class="card-bottom">
-            <h3>Security Skills</h3>
-            <p>More details soon.</p>
+            <h3>SecMCPHub</h3>
+            <p>Automated security MBR dashboard aggregating vulnerability, GRC, and incident data via MCP into a single self-contained report.</p>
             <div class="card-meta"></div>
           </div>
-        </div>
+        </a>
 
       </div>
     </div>
@@ -1854,6 +1855,14 @@
         stack: ['Elixir', 'Semgrep', 'Ash Framework', 'Livebook'],
         usage: 'Clone the repo and point Semgrep at your Ash codebase to start catching auth misconfigurations.',
         url: 'https://github.com/stilwellc/ash-semgrep-rules'
+      },
+      secmcphub: {
+        name: 'SecMCPHub',
+        tag: 'Open Source',
+        about: 'An automated security MBR (Monthly Business Review) dashboard that aggregates data from vulnerability management, GRC/risk registers, and incident/IR ticketing systems via MCP (Model Context Protocol). Computes trend deltas, MTTR, SLA compliance, and composite risk grades — then cross-references findings across sources using CWE mappings and attack path analysis into unified decision views.',
+        stack: ['Claude Code', 'MCP', 'HTML', 'JavaScript'],
+        usage: 'Clone the repo and follow the setup instructions to connect your security data sources via MCP and generate a self-contained HTML dashboard.',
+        url: 'https://github.com/stilwellc/SecMCPHub'
       },
       delta: {
         name: 'Project Delta',
