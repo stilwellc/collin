@@ -13,6 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Geist+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="site.css">
+<style>@view-transition { navigation: auto; }</style>
 <style>
   .home { min-height: 100svh; display: grid; grid-template-rows: auto 1fr auto; }
   .field { position: relative; margin: 0 var(--pad); display: flex; align-items: center; min-height: 0; }
@@ -26,7 +27,7 @@
 <body>
 <div class="home">
 <header class="mast">
-  <a class="brand" href="index.html"><span class="n">Collin Stilwell</span><span class="r">Security</span><span class="pill mono">v2026.09</span></a>
+  <a class="brand" href="index.html"><span class="n">Collin Stilwell</span><span class="r">Security</span><span class="pill mono" id="commit">v2026.09</span></a>
   <nav aria-label="Site"><a class="pill" href="work.html">Work</a><a class="pill" href="about.html">About</a><a class="pill" href="mailto:hello@collin.dev">Email</a></nav>
 </header>
 <div class="field rv d1"><canvas id="field" aria-label="Collin, decoded" role="img"></canvas></div>
