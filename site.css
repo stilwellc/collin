@@ -1,0 +1,125 @@
+/* Collin Stilwell — site system. Eggshell ground, light-weight Geist, hairline
+   registration frames, black pills. Dark is a real palette, not an inversion. */
+:root {
+  --ground: #FCFBFA;
+  --ink: #161616;
+  --ink-2: #6B6C6A;
+  --ink-3: #A3A4A1;
+  --hair: #E6E5E2;
+  --hair-2: #D6D5D1;
+  --pill: #161616;
+  --pill-ink: #FCFBFA;
+  --sans: "Geist", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --pad: clamp(20px, 3.2vw, 44px);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ground: #101010;
+    --ink: #F2F1EE;
+    --ink-2: #9B9B97;
+    --ink-3: #5E5E5B;
+    --hair: #262625;
+    --hair-2: #343433;
+    --pill: #F2F1EE;
+    --pill-ink: #101010;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--ground); color: var(--ink);
+  font-family: var(--sans); font-weight: 400; font-size: 16px; line-height: 1.45;
+  -webkit-font-smoothing: antialiased; font-feature-settings: "ss03", "cv11";
+}
+a { color: inherit; text-decoration: none; }
+a:focus-visible, button:focus-visible { outline: 1.5px solid var(--ink); outline-offset: 3px; border-radius: 999px; }
+::selection { background: var(--ink); color: var(--ground); }
+
+/* ── masthead ── */
+.mast {
+  display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+  padding: var(--pad); font-size: 17px;
+}
+.mast .brand { display: flex; align-items: center; gap: 0.6rem; }
+.mast .brand .n { font-weight: 500; letter-spacing: -0.01em; }
+.mast .brand .r { font-weight: 300; color: var(--ink-2); }
+.mast nav { display: flex; gap: 0.4rem; }
+.pill {
+  display: inline-flex; align-items: center; height: 30px; padding: 0 12px;
+  border: 1px solid var(--hair-2); border-radius: 999px; font-size: 13px; line-height: 1;
+  color: var(--ink); background: transparent; white-space: nowrap; transition: border-color 140ms ease, background 140ms ease;
+}
+.pill:hover { border-color: var(--ink); }
+.pill.on { background: var(--ink); color: var(--ground); border-color: var(--ink); }
+.pill.mono { font-family: var(--mono); font-size: 12px; letter-spacing: 0.01em; }
+.pill.solid { background: var(--pill); color: var(--pill-ink); border-color: var(--pill); height: 44px; padding: 0 22px; font-size: 15px; font-weight: 500; }
+.pill.solid:hover { opacity: 0.86; }
+.pill.ghost { height: 44px; padding: 0 20px; font-size: 15px; }
+
+/* ── generic page column ── */
+.page { padding: 0 var(--pad) var(--pad); }
+.eyebrow { font-family: var(--mono); font-size: 12px; color: var(--ink-3); letter-spacing: 0.02em; margin: 0 0 0.75rem; }
+h1.display {
+  margin: 0; font-weight: 300; letter-spacing: -0.035em; line-height: 0.98;
+  font-size: clamp(2.6rem, 7.2vw, 6.4rem); text-wrap: balance;
+}
+.statement { font-size: clamp(18px, 1.55vw, 21px); line-height: 1.4; color: var(--ink); max-width: 30em; margin: 0; text-wrap: pretty; }
+.statement .dim { color: var(--ink-2); }
+.meta { display: flex; flex-wrap: wrap; gap: 0.75rem 2.5rem; font-size: 15px; color: var(--ink-2); }
+.meta div span { display: block; }
+.meta div span + span { color: var(--ink-3); }
+.actions { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
+
+/* ── registration-frame grid (shared hairlines, like a printed table) ── */
+.frame { border: 1px solid var(--hair); border-radius: 14px; overflow: hidden; }
+.cells { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 760px) { .cells { grid-template-columns: 1fr; } }
+.cell {
+  position: relative; display: flex; flex-direction: column; gap: 1rem; min-height: 300px;
+  padding: clamp(18px, 2.4vw, 30px); border-right: 1px solid var(--hair); border-bottom: 1px solid var(--hair);
+  transition: background 160ms ease;
+}
+.cells .cell:nth-child(2n) { border-right: 0; }
+@media (max-width: 760px) { .cells .cell { border-right: 0; } }
+.cell:hover { background: color-mix(in srgb, var(--ink) 3%, transparent); }
+.cell .top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.cell h2 { margin: 0.9rem 0 0; font-weight: 300; letter-spacing: -0.03em; font-size: clamp(1.9rem, 3.2vw, 2.8rem); line-height: 1.02; }
+.cell h2 .arrow { display: inline-block; margin-left: 0.25em; transition: transform 160ms ease; color: var(--ink-3); }
+.cell:hover h2 .arrow { transform: translate(3px, -3px); color: var(--ink); }
+.cell p { margin: 0; color: var(--ink-2); max-width: 40em; text-wrap: pretty; }
+.cell .foot { font-family: var(--mono); font-size: 12px; color: var(--ink-3); margin-top: auto; padding-top: 0.75rem; }
+
+/* ── ledger rows (about / currently / writing) ── */
+.ledger { border-top: 1px solid var(--hair); }
+.lrow { display: grid; grid-template-columns: 11rem minmax(0,1fr); gap: 1.5rem; padding: 1.1rem 0; border-bottom: 1px solid var(--hair); align-items: baseline; }
+@media (max-width: 640px) { .lrow { grid-template-columns: 1fr; gap: 0.3rem; } }
+.lrow .k { font-family: var(--mono); font-size: 12px; color: var(--ink-3); }
+.lrow .t { font-weight: 500; }
+.lrow .d { color: var(--ink-2); margin-top: 0.15rem; max-width: 46em; text-wrap: pretty; }
+.prose p { margin: 0 0 1rem; max-width: 34em; font-size: 19px; line-height: 1.45; font-weight: 300; color: var(--ink); text-wrap: pretty; }
+.prose p:last-child { margin-bottom: 0; }
+
+/* ── footer ── */
+footer.foot {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.75rem 2rem;
+  padding: var(--pad); border-top: 1px solid var(--hair); margin-top: 3rem;
+  font-family: var(--mono); font-size: 12px; color: var(--ink-3);
+}
+
+/* ── reveal (once, small) ── */
+@media (prefers-reduced-motion: no-preference) {
+  .rv { animation: rv 700ms cubic-bezier(.2,.7,.2,1) both; }
+  .rv.d1 { animation-delay: 80ms; } .rv.d2 { animation-delay: 160ms; } .rv.d3 { animation-delay: 240ms; }
+  @keyframes rv { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+}
+
+/* ── small screens: masthead stays one line ── */
+@media (max-width: 600px) {
+  .mast { font-size: 15px; gap: 0.75rem; }
+  .mast .brand .n { white-space: nowrap; }
+  .mast .brand .r, .mast .brand .pill { display: none; }
+  .mast nav { gap: 0.3rem; }
+  .pill { height: 28px; padding: 0 10px; font-size: 12.5px; }
+  .pill.solid, .pill.ghost { height: 42px; font-size: 14px; }
+}
