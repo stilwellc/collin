@@ -4,272 +4,321 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Collin Stilwell</title>
-<meta name="description" content="Collin Stilwell — Senior Product Security Engineer at Thirty Madison. I build the security tools I wish existed, and a few things just because they should exist.">
-<meta name="color-scheme" content="light dark">
+<meta name="description" content="Collin Stilwell — Senior Product Security Engineer at Thirty Madison. Builder of lectr, SecMCPHub, Soirée.">
+<meta name="color-scheme" content="dark light">
 <meta property="og:title" content="Collin Stilwell">
-<meta property="og:description" content="Senior Product Security Engineer. Builder of lectr, Soirée, SecMCPHub.">
-<meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232138D6'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='ui-monospace,Menlo,monospace' font-size='17' fill='white'%3Ecs%3C/text%3E%3C/svg%3E">
+<meta property="og:description" content="Senior Product Security Engineer. Builder of lectr, SecMCPHub, Soirée.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230B0C0F'/%3E%3Ctext x='4' y='23' font-family='ui-monospace,Menlo,monospace' font-size='18' fill='%234D7CFF'%3E%3E_%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&display=swap">
 <style>
   :root {
-    --paper: #FAFAF8;
-    --ink: #17181C;
-    --ink-2: #5C6068;
-    --ink-3: #8A8E96;
-    --rule: #E3E4E1;
-    --accent: #2138D6;
-    --accent-ink: #1B2FB3;
-    --sans: "Instrument Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
-    --measure: 66ch;
+    --bg: #0B0C0F; --bg-2: #101115;
+    --ink: #E6E7EA; --ink-2: #9A9EAA; --ink-3: #5E626E;
+    --rule: #1E2027; --grid: rgba(255,255,255,0.035);
+    --accent: #4D7CFF; --accent-2: #2E5BE8; --sel: rgba(77,124,255,0.22);
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --gutter: 4.25rem; --bar: 2.5rem;
   }
-  @media (prefers-color-scheme: dark) {
+  @media (prefers-color-scheme: light) {
     :root {
-      --paper: #0F1013;
-      --ink: #ECECEA;
-      --ink-2: #9A9EA6;
-      --ink-3: #6E727A;
-      --rule: #24262B;
-      --accent: #7C8DFF;
-      --accent-ink: #9AA7FF;
+      --bg: #F4F4F2; --bg-2: #ECECE9;
+      --ink: #111216; --ink-2: #565A66; --ink-3: #8C909B;
+      --rule: #DDDDD8; --grid: rgba(0,0,0,0.045);
+      --accent: #1F4FE0; --accent-2: #1740BF; --sel: rgba(31,79,224,0.16);
     }
   }
   * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
   body {
-    margin: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: var(--sans);
-    font-size: 17px;
-    line-height: 1.5;
-    font-feature-settings: "ss01", "cv11";
-    -webkit-font-smoothing: antialiased;
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--mono); font-size: 15px; line-height: 1.6;
+    font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased;
+    background-image: radial-gradient(var(--grid) 1px, transparent 1px); background-size: 24px 24px;
+    padding-bottom: var(--bar);
   }
   a { color: inherit; text-decoration: none; }
-  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
-  ::selection { background: var(--accent); color: #fff; }
+  a:focus-visible, input:focus-visible { outline: 1.5px solid var(--accent); outline-offset: 3px; }
+  ::selection { background: var(--sel); }
 
-  .page {
-    max-width: calc(var(--measure) + 12rem);
-    margin: 0 auto;
-    padding: 2.5rem 1.5rem 5rem;
+  .doc { display: grid; grid-template-columns: var(--gutter) minmax(0, 1fr); max-width: 1180px; margin: 0 auto; min-height: 100vh; }
+  .gutter { position: sticky; top: 0; height: 100vh; border-right: 1px solid var(--rule); color: var(--ink-3); font-size: 12px; padding-top: 1.35rem; user-select: none; overflow: hidden; }
+  .gutter ol { list-style: none; margin: 0; padding: 0; }
+  .gutter li { height: 24px; line-height: 24px; text-align: right; padding-right: 0.9rem; transition: color 160ms ease; }
+  .gutter li.on { color: var(--accent); }
+  .col { padding: 1.35rem 2rem 6rem 2.25rem; min-width: 0; }
+  @media (max-width: 720px) {
+    :root { --gutter: 2.6rem; }
+    .gutter li { padding-right: 0.5rem; font-size: 11px; }
+    .col { padding: 1.35rem 1rem 5rem 1.1rem; }
   }
-  @media (min-width: 860px) { .page { padding: 3.5rem 3rem 6rem; } }
 
-  /* ── masthead ─────────────────────────────────────────────── */
-  .top {
-    display: flex; align-items: baseline; justify-content: space-between; gap: 2rem;
-    font-family: var(--mono); font-size: 13px; letter-spacing: 0.01em; color: var(--ink-2);
-  }
-  .top nav { display: flex; gap: 1.5rem; }
-  .top a:hover { color: var(--ink); }
-  .top .name { color: var(--ink); }
+  .c { color: var(--ink-3); }
+  .k { color: var(--accent); }
+  .line { min-height: 24px; line-height: 24px; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .cursor::after { content: ""; display: inline-block; width: 0.6ch; height: 1.05em; vertical-align: -0.15em; background: var(--accent); margin-left: 0.15ch; }
+  @media (prefers-reduced-motion: no-preference) { .cursor::after { animation: blink 1.05s steps(1) infinite; } }
+  @keyframes blink { 50% { opacity: 0; } }
 
-  header.hero { margin-top: 6rem; max-width: var(--measure); }
-  @media (min-width: 860px) { header.hero { margin-top: 9rem; } }
-  h1 {
-    margin: 0;
-    font-weight: 400;
-    font-size: clamp(2.6rem, 6.5vw, 4.6rem);
-    line-height: 1.02;
-    letter-spacing: -0.03em;
-    text-wrap: balance;
-  }
-  h1 .role { color: var(--ink-2); }
-  .lede {
-    margin: 1.75rem 0 0;
-    font-size: 1.2rem;
-    line-height: 1.45;
-    color: var(--ink-2);
-    max-width: 44ch;
-    text-wrap: pretty;
-  }
-  .lede b { font-weight: 500; color: var(--ink); }
+  .boot { margin-bottom: 2.4rem; }
+  h1 { margin: 0.4rem 0 0; font-weight: 300; font-size: clamp(3.3rem, 9.2vw, 8.4rem); line-height: 0.96; letter-spacing: -0.045em; text-wrap: balance; }
+  h1 .amp { color: var(--ink-3); }
+  .role { margin: 1.4rem 0 0; font-size: clamp(1rem, 2vw, 1.25rem); color: var(--ink-2); max-width: 46ch; text-wrap: pretty; }
+  .role b { font-weight: 600; color: var(--ink); }
 
-  /* ── the ledger: mono label | content ─────────────────────── */
-  section { margin-top: 5rem; max-width: var(--measure); }
-  h2 {
-    margin: 0 0 1.25rem;
-    font-family: var(--mono);
-    font-weight: 400;
-    font-size: 13px;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--ink-3);
+  section { margin-top: 4.5rem; scroll-margin-top: 1rem; }
+  h2 { margin: 0 0 0.6rem; font-size: 13px; font-weight: 400; color: var(--ink-3); letter-spacing: 0.02em; }
+  h2 .k { font-weight: 600; }
+  .rows { border-top: 1px solid var(--rule); }
+  .row { display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 1.25rem; padding: 0.9rem 0; border-bottom: 1px solid var(--rule); align-items: baseline; position: relative; }
+  .row .meta { color: var(--ink-3); font-size: 13px; white-space: nowrap; }
+  .row .t { font-weight: 600; font-size: 1.05rem; }
+  .row .d { color: var(--ink-2); margin-top: 0.2rem; max-width: 64ch; text-wrap: pretty; }
+  .row .s { color: var(--ink-3); font-size: 13px; margin-top: 0.45rem; }
+  .row .s::before { content: "+ "; color: var(--accent); }
+  .row.entry .t a::after { content: " ↗"; color: var(--ink-3); }
+  .row.entry .t a:hover, .row.entry .t a:focus-visible { color: var(--accent); }
+  .row.entry .t a:hover::after { color: var(--accent); }
+  .row .cmd { position: absolute; right: 0; top: 0.9rem; font-size: 12px; color: var(--ink-3); opacity: 0; transition: opacity 120ms ease; }
+  .row:hover .cmd, .row.sel .cmd { opacity: 1; }
+  .row.sel { background: linear-gradient(90deg, var(--sel), transparent 60%); }
+  .row.sel::before { content: ""; position: absolute; left: -2.25rem; top: 0; bottom: 0; width: 2px; background: var(--accent); }
+  @media (max-width: 720px) {
+    .row { grid-template-columns: 1fr; gap: 0.25rem; }
+    .row .cmd { display: none; }
+    .row.sel::before { left: -1.1rem; }
   }
-  .ledger { border-top: 1px solid var(--rule); }
-  .row {
-    display: grid;
-    grid-template-columns: 8.5rem 1fr;
-    gap: 1.25rem;
-    padding: 1rem 0;
-    border-bottom: 1px solid var(--rule);
-    align-items: baseline;
-  }
-  @media (max-width: 560px) { .row { grid-template-columns: 1fr; gap: 0.35rem; } }
-  .k {
-    font-family: var(--mono); font-size: 13px; color: var(--ink-3);
-    font-variant-numeric: tabular-nums; white-space: nowrap;
-  }
-  .v { min-width: 0; }
-  .v .t { font-weight: 500; }
-  .v .d { color: var(--ink-2); margin-top: 0.15rem; text-wrap: pretty; }
-  .v .m { font-family: var(--mono); font-size: 13px; color: var(--ink-3); margin-top: 0.45rem; }
 
-  /* project rows: the title is the link */
-  .row.proj .t a { position: relative; display: inline-block; }
-  .row.proj .t a::after {
-    content: "↗"; margin-left: 0.4em; color: var(--ink-3);
-    transition: color 120ms ease, transform 120ms ease; display: inline-block;
-  }
-  .row.proj .t a:hover { color: var(--accent-ink); }
-  .row.proj .t a:hover::after { color: var(--accent-ink); transform: translate(2px, -2px); }
-  .row.proj .t a[aria-disabled] { pointer-events: none; }
-
-  /* ── prose ───────────────────────────────────────────────── */
-  .prose p { margin: 0 0 1rem; max-width: 60ch; text-wrap: pretty; }
+  .prose p { margin: 0 0 0.9rem; max-width: 66ch; color: var(--ink-2); text-wrap: pretty; }
   .prose p:last-child { margin-bottom: 0; }
+  .links { display: flex; flex-wrap: wrap; gap: 0.6rem 2rem; padding-top: 0.75rem; }
+  .links a { border-bottom: 1px solid var(--rule); padding-bottom: 1px; }
+  .links a:hover { color: var(--accent); border-color: var(--accent); }
+  .links a .c { margin-right: 0.5ch; }
+  .eof { margin-top: 5rem; color: var(--ink-3); font-size: 13px; }
 
-  /* ── contact ─────────────────────────────────────────────── */
-  .links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; font-size: 1.05rem; }
-  .links a { border-bottom: 1px solid var(--rule); padding-bottom: 2px; transition: border-color 120ms ease; }
-  .links a:hover { border-color: var(--accent); color: var(--accent-ink); }
-  .links .mono { font-family: var(--mono); font-size: 0.95rem; }
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; height: var(--bar); background: var(--bg-2); border-top: 1px solid var(--rule); display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 1rem; padding: 0 1rem; font-size: 12.5px; color: var(--ink-2); z-index: 5; }
+  .bar .mode { color: var(--bg); background: var(--accent); padding: 0.1rem 0.55rem; font-weight: 600; letter-spacing: 0.04em; }
+  .bar form { display: flex; align-items: center; gap: 0.6ch; min-width: 0; }
+  .bar input { flex: 1; min-width: 0; background: transparent; border: 0; color: var(--ink); font: inherit; font-size: 13px; padding: 0.35rem 0; caret-color: var(--accent); }
+  .bar input::placeholder { color: var(--ink-3); }
+  .bar .right { display: flex; gap: 1.25rem; white-space: nowrap; }
+  .bar .right .clock { color: var(--ink); }
+  @media (max-width: 720px) { .bar .right .hint, .bar .right .pos { display: none; } .bar input::placeholder { color: transparent; } }
+  .msg { color: var(--accent); white-space: nowrap; }
 
-  footer {
-    margin-top: 6rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
-    font-family: var(--mono); font-size: 12.5px; color: var(--ink-3);
-    display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; justify-content: space-between;
-  }
-
-  /* ── one reveal, once ────────────────────────────────────── */
   @media (prefers-reduced-motion: no-preference) {
-    .reveal { animation: up 640ms cubic-bezier(.2,.7,.2,1) both; }
-    .reveal:nth-child(2) { animation-delay: 60ms; }
-    .reveal:nth-child(3) { animation-delay: 120ms; }
-    @keyframes up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    .js .boot .line { opacity: 0; animation: in 320ms steps(2) forwards; }
+    .js .boot .line:nth-child(1) { animation-delay: 60ms; }
+    .js .boot .line:nth-child(2) { animation-delay: 260ms; }
+    .js .boot .line:nth-child(3) { animation-delay: 460ms; }
+    .js h1 { opacity: 0; animation: in 420ms ease-out 640ms forwards; }
+    .js .role { opacity: 0; animation: in 420ms ease-out 820ms forwards; }
+    @keyframes in { to { opacity: 1; } }
   }
 </style>
 </head>
 <body>
-<div class="page">
+<div class="doc">
+  <aside class="gutter" aria-hidden="true"><ol id="ln"></ol></aside>
+  <main class="col">
+    <header>
+      <div class="boot" aria-label="Session">
+        <div class="line"><span class="k">$</span> whoami</div>
+        <div class="line">collin stilwell <span class="c">— senior product security engineer, thirty madison</span></div>
+        <div class="line"><span class="k">$</span> cat README.md<span class="cursor" aria-hidden="true"></span></div>
+      </div>
+      <h1>Collin<br>Stilwell<span class="amp">.</span></h1>
+      <p class="role">Security engineer who builds like a designer. I make the security tools I wish existed, and a few other things because they should exist. <b>Currently at Thirty Madison.</b></p>
+    </header>
 
-  <div class="top">
-    <a class="name" href="#">collin stilwell</a>
-    <nav aria-label="Sections">
-      <a href="#work">Work</a>
-      <a href="#writing">Writing</a>
-      <a href="#about">About</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </div>
+    <section id="currently" data-name="currently">
+      <h2><span class="k">##</span> currently</h2>
+      <div class="rows">
+        <div class="row"><div class="meta">now</div><div><div class="t">Thirty Madison</div><div class="d">Senior Product Security Engineer</div></div></div>
+        <div class="row"><div class="meta">previously</div><div><div class="t">Podium</div><div class="d">Application Security Engineer</div></div></div>
+        <div class="row"><div class="meta">studied</div><div><div class="t">NYU</div><div class="d">M.S. Cybersecurity, Cyber Fellowship</div></div></div>
+      </div>
+    </section>
 
-  <header class="hero">
-    <h1 class="reveal">Collin Stilwell<br><span class="role">Security engineer.</span></h1>
-    <p class="lede reveal">I build the security tools I wish existed, and a few things just because they should. <b>Senior Product Security Engineer at Thirty Madison.</b></p>
-  </header>
-
-  <section id="now" aria-labelledby="h-now">
-    <h2 id="h-now">Currently</h2>
-    <div class="ledger">
-      <div class="row">
-        <div class="k">Now</div>
-        <div class="v">
-          <div class="t">Thirty Madison · Senior Product Security Engineer</div>
+    <section id="work" data-name="work">
+      <h2><span class="k">##</span> work <span class="c">— j / k to move, enter to open</span></h2>
+      <div class="rows" id="entries">
+        <div class="row entry" data-url="https://lectr.bid">
+          <div class="meta">~/work/lectr</div>
+          <div>
+            <div class="t"><a href="https://lectr.bid" target="_blank" rel="noopener">lectr</a></div>
+            <div class="d">Auction intelligence. A 1.1M-lot corpus across 16 houses, a value engine with a published backtest record, and a nightly pipeline that crawls, gates, and ships itself. Every price is traceable to a sale.</div>
+            <div class="s">TypeScript · Next.js · Cloudflare R2 + Pages · GitHub Actions · Supabase</div>
+          </div>
+          <span class="cmd">$ open lectr.bid</span>
+        </div>
+        <div class="row entry" data-url="https://github.com/stilwellc/SecMCPHub">
+          <div class="meta">~/work/secmcphub</div>
+          <div>
+            <div class="t"><a href="https://github.com/stilwellc/SecMCPHub" target="_blank" rel="noopener">SecMCPHub</a></div>
+            <div class="d">A security MBR that writes itself. Pulls vulnerability management, GRC, and incident data over MCP; computes MTTR, SLA compliance, and composite risk grades; cross-references findings by CWE and attack path into one self-contained report.</div>
+            <div class="s">MCP · Claude Code · HTML · JavaScript</div>
+          </div>
+          <span class="cmd">$ open github.com/stilwellc/SecMCPHub</span>
+        </div>
+        <div class="row entry" data-url="https://soiree.today">
+          <div class="meta">~/work/soiree</div>
+          <div>
+            <div class="t"><a href="https://soiree.today" target="_blank" rel="noopener">Soirée</a></div>
+            <div class="d">What's actually happening in New York tonight. Scrapes five sources, normalizes them, sorts by real dates. No account, no feed.</div>
+            <div class="s">Node.js · PostgreSQL · Cheerio · Cron</div>
+          </div>
+          <span class="cmd">$ open soiree.today</span>
+        </div>
+        <div class="row entry" data-url="https://github.com/stilwellc/elixir-secure-coding">
+          <div class="meta">~/work/elixir-security</div>
+          <div>
+            <div class="t"><a href="https://github.com/stilwellc/elixir-secure-coding" target="_blank" rel="noopener">Elixir security</a></div>
+            <div class="d">Semgrep rules for Ash Framework authorization, and contributions to the Elixir secure coding training.</div>
+            <div class="s">Elixir · Semgrep · Ash</div>
+          </div>
+          <span class="cmd">$ open github.com/stilwellc/elixir-secure-coding</span>
         </div>
       </div>
-      <div class="row">
-        <div class="k">Previously</div>
-        <div class="v">
-          <div class="t">Podium · Application Security Engineer</div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="k">Studied</div>
-        <div class="v">
-          <div class="t">NYU · M.S. Cybersecurity, Cyber Fellowship</div>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <section id="work" aria-labelledby="h-work">
-    <h2 id="h-work">Work</h2>
-    <div class="ledger">
-      <div class="row proj">
-        <div class="k">2026 · Web app</div>
-        <div class="v">
-          <div class="t"><a href="https://lectr.bid" target="_blank" rel="noopener">lectr</a></div>
-          <div class="d">Auction intelligence. A 1.1M-lot corpus across 16 houses, a value engine with a published backtest record, and a nightly pipeline that crawls, gates, and ships itself. Every price on the site is traceable to a sale.</div>
-          <div class="m">TypeScript · Next.js · Cloudflare R2 + Pages · GitHub Actions · Supabase</div>
+    <section id="writing" data-name="writing">
+      <h2><span class="k">##</span> writing</h2>
+      <div class="rows">
+        <div class="row entry" data-url="https://collinsthoughts.substack.com/p/building-an-application-security">
+          <div class="meta">2026-05 · substack</div>
+          <div>
+            <div class="t"><a href="https://collinsthoughts.substack.com/p/building-an-application-security" target="_blank" rel="noopener">Building an Application Security Program That Actually Works</a></div>
+            <div class="d">A four-legged framework for turning security from a blocking function into something that makes engineering faster.</div>
+          </div>
+          <span class="cmd">$ open substack</span>
         </div>
       </div>
-      <div class="row proj">
-        <div class="k">2026 · Open source</div>
-        <div class="v">
-          <div class="t"><a href="https://github.com/stilwellc/SecMCPHub" target="_blank" rel="noopener">SecMCPHub</a></div>
-          <div class="d">A security MBR that writes itself. Pulls vulnerability management, GRC, and incident data over MCP; computes MTTR, SLA compliance, and composite risk grades; cross-references findings by CWE and attack path into one self-contained report.</div>
-          <div class="m">MCP · Claude Code · HTML · JavaScript</div>
-        </div>
+    </section>
+
+    <section id="about" data-name="about" class="prose">
+      <h2><span class="k">##</span> about</h2>
+      <p>I'm a security engineer who cares about craft. I like building things that feel good to use, where every detail is considered and nothing is accidental.</p>
+      <p>Most of what I make sits between security tooling, data, and design. The question is usually the same: what would this look like if it were built by someone who had to use it every day?</p>
+    </section>
+
+    <section id="contact" data-name="contact">
+      <h2><span class="k">##</span> contact</h2>
+      <div class="links">
+        <a href="mailto:hello@collin.dev"><span class="c">mail</span>hello@collin.dev</a>
+        <a href="https://github.com/stilwellc" target="_blank" rel="noopener"><span class="c">gh</span>stilwellc</a>
+        <a href="https://www.linkedin.com/in/collin-stilwell/" target="_blank" rel="noopener"><span class="c">in</span>collin-stilwell</a>
+        <a href="https://collinsthoughts.substack.com" target="_blank" rel="noopener"><span class="c">rss</span>collinsthoughts</a>
       </div>
-      <div class="row proj">
-        <div class="k">Web app</div>
-        <div class="v">
-          <div class="t"><a href="https://soiree.today" target="_blank" rel="noopener">Soirée</a></div>
-          <div class="d">What's actually happening in New York tonight. Scrapes five sources, normalizes them, and sorts by real dates. No account, no feed.</div>
-          <div class="m">Node.js · PostgreSQL · Cheerio · Cron</div>
-        </div>
-      </div>
-      <div class="row proj">
-        <div class="k">Open source</div>
-        <div class="v">
-          <div class="t"><a href="https://github.com/stilwellc/elixir-secure-coding" target="_blank" rel="noopener">Elixir security</a></div>
-          <div class="d">Semgrep rules for Ash Framework authorization, and contributions to the Elixir secure coding training.</div>
-          <div class="m">Elixir · Semgrep · Ash</div>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <section id="writing" aria-labelledby="h-writing">
-    <h2 id="h-writing">Writing</h2>
-    <div class="ledger">
-      <div class="row proj">
-        <div class="k">May 2026</div>
-        <div class="v">
-          <div class="t"><a href="https://collinsthoughts.substack.com/p/building-an-application-security" target="_blank" rel="noopener">Building an Application Security Program That Actually Works</a></div>
-          <div class="d">A four-legged framework for turning security from a blocking function into something that makes engineering faster.</div>
-          <div class="m">Substack</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="about" aria-labelledby="h-about" class="prose">
-    <h2 id="h-about">About</h2>
-    <p>I'm a security engineer who cares about craft. I like building things that feel good to use, where every detail is considered and nothing is accidental.</p>
-    <p>Most of what I make sits in the space between security tooling, data, and design. The question is usually the same: what would this look like if it were built by someone who had to use it every day?</p>
-  </section>
-
-  <section id="contact" aria-labelledby="h-contact">
-    <h2 id="h-contact">Contact</h2>
-    <div class="links">
-      <a class="mono" href="mailto:hello@collin.dev">hello@collin.dev</a>
-      <a href="https://github.com/stilwellc" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://www.linkedin.com/in/collin-stilwell/" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="https://collinsthoughts.substack.com" target="_blank" rel="noopener">Substack</a>
-    </div>
-  </section>
-
-  <footer>
-    <span>© 2026 Collin Stilwell</span>
-    <span>Last revised 2026-09-10 · one file, no framework</span>
-  </footer>
-
+    <div class="eof"><span class="k">$</span> <span class="c">EOF · © 2026 Collin Stilwell · revised 2026-09-10 · one file, no framework</span></div>
+  </main>
 </div>
+
+<div class="bar" role="region" aria-label="Status bar">
+  <span class="mode" id="mode">NORMAL</span>
+  <form id="cmdf" autocomplete="off">
+    <span class="k">:</span>
+    <label for="cmd" style="position:absolute;left:-9999px">Command</label>
+    <input id="cmd" placeholder="type a command — work · writing · about · contact · help" spellcheck="false">
+    <span class="msg" id="msg" aria-live="polite"></span>
+  </form>
+  <div class="right">
+    <span class="hint c">/ to focus · j k · enter</span>
+    <span class="pos" id="pos">ln 1</span>
+    <span class="clock" id="clock">--:--:-- UTC</span>
+  </div>
+</div>
+
+<script>
+(function () {
+  document.documentElement.classList.add('js');
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var ln = document.getElementById('ln');
+  var sections = [].slice.call(document.querySelectorAll('section[id]'));
+  var LINE = 24;
+  function buildGutter() {
+    var n = Math.ceil(window.innerHeight / LINE) + 2;
+    var frag = document.createDocumentFragment();
+    for (var i = 1; i <= n; i++) { var li = document.createElement('li'); li.textContent = i; frag.appendChild(li); }
+    ln.innerHTML = ''; ln.appendChild(frag);
+  }
+  var pos = document.getElementById('pos');
+  function paintGutter() {
+    var y = window.scrollY, first = Math.floor(y / LINE) + 1;
+    var items = ln.children;
+    ln.style.transform = 'translateY(' + (-(y % LINE)) + 'px)';
+    for (var i = 0; i < items.length; i++) { items[i].textContent = first + i; items[i].className = ''; }
+    var cur = null;
+    sections.forEach(function (s) {
+      var top = s.getBoundingClientRect().top + y;
+      var idx = Math.floor(top / LINE) + 1 - first;
+      if (idx >= 0 && idx < items.length) items[idx].className = 'on';
+      if (top - y < window.innerHeight * 0.4) cur = s;
+    });
+    pos.textContent = 'ln ' + (Math.floor((y + window.innerHeight * 0.4) / LINE) + 1) + (cur ? ' · ' + cur.dataset.name : '');
+  }
+  buildGutter(); paintGutter();
+  addEventListener('scroll', paintGutter, { passive: true });
+  addEventListener('resize', function () { buildGutter(); paintGutter(); });
+  if (document.fonts) document.fonts.ready.then(paintGutter);
+
+  var clock = document.getElementById('clock');
+  function tick() { clock.textContent = new Date().toISOString().slice(11, 19) + ' UTC'; }
+  tick(); setInterval(tick, 1000);
+
+  var entries = [].slice.call(document.querySelectorAll('.row.entry'));
+  var sel = -1;
+  function select(i) {
+    entries.forEach(function (e) { e.classList.remove('sel'); });
+    sel = Math.max(0, Math.min(entries.length - 1, i));
+    var e = entries[sel]; e.classList.add('sel');
+    e.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
+  }
+  function openSel() { if (sel >= 0) window.open(entries[sel].dataset.url, '_blank', 'noopener'); }
+
+  var cmd = document.getElementById('cmd'), msg = document.getElementById('msg'), mode = document.getElementById('mode');
+  var say = function (t, ms) { msg.textContent = t; clearTimeout(say.t); say.t = setTimeout(function () { msg.textContent = ''; }, ms || 2400); };
+  var routes = {
+    work: '#work', writing: '#writing', about: '#about', contact: '#contact', currently: '#currently', now: '#currently', top: 'top',
+    email: 'mailto:hello@collin.dev', mail: 'mailto:hello@collin.dev', gh: 'https://github.com/stilwellc', github: 'https://github.com/stilwellc',
+    li: 'https://www.linkedin.com/in/collin-stilwell/', linkedin: 'https://www.linkedin.com/in/collin-stilwell/', substack: 'https://collinsthoughts.substack.com',
+    lectr: 'https://lectr.bid', soiree: 'https://soiree.today', secmcphub: 'https://github.com/stilwellc/SecMCPHub'
+  };
+  function run(raw) {
+    var q = raw.trim().toLowerCase().replace(/^:/, '');
+    if (!q) return;
+    if (q === 'help' || q === '?') return say('work · writing · about · contact · email · gh · linkedin · lectr · soiree · top · clear', 6000);
+    if (q === 'clear') { cmd.value = ''; return say(''); }
+    if (q === 'whoami') return say('collin stilwell — security engineer');
+    if (q === 'date') return say(new Date().toISOString());
+    var r = routes[q];
+    if (!r) return say('unknown command: ' + q + '  (try help)');
+    if (r === 'top') return scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    if (r.charAt(0) === '#') { document.querySelector(r).scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); return say('→ ' + q); }
+    if (r.indexOf('mailto:') === 0) { location.href = r; return say('→ ' + r.slice(7)); }
+    window.open(r, '_blank', 'noopener'); say('→ ' + r.replace(/^https?:\/\//, ''));
+  }
+  document.getElementById('cmdf').addEventListener('submit', function (e) { e.preventDefault(); run(cmd.value); cmd.value = ''; });
+  cmd.addEventListener('focus', function () { mode.textContent = 'COMMAND'; });
+  cmd.addEventListener('blur', function () { mode.textContent = 'NORMAL'; });
+  addEventListener('keydown', function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (document.activeElement === cmd) { if (e.key === 'Escape') cmd.blur(); return; }
+    if (e.key === '/' || e.key === ':') { e.preventDefault(); cmd.focus(); return; }
+    if (e.key === 'j') { e.preventDefault(); select(sel + 1); }
+    else if (e.key === 'k') { e.preventDefault(); select(sel - 1); }
+    else if (e.key === 'Enter' && sel >= 0) { e.preventDefault(); openSel(); }
+    else if (e.key === 'Escape') { entries.forEach(function (x) { x.classList.remove('sel'); }); sel = -1; }
+    else if (e.key === 'g') { scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }); }
+    else if (e.key === 'G') { scrollTo({ top: document.body.scrollHeight, behavior: reduce ? 'auto' : 'smooth' }); }
+  });
+  entries.forEach(function (e, i) { e.addEventListener('mouseenter', function () { entries.forEach(function (x) { x.classList.remove('sel'); }); sel = i; }); });
+})();
+</script>
 </body>
 </html>
