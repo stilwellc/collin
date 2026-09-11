@@ -1,17 +1,17 @@
 <!doctype html>
 <html lang="en">
 <head>
-<title>SecMCPHub — a case study — Collin Stilwell</title>
-<meta name="description" content="SecMCPHub: Claude Code skills that pull vulnerability, GRC, and incident data over MCP into one self-contained security MBR.">
-<meta property="og:title" content="SecMCPHub — a case study — Collin Stilwell">
-<meta property="og:description" content="SecMCPHub: Claude Code skills that pull vulnerability, GRC, and incident data over MCP into one self-contained security MBR.">
+<title>Physical — Collin Stilwell</title>
+<meta name="description" content="Design that leaves the screen: Project 1122, a residence rebuilt from the studs, and objects printed into the world.">
+<meta property="og:title" content="Physical">
+<meta property="og:description" content="Design that leaves the screen: Project 1122, a residence rebuilt from the studs, and objects printed into the world.">
 <meta charset="utf-8">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://stilwellc.github.io/collin/secmcphub.html">
-<meta property="og:image" content="https://stilwellc.github.io/collin/assets/og/secmcphub.png">
+<meta property="og:url" content="https://stilwellc.github.io/collin/physical.html">
+<meta property="og:image" content="https://stilwellc.github.io/collin/assets/og/physical.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://stilwellc.github.io/collin/assets/og/secmcphub.png">
-<link rel="canonical" href="https://stilwellc.github.io/collin/secmcphub.html">
+<meta name="twitter:image" content="https://stilwellc.github.io/collin/assets/og/physical.png">
+<link rel="canonical" href="https://stilwellc.github.io/collin/physical.html">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='16' fill='%23161616'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='13' fill='%23FCFBFA'%3ECS%3C/text%3E%3C/svg%3E">
@@ -21,11 +21,9 @@
 <link rel="stylesheet" href="site.css">
 <style>@view-transition { navigation: auto; }</style>
 <script>(function(){try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
-
 <style>
   .cs { max-width: 62rem; }
-  .cs h1.display { font-size: clamp(2.4rem, 6vw, 5.2rem); }
-  .cs .lede { font-size: clamp(18px, 1.6vw, 22px); font-weight: 300; line-height: 1.4; max-width: 34em; margin: 1.5rem 0 0; color: var(--ink); text-wrap: pretty; }
+  .lede { font-size: clamp(18px, 1.6vw, 22px); font-weight: 300; line-height: 1.4; max-width: 34em; margin: 1.25rem 0 0; color: var(--ink); text-wrap: pretty; }
   .facts { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); margin-top: clamp(28px,4vw,56px); border-top: 1px solid var(--hair); }
   @media (max-width: 760px) { .facts { grid-template-columns: repeat(2, minmax(0,1fr)); } }
   .facts > div { padding: clamp(14px,2vw,24px); border-right: 1px solid var(--hair); border-bottom: 1px solid var(--hair); }
@@ -53,64 +51,37 @@
   .cta { margin-top: clamp(40px, 6vw, 88px); display: flex; flex-wrap: wrap; gap: 0.6rem; }
   pre.code { margin: 0.5rem 0 1rem; padding: 14px 16px; border: 1px solid var(--hair); border-radius: 12px; font-family: var(--mono); font-size: 12.5px; line-height: 1.6; color: var(--ink-2); overflow-x: auto; max-width: 40em; }
   pre.code b { color: var(--ink); font-weight: 500; }
+  .legs { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); border: 1px solid var(--hair); border-radius: 14px; overflow: hidden; }
+  @media (max-width: 760px) { .legs { grid-template-columns: 1fr; } }
+  .legs > div { padding: clamp(16px,2.2vw,26px); border-right: 1px solid var(--hair); border-bottom: 1px solid var(--hair); }
+  .legs > div:nth-child(2n) { border-right: 0; }
+  @media (max-width: 760px) { .legs > div { border-right: 0; } }
+  .legs .t { font-weight: 300; font-size: clamp(1.4rem, 2.4vw, 2rem); letter-spacing: -0.03em; line-height: 1.05; margin: 0.4rem 0 0.6rem; }
+  .legs p { margin: 0; color: var(--ink-2); font-size: 15.5px; max-width: 34em; text-wrap: pretty; }
 </style>
 </head>
 <body>
 <header class="mast">
   <a class="brand" href="index.html"><span class="n">Collin Stilwell</span><span class="r">Security</span><span class="pill mono" id="commit">v2026.09</span></a>
-  <nav aria-label="Site"><a class="pill on" href="work.html">Work</a><a class="pill" href="physical.html">Physical</a><a class="pill" href="security.html">Security</a><a class="pill" href="writing.html">Writing</a><a class="pill" href="github.html">GitHub</a><a class="pill" href="about.html">About</a><a class="pill" href="resume.html">Résumé</a><button class="pill" id="theme" type="button" aria-label="Toggle theme" title="Toggle theme (t)">◐</button><button class="pill mono" id="palette-btn" type="button" aria-label="Command palette" title="Command palette (⌘K)">⌘K</button></nav>
+  <nav aria-label="Site"><a class="pill" href="work.html">Work</a><a class="pill on" href="physical.html">Physical</a><a class="pill" href="security.html">Security</a><a class="pill" href="writing.html">Writing</a><a class="pill" href="github.html">GitHub</a><a class="pill" href="about.html">About</a><a class="pill" href="resume.html">Résumé</a><button class="pill" id="theme" type="button" aria-label="Toggle theme" title="Toggle theme (t)">◐</button><button class="pill mono" id="palette-btn" type="button" aria-label="Command palette" title="Command palette (⌘K)">⌘K</button></nav>
 </header>
 <main class="page cs">
-  <div class="mhead rv"><canvas class="matrix" data-text="SecMCPHub" data-src="assets/secmcphub.svg" aria-label="SecMCPHub, decoded" role="img"></canvas><span class="hint">click to replay · glyph → text</span></div>
-  <p class="eyebrow rv">Case study · github.com/stilwellc/SecMCPHub</p>
-  <h1 class="display rv d1">A security business review<br>that writes itself.</h1>
-  <p class="lede rv d2">Security leaders spend the first week of every month rebuilding the same slides from three systems that don't talk to each other. SecMCPHub is a set of Claude Code skills that pull those systems over MCP and render one self-contained HTML report, in a single command.</p>
+<div class="lander-head">
+  <div class="mhead rv"><canvas class="matrix" data-text="Physical" data-src="assets/physical/1122-iso.jpg" aria-label="The building at No. 1122 in isometric, decoded into the word Physical" role="img"></canvas><span class="hint">click to replay · picture → text</span></div>
+  <p class="eyebrow rv d1">Physical · spaces, objects, fabrication</p>
+  <h1 class="display rv d1">Design that leaves the screen.</h1>
+  <p class="lede one rv d2">A residence rebuilt from the studs, and objects printed into the world.</p>
+</div>
 
-  <div class="facts rv d3">
-    <div><div class="n">1</div><div class="l">command · /security-report</div></div>
-    <div><div class="n">3</div><div class="l">source classes · vuln, GRC, incident</div></div>
-    <div><div class="n">1</div><div class="l">file · self-contained HTML</div></div>
-    <div><div class="n">0</div><div class="l">servers · runs in Claude Code</div></div>
+  <p class="sheet-h rv d3">Projects</p>
+  <div class="sheet rv d3">
+    <a class="row" href="1122.html"><span class="k">2024 –</span><span><span class="t">Project 1122<span class="arrow">→</span></span><span class="d">A residence taken back to the studs. Redesigned room by room, documented as found and as intended.</span></span><span class="v">residence · in progress</span></a>
+    <a class="row" href="prints.html"><span class="k">2025 –</span><span><span class="t">3D prints<span class="arrow">→</span></span><span class="d">Describe an object, get a print-ready model. The pipeline, and the lighting and furniture parts it has produced.</span></span><span class="v">text → CAD → PLA</span></a>
+    <a class="row" href="https://github.com/stilwellc/text2print" target="_blank" rel="noopener"><span class="k">skill</span><span><span class="t">text2print<span class="arrow">↗</span></span><span class="d">The Claude Code skill behind the prints: requirements, design brief, phased build, structural check, slicer verification.</span></span><span class="v">github</span></a>
   </div>
 
-  <section class="sec">
-    <div class="k">the shape</div>
-    <div>
-      <h2>Skills, a template, and two mapping tables.</h2>
-      <p>The bundle is deliberately small. Two skills: <b>/security-report</b> does the weekly refresh, <b>/rewrite-dashboard</b> rebuilds the renderer on the rare occasion the UI changes. One HTML template whose data and rendering live in separate script blocks, so a refresh only ever touches data. A rolling KPI history for sparklines and deltas, and two JSON maps that do the real work: CWE → risk category, and IR project → risk.</p>
-      <pre class="code">mbr-dashboard/
-├── skills/        security-report.md · rewrite-dashboard.md
-├── dashboard/     security-posture-report.html   <b>← renderer + empty data block</b>
-└── data/          security-metrics-history.json · cwe-risk-mapping.json · ir-risk-mapping.json</pre>
-    </div>
-  </section>
+  <div class="cta" style="margin-top:2.5rem"><a class="pill solid" href="1122.html">Project 1122</a><a class="pill ghost" href="prints.html">The prints</a></div>
 
-  <section class="sec">
-    <div class="k">the run</div>
-    <div>
-      <h2>Pull, compute, cross-reference, render.</h2>
-      <p>The skill pulls from each configured MCP source, vulnerability findings in parallel batches, GRC paginated, incidents by project. It computes what a reviewer actually asks for: trend deltas against the history buffer, mean time to remediate, SLA compliance, and a weighted composite risk grade.</p>
-      <p>Then the part that makes it a dashboard instead of three reports. Findings are mapped to risk categories through CWE, incidents supply evidence against the same risks, and the two are chained into <b>attack paths</b> with gap proofs, so a control weakness, the vulnerabilities that exploit it, and the incidents that already did all appear in one view.</p>
-    </div>
-  </section>
-
-  <section class="sec">
-    <div class="k">the design call</div>
-    <div>
-      <h2>Reference-implementation agnostic on purpose.</h2>
-      <p>Every organization runs a different vulnerability scanner, GRC platform, and ticketing system. The skills assume the three <b>categories</b> of source and nothing about the vendors: MCP tool names and field shapes are edited in one place. The report itself has no dependencies and no server, so it can be emailed, archived, or opened in five years.</p>
-      <ul>
-        <li><span>Language</span><span class="v">HTML · JSON · Markdown skills</span></li>
-        <li><span>Runtime</span><span class="v">Claude Code + MCP</span></li>
-        <li><span>Published</span><span class="v">June 2026 · MIT-style bundle</span></li>
-      </ul>
-    </div>
-  </section>
-
-  <div class="cta">
-    <a class="pill solid" href="https://github.com/stilwellc/SecMCPHub" target="_blank" rel="noopener">Open the repo</a>
-    <a class="pill ghost" href="work.html">Back to work</a>
-  </div>
 </main>
 <footer class="foot">
   <span>© 2026 Collin Stilwell · Hoboken, NJ</span>

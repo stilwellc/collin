@@ -238,7 +238,7 @@ document.addEventListener('click', function (e) {
   var pal = document.getElementById('pal'), inp = document.getElementById('pal-in'), list = document.getElementById('pal-list'), keys = document.getElementById('keys');
   if (!pal) return;
   var ITEMS = [
-    { t: 'Home', h: 'g h', u: 'index.html' }, { t: 'Work', h: 'g w', u: 'work.html' }, { t: 'Security', h: 'g s', u: 'security.html' }, { t: 'Writing', h: 'g n', u: 'writing.html' }, { t: 'Essay · 130 minutes to 52', h: 'lectr', u: 'nightly.html' }, { t: 'Essay · The gate that wedged the pipeline', h: 'postmortem', u: 'gate.html' }, { t: 'GitHub', h: 'g g', u: 'github.html' }, { t: 'About', h: 'g a', u: 'about.html' }, { t: 'Résumé', h: 'g r', u: 'resume.html' },
+    { t: 'Home', h: 'g h', u: 'index.html' }, { t: 'Work', h: 'g w', u: 'work.html' }, { t: 'Physical', h: 'g p', u: 'physical.html' }, { t: 'Project 1122', h: 'residence', u: '1122.html' }, { t: '3D prints', h: 'text → print', u: 'prints.html' }, { t: 'Security', h: 'g s', u: 'security.html' }, { t: 'Writing', h: 'g n', u: 'writing.html' }, { t: 'Essay · 130 minutes to 52', h: 'lectr', u: 'nightly.html' }, { t: 'Essay · The gate that wedged the pipeline', h: 'postmortem', u: 'gate.html' }, { t: 'GitHub', h: 'g g', u: 'github.html' }, { t: 'About', h: 'g a', u: 'about.html' }, { t: 'Résumé', h: 'g r', u: 'resume.html' },
     { t: 'lectr — case study', h: 'g l', u: 'lectr.html' }, { t: 'SecMCPHub — case study', h: '', u: 'secmcphub.html' }, { t: 'Soirée — case study', h: '', u: 'soiree.html' },
     { t: 'Open lectr.bid', h: '↗', u: 'https://lectr.bid', x: 1 }, { t: 'Open Starling', h: '↗', u: 'https://starling-6s1.pages.dev', x: 1 }, { t: 'text2print (GitHub)', h: '↗', u: 'https://github.com/stilwellc/text2print', x: 1 }, { t: 'Open soiree.today', h: '↗', u: 'https://soiree.today', x: 1 },
     { t: 'Email hello@collin.dev', h: '', u: 'mailto:hello@collin.dev' }, { t: 'GitHub', h: '↗', u: 'https://github.com/stilwellc', x: 1 }, { t: 'LinkedIn', h: '↗', u: 'https://www.linkedin.com/in/collin-stilwell/', x: 1 }, { t: 'Substack', h: '↗', u: 'https://collinsthoughts.substack.com', x: 1 },
@@ -278,7 +278,7 @@ document.addEventListener('click', function (e) {
     if (e.key === '?') { e.preventDefault(); openKeys(); return; }
     if (e.key === 't') { window.__toggleTheme && window.__toggleTheme(); return; }
     var now = Date.now();
-    if (pending === 'g' && now - pt < 900) { pending = null; var map = { h: 'index.html', w: 'work.html', s: 'security.html', n: 'writing.html', g: 'github.html', a: 'about.html', r: 'resume.html', l: 'lectr.html' }; if (map[e.key]) { e.preventDefault(); location.href = map[e.key]; return; } }
+    if (pending === 'g' && now - pt < 900) { pending = null; var map = { h: 'index.html', w: 'work.html', s: 'security.html', n: 'writing.html', g: 'github.html', a: 'about.html', r: 'resume.html', l: 'lectr.html', p: 'physical.html' }; if (map[e.key]) { e.preventDefault(); location.href = map[e.key]; return; } }
     if (e.key === 'g') { pending = 'g'; pt = now; return; }
     if (window.__fieldType && window.__fieldType(e)) e.preventDefault();
   });
@@ -360,7 +360,7 @@ document.addEventListener('click', function (e) {
     h.classList.remove('rv', 'd1'); h.classList.add('split');
   });
   // below-the-fold blocks reveal on scroll; anything already in view is left alone
-  var blocks = document.querySelectorAll('.sec, .facts, .frame, .legs, .trace, .ledger, .two, .repos, .act, .cta, .prose, #trace-rec');
+  var blocks = document.querySelectorAll('.sec, .facts, .frame, .legs, .trace, .ledger, .two, .repos, .act, .cta, .prose, #trace-rec, .sheet, .room, .plates, .pairs, figure.plate.wide');
   var vh = innerHeight, pending = [];
   [].forEach.call(blocks, function (b) { var r = b.getBoundingClientRect(); if (r.top > vh * 0.92) { (b.classList.contains('frame') ? b.querySelector('.cells') || b : b).classList.add('sr'); if (b.classList.contains('frame')) b.classList.add('sr'); pending.push(b); } });
   function show(b) { if (b.classList.contains('in')) return; b.classList.add('in'); var c = b.querySelector('.cells'); if (c) c.classList.add('in'); countUp(b); }

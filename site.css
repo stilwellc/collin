@@ -320,3 +320,25 @@ body a.row:hover .t { text-decoration: underline; text-underline-offset: 3px; }
 body .sheet .row .arrow { color: var(--ink-3); margin-left: 0.3em; }
 body .lede.one { max-width: 30em; }
 @media (max-width: 600px) { body .sheet .row { grid-template-columns: 1fr; gap: 0.25rem; } body .sheet .row .v { justify-self: start; } }
+
+/* ── physical: photographs as plates ── */
+body .chapter { max-width: var(--col); margin: 0 auto 1.5rem; text-align: left; color: var(--ink-2); font-size: 16.5px; line-height: 1.55; text-wrap: pretty; }
+body .rooms { max-width: var(--wide); margin: 0 auto; text-align: left; }
+body .room { margin: 0 auto 2.5rem; max-width: var(--wide); }
+body .room h3 { margin: 0 0 0.3rem; font-family: var(--display); font-weight: 400; font-size: 1.15rem; letter-spacing: -0.01em; }
+body .room p { margin: 0 0 1rem; color: var(--ink-2); font-size: 15px; line-height: 1.55; max-width: 44em; }
+body figure.plate { margin: 0; }
+body figure.plate img { display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border: 1px solid var(--hair); border-radius: 10px; background: color-mix(in srgb, var(--ink) 3%, transparent); }
+body figure.plate.wide { max-width: var(--wide); margin: 2rem auto 0; }
+body figure.plate.wide img { aspect-ratio: auto; }
+body figure.plate figcaption { margin-top: 0.5rem; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); text-align: left; }
+body .pairs { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.75rem; max-width: var(--wide); margin-left: auto; margin-right: auto; }
+body .pairs.plans img { aspect-ratio: auto; background: #fff; }
+body .plates { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; max-width: var(--wide); margin: 0 auto; text-align: left; }
+body figure.plate.print img { aspect-ratio: 16 / 10; }
+body figure.plate.print figcaption { text-transform: none; letter-spacing: 0; font-family: var(--sans); font-size: 15px; color: var(--ink-2); display: flex; flex-direction: column; gap: 0.35rem; margin-top: 0.75rem; }
+body figure.plate.print figcaption .k { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; color: var(--ink-3); }
+body figure.plate.print figcaption b { color: var(--ink); font-weight: 500; font-size: 16px; }
+body figure.plate.print figcaption .note { color: var(--ink-3); font-size: 14px; }
+body figure.plate.print figcaption .v { font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.04em; margin-top: 0.2rem; }
+@media (max-width: 760px) { body .plates, body .pairs { grid-template-columns: 1fr; } }
