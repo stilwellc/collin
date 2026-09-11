@@ -1,17 +1,17 @@
 <!doctype html>
 <html lang="en">
 <head>
-<title>Work — Collin Stilwell</title>
-<meta name="description" content="Selected work by Collin Stilwell: lectr, Starling, SecMCPHub, text2print, Soirée, Elixir security.">
-<meta property="og:title" content="Work — Collin Stilwell">
-<meta property="og:description" content="Selected work by Collin Stilwell: lectr, Starling, SecMCPHub, text2print, Soirée, Elixir security.">
+<title>130 minutes to 52 — Collin Stilwell</title>
+<meta name="description" content="How lectr's nightly rebuild went from over two hours to 52 minutes with provably identical output.">
+<meta property="og:title" content="130 minutes to 52">
+<meta property="og:description" content="How lectr's nightly rebuild went from over two hours to 52 minutes with provably identical output.">
 <meta charset="utf-8">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://stilwellc.github.io/collin/work.html">
-<meta property="og:image" content="https://stilwellc.github.io/collin/assets/og/work.png">
+<meta property="og:url" content="https://stilwellc.github.io/collin/nightly.html">
+<meta property="og:image" content="https://stilwellc.github.io/collin/assets/og/nightly.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://stilwellc.github.io/collin/assets/og/work.png">
-<link rel="canonical" href="https://stilwellc.github.io/collin/work.html">
+<meta name="twitter:image" content="https://stilwellc.github.io/collin/assets/og/nightly.png">
+<link rel="canonical" href="https://stilwellc.github.io/collin/nightly.html">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='16' fill='%23161616'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='13' fill='%23FCFBFA'%3ECS%3C/text%3E%3C/svg%3E">
@@ -63,54 +63,71 @@
 <body>
 <header class="mast">
   <a class="brand" href="index.html"><span class="n">Collin Stilwell</span><span class="r">Security</span><span class="pill mono" id="commit">v2026.09</span></a>
-  <nav aria-label="Site"><a class="pill on" href="work.html">Work</a><a class="pill" href="security.html">Security</a><a class="pill" href="writing.html">Writing</a><a class="pill" href="github.html">GitHub</a><a class="pill" href="about.html">About</a><a class="pill" href="resume.html">Résumé</a><button class="pill" id="theme" type="button" aria-label="Toggle theme" title="Toggle theme (t)">◐</button><button class="pill mono" id="palette-btn" type="button" aria-label="Command palette" title="Command palette (⌘K)">⌘K</button></nav>
+  <nav aria-label="Site"><a class="pill" href="work.html">Work</a><a class="pill" href="security.html">Security</a><a class="pill on" href="writing.html">Writing</a><a class="pill" href="github.html">GitHub</a><a class="pill" href="about.html">About</a><a class="pill" href="resume.html">Résumé</a><button class="pill" id="theme" type="button" aria-label="Toggle theme" title="Toggle theme (t)">◐</button><button class="pill mono" id="palette-btn" type="button" aria-label="Command palette" title="Command palette (⌘K)">⌘K</button></nav>
 </header>
-<main class="page">
+<main class="page cs">
 <div class="lander-head">
-  <div class="mhead rv"><canvas class="matrix" data-text="Work" data-src="assets/work.svg" aria-label="A hammer, decoded into the word Work" role="img"></canvas><span class="hint">click to replay · glyph → text</span></div>
-  <p class="eyebrow rv d1">Selected work · 6</p>
-  <h1 class="display rv d1">Things I built<br>because they should exist.</h1>
-  <p class="lede rv d2">Products that run on their own, tools that other engineers install, and a curriculum a company adopted. Every one of them is live.</p>
+  <div class="mhead rv"><canvas class="matrix" data-text="52 min" data-src="assets/lectr.svg" aria-label="A gavel, decoded into the words 52 min" role="img"></canvas><span class="hint">click to replay · glyph → text</span></div>
+  <p class="eyebrow rv d1">Essay · 2026-09-10 · lectr.bid</p>
+  <h1 class="display rv d1">130 minutes to 52,<br>without changing a number.</h1>
+  <p class="lede rv d2">lectr rebuilds its whole market every night: crawl sixteen houses, reassemble a 1.1M-lot corpus, rerun the value engine, ship. The run had crept past two hours. One evening of profiling and two rewrites brought it to 52 minutes, and the outputs are identical to what they were.</p>
+
+  <div class="facts rv d2">
+    <div><div class="n">52 min</div><div class="l">full nightly · was 110–130</div></div>
+    <div><div class="n">33 min</div><div class="l">assemble stage · was 71–95</div></div>
+    <div><div class="n">3s</div><div class="l">repeat-sale grouping · was 1,660s</div></div>
+    <div><div class="n">87s</div><div class="l">per-maker indices · was 1,700s</div></div>
+  </div>
+
+  <section class="sec">
+    <div class="k">where the time went</div>
+    <div>
+      <h2>Profile a healthy night before touching anything.</h2>
+      <p>The crawl is a matrix, one job per house, all in parallel, so its wall-clock is whichever house is slowest that night. Christie's took 77 minutes on a bad one and Huggins &amp; Scott 80. Nothing to rewrite there; that's the houses' pace, not mine.</p>
+      <p>Assemble is different. It's the only stage that sees the whole corpus, and it's serial: 71 to 95 minutes, and the profile said almost all of it was two things. A repeat-sale grouper that finds the same object sold more than once, and the per-maker hedonic price indices. Everything else combined was single-digit minutes.</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="k">repeat sales</div>
+    <div>
+      <h2>Only compare what can physically match.</h2>
+      <p>The grouper pairs lots that are the same object. It was deciding whether a lot was even eligible to match <b>inside</b> the pairwise loop, so the expensive check ran on every candidate pair instead of once per lot. Hoisting eligibility out, so only lots that can physically match are indexed before any pairing happens, took the stage from 1,660 seconds to 3.</p>
+      <p>It finds exactly the same pairs. That's the whole point of the next section.</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="k">indices</div>
+    <div>
+      <h2>Solve for the columns you actually read.</h2>
+      <p>Each maker gets its own hedonic regression. Two changes. The makers now run in a worker pool instead of one after another. And the covariance step was solving the full system when the printed band only ever reads about a quarter of the columns, so it now solves for those through a Cholesky factor: O(p²·q) instead of O(p³). Patek, the biggest maker, went from 572 seconds to 109. The stage went from 1,700 seconds to 87. A follow-up builds the normal-equations matrix straight from the accumulator instead of materializing the design matrix first.</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="k">the rule</div>
+    <div>
+      <h2>A speed change ships only if the output is provably identical.</h2>
+      <p>Both rewrites were run offline against the full corpus next to the old code, and the outputs were diffed before anything merged. Zero differences, for the repeat-sale pairs and for every printed index value. A faster engine that prints different numbers isn't an optimization, it's a new engine, and it would have to earn its own backtest record.</p>
+      <ul>
+        <li><span>Repeat-sale grouping, eligibility hoisted out of the pair loop</span><span class="v">1,660s → 3s</span></li>
+        <li><span>Per-maker indices, worker pool + quarter-column covariance</span><span class="v">1,700s → 87s</span></li>
+        <li><span>Assemble stage</span><span class="v">71–95 min → 33 min</span></li>
+        <li><span>Full nightly, weekday</span><span class="v">110–130 min → 52 min</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="k">what's left</div>
+    <div>
+      <h2>The crawl is now the long pole.</h2>
+      <p>Christie's alone is over an hour and would need sharding to move. The valuation pass over upcoming lots is about ten minutes and is next. And the timeouts moved: crawl from 90 to 120 minutes, assemble from 120 to 180, so a slow house degrades the run instead of killing it.</p>
+      <div class="cta" style="margin-top:1.5rem"><a class="pill solid" href="lectr.html">The lectr case study</a><a class="pill ghost" href="gate.html">The gate that wedged the pipeline →</a></div>
+    </div>
+  </section>
 </div>
-  <div style="height: clamp(28px, 4vw, 56px)"></div>
-  <div class="frame rv d2"><div class="cells">
-<a class="cell" href="lectr.html">
-  <div class="top"><span class="pill mono">web app · case study</span></div>
-  <h2>lectr<span class="arrow">↗</span></h2>
-  <p>Auction intelligence. A 1.1M-lot corpus across 16 houses, a value engine with a published backtest record, and a nightly pipeline that crawls, gates, and ships itself. Every price is traceable to a sale.</p>
-  <div class="foot">TypeScript · Next.js · Cloudflare R2 + Pages · GitHub Actions · Supabase</div>
-</a>
-<a class="cell" href="https://starling-6s1.pages.dev" target="_blank" rel="noopener">
-  <div class="top"><span class="pill mono">web app · powered by lectr</span></div>
-  <h2>Starling<span class="arrow">↗</span></h2>
-  <p>A deep-value eBay deal board. Surfaces Buy It Now listings priced well under what lectr's corpus says they're worth, risk-ranked and evidence-backed.</p>
-  <div class="foot">TypeScript · Cloudflare Pages + R2 · lectr value engine</div>
-</a>
-<a class="cell" href="secmcphub.html">
-  <div class="top"><span class="pill mono">open source · case study</span></div>
-  <h2>SecMCPHub<span class="arrow">↗</span></h2>
-  <p>A security MBR that writes itself. Claude Code skills pull vulnerability, GRC, and incident data over MCP and render one self-contained HTML report: deltas, MTTR, SLA compliance, a weighted risk grade, and attack paths chained across sources.</p>
-  <div class="foot">Claude Code · MCP · HTML · JSON</div>
-</a>
-<a class="cell" href="https://github.com/stilwellc/text2print" target="_blank" rel="noopener">
-  <div class="top"><span class="pill mono">open source · claude code skill</span></div>
-  <h2>text2print<span class="arrow">↗</span></h2>
-  <p>Describe a thing, get a print-ready STL. A Claude Code skill for parametric 3D printing with CadQuery: requirements → design brief → phased build → structural check → slicer verification.</p>
-  <div class="foot">Python · CadQuery · Claude Code</div>
-</a>
-<a class="cell" href="soiree.html">
-  <div class="top"><span class="pill mono">web app · case study</span></div>
-  <h2>Soirée<span class="arrow">↗</span></h2>
-  <p>What's actually happening tonight. 780 experiences across New York, Hoboken and Jersey City, and Philadelphia, 391 of them free, gathered from the sources that post them and sorted by real dates.</p>
-  <div class="foot">Node.js · Cloudflare · scrapers · cron</div>
-</a>
-<a class="cell" href="https://github.com/stilwellc/elixir-secure-coding" target="_blank" rel="noopener">
-  <div class="top"><span class="pill mono">open source · security</span></div>
-  <h2>Elixir security<span class="arrow">↗</span></h2>
-  <p>Semgrep rules for Ash Framework authorization, and the top contributor to Podium's open Elixir secure-coding curriculum.</p>
-  <div class="foot">Elixir · Semgrep · Ash</div>
-</a>
-  </div></div>
 </main>
 <footer class="foot">
   <span>© 2026 Collin Stilwell · New Jersey</span>

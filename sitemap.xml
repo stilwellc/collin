@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://collin-theta.vercel.app/</loc><lastmod>2026-09-11</lastmod></url>
-  <url><loc>https://collin-theta.vercel.app/work.html</loc><lastmod>2026-09-11</lastmod></url>
-  <url><loc>https://collin-theta.vercel.app/security.html</loc><lastmod>2026-09-11</lastmod></url>
-  <url><loc>https://collin-theta.vercel.app/writing.html</loc><lastmod>2026-09-11</lastmod></url>
-  <url><loc>https://collin-theta.vercel.app/github.html</loc><lastmod>2026-09-11</lastmod></url>
-  <url><loc>https://collin-theta.vercel.app/about.html</loc><lastmod>2026-09-11</lastmod></url>
-  <url><loc>https://collin-theta.vercel.app/resume.html</loc><lastmod>2026-09-11</lastmod></url>
-  <url><loc>https://collin-theta.vercel.app/lectr.html</loc><lastmod>2026-09-11</lastmod></url>
-  <url><loc>https://collin-theta.vercel.app/secmcphub.html</loc><lastmod>2026-09-11</lastmod></url>
-  <url><loc>https://collin-theta.vercel.app/soiree.html</loc><lastmod>2026-09-11</lastmod></url>
+  <url><loc>https://stilwellc.github.io/collin/</loc><lastmod>2026-09-11</lastmod></url>
+  <url><loc>https://stilwellc.github.io/collin/work.html</loc><lastmod>2026-09-11</lastmod></url>
+  <url><loc>https://stilwellc.github.io/collin/security.html</loc><lastmod>2026-09-11</lastmod></url>
+  <url><loc>https://stilwellc.github.io/collin/writing.html</loc><lastmod>2026-09-11</lastmod></url>
+  <url><loc>https://stilwellc.github.io/collin/github.html</loc><lastmod>2026-09-11</lastmod></url>
+  <url><loc>https://stilwellc.github.io/collin/about.html</loc><lastmod>2026-09-11</lastmod></url>
+  <url><loc>https://stilwellc.github.io/collin/resume.html</loc><lastmod>2026-09-11</lastmod></url>
+  <url><loc>https://stilwellc.github.io/collin/lectr.html</loc><lastmod>2026-09-11</lastmod></url>
+  <url><loc>https://stilwellc.github.io/collin/soiree.html</loc><lastmod>2026-09-11</lastmod></url>
+  <url><loc>https://stilwellc.github.io/collin/secmcphub.html</loc><lastmod>2026-09-11</lastmod></url>
+  <url><loc>https://stilwellc.github.io/collin/nightly.html</loc><lastmod>2026-09-11</lastmod></url>
+  <url><loc>https://stilwellc.github.io/collin/gate.html</loc><lastmod>2026-09-11</lastmod></url>
 </urlset>

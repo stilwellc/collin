@@ -1,17 +1,17 @@
 <!doctype html>
 <html lang="en">
 <head>
-<title>Work — Collin Stilwell</title>
-<meta name="description" content="Selected work by Collin Stilwell: lectr, Starling, SecMCPHub, text2print, Soirée, Elixir security.">
-<meta property="og:title" content="Work — Collin Stilwell">
-<meta property="og:description" content="Selected work by Collin Stilwell: lectr, Starling, SecMCPHub, text2print, Soirée, Elixir security.">
+<title>The gate that wedged the pipeline — Collin Stilwell</title>
+<meta name="description" content="A postmortem: a safety gate added to lectr's nightly blocked every publish for a week. What happened, and the delta gate that replaced it.">
+<meta property="og:title" content="The gate that wedged the pipeline">
+<meta property="og:description" content="A postmortem: a safety gate added to lectr's nightly blocked every publish for a week. What happened, and the delta gate that replaced it.">
 <meta charset="utf-8">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://stilwellc.github.io/collin/work.html">
-<meta property="og:image" content="https://stilwellc.github.io/collin/assets/og/work.png">
+<meta property="og:url" content="https://stilwellc.github.io/collin/gate.html">
+<meta property="og:image" content="https://stilwellc.github.io/collin/assets/og/gate.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://stilwellc.github.io/collin/assets/og/work.png">
-<link rel="canonical" href="https://stilwellc.github.io/collin/work.html">
+<meta name="twitter:image" content="https://stilwellc.github.io/collin/assets/og/gate.png">
+<link rel="canonical" href="https://stilwellc.github.io/collin/gate.html">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='16' fill='%23161616'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='13' fill='%23FCFBFA'%3ECS%3C/text%3E%3C/svg%3E">
@@ -63,54 +63,68 @@
 <body>
 <header class="mast">
   <a class="brand" href="index.html"><span class="n">Collin Stilwell</span><span class="r">Security</span><span class="pill mono" id="commit">v2026.09</span></a>
-  <nav aria-label="Site"><a class="pill on" href="work.html">Work</a><a class="pill" href="security.html">Security</a><a class="pill" href="writing.html">Writing</a><a class="pill" href="github.html">GitHub</a><a class="pill" href="about.html">About</a><a class="pill" href="resume.html">Résumé</a><button class="pill" id="theme" type="button" aria-label="Toggle theme" title="Toggle theme (t)">◐</button><button class="pill mono" id="palette-btn" type="button" aria-label="Command palette" title="Command palette (⌘K)">⌘K</button></nav>
+  <nav aria-label="Site"><a class="pill" href="work.html">Work</a><a class="pill" href="security.html">Security</a><a class="pill on" href="writing.html">Writing</a><a class="pill" href="github.html">GitHub</a><a class="pill" href="about.html">About</a><a class="pill" href="resume.html">Résumé</a><button class="pill" id="theme" type="button" aria-label="Toggle theme" title="Toggle theme (t)">◐</button><button class="pill mono" id="palette-btn" type="button" aria-label="Command palette" title="Command palette (⌘K)">⌘K</button></nav>
 </header>
-<main class="page">
+<main class="page cs">
 <div class="lander-head">
-  <div class="mhead rv"><canvas class="matrix" data-text="Work" data-src="assets/work.svg" aria-label="A hammer, decoded into the word Work" role="img"></canvas><span class="hint">click to replay · glyph → text</span></div>
-  <p class="eyebrow rv d1">Selected work · 6</p>
-  <h1 class="display rv d1">Things I built<br>because they should exist.</h1>
-  <p class="lede rv d2">Products that run on their own, tools that other engineers install, and a curriculum a company adopted. Every one of them is live.</p>
+  <div class="mhead rv"><canvas class="matrix" data-text="Wedged" data-src="assets/security.svg" aria-label="Space invaders, decoded into the word Wedged" role="img"></canvas><span class="hint">click to replay · glyph → text</span></div>
+  <p class="eyebrow rv d1">Postmortem · 2026-09-09 · lectr.bid</p>
+  <h1 class="display rv d1">The gate that<br>wedged the pipeline.</h1>
+  <p class="lede rv d2">On September 2 I added a safety gate to lectr's nightly so a broken crawler could never publish poisoned prices. For the next week it blocked every publish. Prices froze, 18,797 freshly crawled lots sat unshipped, and the report that reached me was "prices aren't updating and I don't think it's ingesting." Here's what happened and what I'd tell myself.</p>
+
+  <div class="facts rv d2">
+    <div><div class="n">7</div><div class="l">nightly publishes blocked</div></div>
+    <div><div class="n">18,797</div><div class="l">crawled lots stranded</div></div>
+    <div><div class="n">82</div><div class="l">price signatures in the standing book</div></div>
+    <div><div class="n">0</div><div class="l">of them were new</div></div>
+  </div>
+
+  <section class="sec">
+    <div class="k">the gate</div>
+    <div>
+      <h2>A crawler can stamp one price on thousands of lots.</h2>
+      <p>When a house's pages misbehave, a crawl can walk the wrong ids and stamp one price across a run of lots. The worst shape I'd seen was $10,050 on 3,622 NFL Auction lots. The sentinel exists to catch that: it looks for clusters of lots at one house that share an identical price, sets aside the honest ones (ties on a bid increment), and calls the rest poison.</p>
+      <p>The September 2 rule was simple. Two or more poison clusters and the publish aborts. Simple was the problem.</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="k">why it never opened</div>
+    <div>
+      <h2>The book already looked like that.</h2>
+      <p>The standing corpus carried 82 of those signatures. All old, all known, all from crawls that had long since been healed or accepted. An absolute count can't tell "the crawler broke tonight" from "the book has always had these," so the gate tripped every single night, on the same 82.</p>
+      <p>Then the second failure, which is the one anybody noticed. The intraday close-board reads the published corpus to find lots closing in the next 24 hours and reprices them. The published corpus was frozen on September 2, so it found nothing closing, so nothing moved. Two symptoms, one cause, and from the outside it looked exactly like ingestion had stopped.</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="k">the fix</div>
+    <div>
+      <h2>Gate on the delta, not the count.</h2>
+      <p>Tonight's signature set is diffed against the one from the last <b>published</b> corpus. Only new poison clusters count, and it still takes two of them to abort. One absolute backstop survives any baseline: a single price stamped across thousands of lots is catastrophic whether or not it was there yesterday.</p>
+      <p>The decision is a pure function now, with a test whose fixture is the real 82-signature set from the September 9 production run. The first case is literally "would last night have published under the new rule." The same night I added a dispatch input that turns the gate into a warning, so the next wedge can be opened by hand in one minute instead of a week. The engine's other gate, a holdout monotonicity check, got the same treatment: a dip is a warning that the signal degraded, not a reason to hold the site.</p>
+      <ul>
+        <li><span>Sep 2 · absolute gate added, ≥2 poison clusters abort</span><span class="v">fdd9791</span></li>
+        <li><span>Sep 3–8 · every nightly blocked on the standing 82</span><span class="v">site frozen at Sep 2</span></li>
+        <li><span>Sep 9 · delta gate, catastrophic backstop, pure decision + test</span><span class="v">1d3f9e0</span></li>
+        <li><span>Sep 9 · sentinel_warn_only valve; holdout dips become warnings</span><span class="v">20e8adc · 5943356</span></li>
+        <li><span>Sep 10 · full run, published</span><span class="v">52 min</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="k">what I'd tell past me</div>
+    <div>
+      <h2>A gate that isn't relative to the last good state is a countdown.</h2>
+      <p><b>Diff against the last good publish.</b> Any check that scores the world in absolute terms will eventually be failed by a world that is fine.</p>
+      <p><b>Not publishing is a failure, so make it loud.</b> The site kept serving. It just served yesterday, then the day before, and nothing on it said so. A crash would have been found in a day.</p>
+      <p><b>Every gate ships with its valve.</b> If you can't override it from the dispatch form, you don't own it, it owns you.</p>
+      <p><b>Test gates against production data.</b> Synthetic fixtures pass; the real 82 didn't. The test now carries the real ones.</p>
+      <div class="cta" style="margin-top:1.5rem"><a class="pill solid" href="nightly.html">What I did with the week back →</a><a class="pill ghost" href="lectr.html">The lectr case study</a></div>
+    </div>
+  </section>
 </div>
-  <div style="height: clamp(28px, 4vw, 56px)"></div>
-  <div class="frame rv d2"><div class="cells">
-<a class="cell" href="lectr.html">
-  <div class="top"><span class="pill mono">web app · case study</span></div>
-  <h2>lectr<span class="arrow">↗</span></h2>
-  <p>Auction intelligence. A 1.1M-lot corpus across 16 houses, a value engine with a published backtest record, and a nightly pipeline that crawls, gates, and ships itself. Every price is traceable to a sale.</p>
-  <div class="foot">TypeScript · Next.js · Cloudflare R2 + Pages · GitHub Actions · Supabase</div>
-</a>
-<a class="cell" href="https://starling-6s1.pages.dev" target="_blank" rel="noopener">
-  <div class="top"><span class="pill mono">web app · powered by lectr</span></div>
-  <h2>Starling<span class="arrow">↗</span></h2>
-  <p>A deep-value eBay deal board. Surfaces Buy It Now listings priced well under what lectr's corpus says they're worth, risk-ranked and evidence-backed.</p>
-  <div class="foot">TypeScript · Cloudflare Pages + R2 · lectr value engine</div>
-</a>
-<a class="cell" href="secmcphub.html">
-  <div class="top"><span class="pill mono">open source · case study</span></div>
-  <h2>SecMCPHub<span class="arrow">↗</span></h2>
-  <p>A security MBR that writes itself. Claude Code skills pull vulnerability, GRC, and incident data over MCP and render one self-contained HTML report: deltas, MTTR, SLA compliance, a weighted risk grade, and attack paths chained across sources.</p>
-  <div class="foot">Claude Code · MCP · HTML · JSON</div>
-</a>
-<a class="cell" href="https://github.com/stilwellc/text2print" target="_blank" rel="noopener">
-  <div class="top"><span class="pill mono">open source · claude code skill</span></div>
-  <h2>text2print<span class="arrow">↗</span></h2>
-  <p>Describe a thing, get a print-ready STL. A Claude Code skill for parametric 3D printing with CadQuery: requirements → design brief → phased build → structural check → slicer verification.</p>
-  <div class="foot">Python · CadQuery · Claude Code</div>
-</a>
-<a class="cell" href="soiree.html">
-  <div class="top"><span class="pill mono">web app · case study</span></div>
-  <h2>Soirée<span class="arrow">↗</span></h2>
-  <p>What's actually happening tonight. 780 experiences across New York, Hoboken and Jersey City, and Philadelphia, 391 of them free, gathered from the sources that post them and sorted by real dates.</p>
-  <div class="foot">Node.js · Cloudflare · scrapers · cron</div>
-</a>
-<a class="cell" href="https://github.com/stilwellc/elixir-secure-coding" target="_blank" rel="noopener">
-  <div class="top"><span class="pill mono">open source · security</span></div>
-  <h2>Elixir security<span class="arrow">↗</span></h2>
-  <p>Semgrep rules for Ash Framework authorization, and the top contributor to Podium's open Elixir secure-coding curriculum.</p>
-  <div class="foot">Elixir · Semgrep · Ash</div>
-</a>
-  </div></div>
 </main>
 <footer class="foot">
   <span>© 2026 Collin Stilwell · New Jersey</span>

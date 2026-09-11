@@ -21,6 +21,7 @@ function matrix(c, opts) {
   var dpr = Math.min(2, window.devicePixelRatio || 1);
   var W, H, cols, rows, cell, mask, chars, heat, lum, t0, mx = -1e4, my = -1e4, img = null, word = opts.text, raf = 0;
   var PIC = 2.6, DISSOLVE = 0.7, RESOLVE = 1.8;                 // seconds per phase
+  var PREV = 1.0, PREV_DIS = 0.5, prevImg = null, lumPrev = null;  // the glyph of the page you came from, if any
   var DRIFT_X = 0, DRIFT_Y = 0;                                  // picture drift amplitude, in cells
   function ink() { return getComputedStyle(document.body).color; }
   function build() {
@@ -39,8 +40,13 @@ function matrix(c, opts) {
     var px = mc.getImageData(0, 0, cols, rows).data;
     mask = new Uint8Array(cols * rows); chars = new Array(cols * rows); heat = new Float32Array(cols * rows); lum = null;
     for (var i = 0; i < cols * rows; i++) { mask[i] = px[i * 4 + 3] > 96 ? 1 : 0; chars[i] = HEX[(Math.random() * 16) | 0]; }
-    if (img) {
-      // cover-fit the picture into the grid, then per-cell luminance
+    lumPrev = prevImg ? halftone(prevImg) : null;
+    lum = img ? halftone(img) : null;
+    t0 = performance.now();
+  }
+  function halftone(img) {
+    var lum;
+    {
       var p = document.createElement('canvas'); p.width = cols; p.height = rows;
       var pc = p.getContext('2d');
       // contain-fit, centered like the text that replaces it, with room to drift
@@ -62,7 +68,7 @@ function matrix(c, opts) {
       var lo = sorted[Math.floor(sorted.length * 0.05)], hi = sorted[Math.floor(sorted.length * 0.95)], span = Math.max(0.05, hi - lo);
       for (var k = 0; k < cols * rows; k++) { if (!inside(k)) { lum[k] = 0; continue; } var v = flip ? 1 - raw[k] : raw[k]; v = (v - (flip ? 1 - hi : lo)) / span; v = Math.min(1, Math.max(0, v)); lum[k] = Math.pow(v, 1.7); }
     }
-    t0 = performance.now();
+    return lum;
   }
   function frame(now) {
     var el = (now - t0) / 1000;
@@ -70,10 +76,13 @@ function matrix(c, opts) {
     var col = ink();
     ctx.font = '400 ' + (cell * 0.78) + 'px "Geist Mono", Menlo, monospace';
     ctx.textBaseline = 'middle'; ctx.textAlign = 'center';
+    var hasPrev = !!lumPrev && !reduce, tPrev = hasPrev ? PREV + PREV_DIS : 0;
     var hasPic = !!lum && !reduce;
     var tPic = hasPic ? PIC : 0, tDis = hasPic ? DISSOLVE : 0;
-    var wave = reduce ? 1e9 : (el - tPic - tDis - 0.2) / RESOLVE;   // 0..1 across columns
-    var picMix = hasPic ? (el < tPic ? 1 : Math.max(0, 1 - (el - tPic) / tDis)) : 0;   // 1 = picture, 0 = gone
+    var wave = reduce ? 1e9 : (el - tPrev - tPic - tDis - 0.2) / RESOLVE;   // 0..1 across columns
+    var picMix, src;
+    if (hasPrev && el < tPrev) { src = lumPrev; picMix = el < PREV ? 1 : Math.max(0, 1 - (el - PREV) / PREV_DIS); }
+    else { src = lum; var e2 = el - tPrev; picMix = hasPic ? (e2 < tPic ? 1 : Math.max(0, 1 - (e2 - tPic) / tDis)) : 0; }   // 1 = picture, 0 = gone
     var R = cell * 4.2, R2 = R * R, flicker = ((now / 60) | 0) % 2 === 0;
     // the picture wanders on the grid, whole cells at a time, like a sprite
     var sx = Math.round(DRIFT_X * Math.sin(el * 1.9)), sy = Math.round(DRIFT_Y * Math.sin(el * 3.1 + 1.2));
@@ -81,7 +90,7 @@ function matrix(c, opts) {
       var i = y * cols + x, cx = x * cell + cell / 2, cy = y * cell + cell / 2;
       ctx.fillStyle = col;
       if (picMix > 0) {
-        var px = x - sx, py = y - sy, L = (px >= 0 && px < cols && py >= 0 && py < rows) ? lum[py * cols + px] : 0;
+        var px = x - sx, py = y - sy, L = (px >= 0 && px < cols && py >= 0 && py < rows) ? src[py * cols + px] : 0;
         var q = cell * 0.86 * L * picMix;
         if (q > 0.6) { ctx.globalAlpha = 0.9; ctx.fillRect(cx - q / 2, cy - q / 2, q, q); }
         if (picMix < 1 && flicker && Math.random() < 0.3 * (1 - picMix)) { ctx.globalAlpha = 0.3; ctx.fillText(HEX[(Math.random() * 16) | 0], cx, cy); }
@@ -107,15 +116,28 @@ function matrix(c, opts) {
   c.addEventListener('click', function () { play(); });
   var rt; addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(play, 120); });
   function start() {
-    if (opts.src) { img = new Image(); img.onload = play; img.onerror = function () { img = null; play(); }; img.src = opts.src; }
-    else play();
+    var pending = 0;
+    function done() { if (--pending <= 0) play(); }
+    if (opts.prev) { pending++; prevImg = new Image(); prevImg.onload = done; prevImg.onerror = function () { prevImg = null; done(); }; prevImg.src = opts.prev; }
+    if (opts.src) { pending++; img = new Image(); img.onload = done; img.onerror = function () { img = null; done(); }; img.src = opts.src; }
+    if (!pending) play();
   }
   if (document.fonts && document.fonts.load) Promise.all([document.fonts.load('300 40px Geist'), document.fonts.load('400 12px "Geist Mono"')]).then(start, start); else start();
   return { setWord: setWord, replay: play, get word() { return word; } };
 }
 
+// the glyph travels with you: the page you leave hands its glyph to the page you enter,
+// which shows it first and dissolves it into its own. (sessionStorage, one hop)
+var PREV_GLYPH = null;
+try { PREV_GLYPH = sessionStorage.getItem('mx:prev'); sessionStorage.removeItem('mx:prev'); } catch (e) {}
+var OWN_GLYPH = (document.querySelector('canvas.matrix') || {}).dataset ? document.querySelector('canvas.matrix').dataset.src : null;
+document.addEventListener('click', function (e) {
+  var a = e.target.closest && e.target.closest('a[href]'); if (!a || a.target === '_blank' || a.origin !== location.origin) return;
+  try { if (OWN_GLYPH) sessionStorage.setItem('mx:prev', OWN_GLYPH); } catch (err) {}
+});
+
 // headers on landers + case studies
-[].forEach.call(document.querySelectorAll('canvas.matrix'), function (c) { matrix(c, { text: c.dataset.text || '', src: c.dataset.src || null }); });
+[].forEach.call(document.querySelectorAll('canvas.matrix'), function (c) { var src = c.dataset.src || null; matrix(c, { text: c.dataset.text || '', src: src, prev: PREV_GLYPH && PREV_GLYPH !== src ? PREV_GLYPH : null }); });
 
 // the home field: same engine, plus the word cycle and type-to-rewrite
 (function () {
@@ -124,7 +146,7 @@ function matrix(c, opts) {
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var WORDS = ['Collin', 'Stilwell', 'Security'], wi = 0, typed = '', cycle = null;
   var hint = document.getElementById('field-hint');
-  var m = matrix(c, { text: WORDS[0] });
+  var m = matrix(c, { text: WORDS[0], prev: PREV_GLYPH });
   function startCycle() { if (reduce || cycle) return; cycle = setInterval(function () { wi = (wi + 1) % WORDS.length; m.setWord(WORDS[wi]); }, 7000); }
   function stopCycle() { if (cycle) { clearInterval(cycle); cycle = null; } }
   startCycle();
@@ -159,7 +181,7 @@ function matrix(c, opts) {
   var pal = document.getElementById('pal'), inp = document.getElementById('pal-in'), list = document.getElementById('pal-list'), keys = document.getElementById('keys');
   if (!pal) return;
   var ITEMS = [
-    { t: 'Home', h: 'g h', u: 'index.html' }, { t: 'Work', h: 'g w', u: 'work.html' }, { t: 'Security', h: 'g s', u: 'security.html' }, { t: 'Writing', h: 'g n', u: 'writing.html' }, { t: 'GitHub', h: 'g g', u: 'github.html' }, { t: 'About', h: 'g a', u: 'about.html' }, { t: 'Résumé', h: 'g r', u: 'resume.html' },
+    { t: 'Home', h: 'g h', u: 'index.html' }, { t: 'Work', h: 'g w', u: 'work.html' }, { t: 'Security', h: 'g s', u: 'security.html' }, { t: 'Writing', h: 'g n', u: 'writing.html' }, { t: 'Essay · 130 minutes to 52', h: 'lectr', u: 'nightly.html' }, { t: 'Essay · The gate that wedged the pipeline', h: 'postmortem', u: 'gate.html' }, { t: 'GitHub', h: 'g g', u: 'github.html' }, { t: 'About', h: 'g a', u: 'about.html' }, { t: 'Résumé', h: 'g r', u: 'resume.html' },
     { t: 'lectr — case study', h: 'g l', u: 'lectr.html' }, { t: 'SecMCPHub — case study', h: '', u: 'secmcphub.html' }, { t: 'Soirée — case study', h: '', u: 'soiree.html' },
     { t: 'Open lectr.bid', h: '↗', u: 'https://lectr.bid', x: 1 }, { t: 'Open Starling', h: '↗', u: 'https://starling-6s1.pages.dev', x: 1 }, { t: 'text2print (GitHub)', h: '↗', u: 'https://github.com/stilwellc/text2print', x: 1 }, { t: 'Open soiree.today', h: '↗', u: 'https://soiree.today', x: 1 },
     { t: 'Email hello@collin.dev', h: '', u: 'mailto:hello@collin.dev' }, { t: 'GitHub', h: '↗', u: 'https://github.com/stilwellc', x: 1 }, { t: 'LinkedIn', h: '↗', u: 'https://www.linkedin.com/in/collin-stilwell/', x: 1 }, { t: 'Substack', h: '↗', u: 'https://collinsthoughts.substack.com', x: 1 },

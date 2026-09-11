@@ -6,6 +6,12 @@
 <meta property="og:title" content="Writing — Collin Stilwell">
 <meta property="og:description" content="Writing by Collin Stilwell: Building an Application Security Program That Actually Works.">
 <meta charset="utf-8">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stilwellc.github.io/collin/writing.html">
+<meta property="og:image" content="https://stilwellc.github.io/collin/assets/og/writing.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://stilwellc.github.io/collin/assets/og/writing.png">
+<link rel="canonical" href="https://stilwellc.github.io/collin/writing.html">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='16' fill='%23161616'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='13' fill='%23FCFBFA'%3ECS%3C/text%3E%3C/svg%3E">
@@ -64,8 +70,34 @@
   <div class="mhead rv"><canvas class="matrix" data-text="Writing" data-src="assets/writing.svg" aria-label="A keyboard, decoded into the word Writing" role="img"></canvas><span class="hint">click to replay · glyph → text</span></div>
   <p class="eyebrow rv d1">Writing · collinsthoughts.substack.com</p>
   <h1 class="display rv d1">Notes from<br>running the program.</h1>
-  <p class="lede rv d2">One long piece so far, written for the security leads who are still triaging scanners by hand. More as they're earned.</p>
+  <p class="lede rv d2">One long piece on running an AppSec program, and two short ones from lectr's engine room: a speed rewrite with provably identical output, and the postmortem of a gate I got wrong.</p>
 </div>
+
+  <section class="sec">
+    <div class="k">2026-09-10</div>
+    <div>
+      <h2><a href="nightly.html">130 minutes to 52, without changing a number</a></h2>
+      <p>lectr's nightly had crept past two hours. A profile said the assemble stage was almost entirely two things. Two rewrites, run offline against the full corpus and diffed before merging, brought the run to 52 minutes with byte-identical output.</p>
+      <ul>
+        <li><span>Repeat-sale grouping</span><span class="v">1,660s → 3s</span></li>
+        <li><span>Per-maker indices</span><span class="v">1,700s → 87s</span></li>
+        <li><span>Full nightly</span><span class="v">110–130 min → 52 min</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="k">2026-09-09</div>
+    <div>
+      <h2><a href="gate.html">The gate that wedged the pipeline</a></h2>
+      <p>A safety gate I added to lectr's nightly blocked every publish for a week. Prices froze, 18,797 crawled lots sat unshipped, and it looked from the outside like ingestion had stopped. The postmortem, and the delta gate that replaced it.</p>
+      <ul>
+        <li><span>Nightly publishes blocked</span><span class="v">7</span></li>
+        <li><span>Signatures that tripped it, all old</span><span class="v">82</span></li>
+        <li><span>The rule now</span><span class="v">diff against the last publish</span></li>
+      </ul>
+    </div>
+  </section>
 
   <section class="sec">
     <div class="k">2026-05-19</div>
