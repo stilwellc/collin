@@ -218,7 +218,7 @@ document.addEventListener('click', function (e) {
 // ── live: the page's own last commit, and lectr's live corpus ──────────────
 (function () {
   var el = document.getElementById('commit');
-  if (el) fetch('https://api.github.com/repos/stilwellc/collin/commits/main', { headers: { Accept: 'application/vnd.github+json' } })
+  if (el) fetch('https://api.github.com/repos/stilwellc/me/commits/main', { headers: { Accept: 'application/vnd.github+json' } })
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (j) { if (!j || !j.sha) return; var ago = Math.round((Date.now() - new Date(j.commit.committer.date)) / 36e5);
       el.textContent = 'main @ ' + j.sha.slice(0, 7) + ' · ' + (ago < 1 ? 'just now' : ago < 48 ? ago + 'h ago' : Math.round(ago / 24) + 'd ago'); }).catch(function () {});
