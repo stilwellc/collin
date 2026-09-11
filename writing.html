@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="en">
 <head>
-<title>Work — Collin Stilwell</title>
-<meta name="description" content="Selected work by Collin Stilwell: lectr, Starling, SecMCPHub, text2print, Soirée, Elixir security.">
-<meta property="og:title" content="Work — Collin Stilwell">
-<meta property="og:description" content="Selected work by Collin Stilwell: lectr, Starling, SecMCPHub, text2print, Soirée, Elixir security.">
+<title>Writing — Collin Stilwell</title>
+<meta name="description" content="Writing by Collin Stilwell: Building an Application Security Program That Actually Works.">
+<meta property="og:title" content="Writing — Collin Stilwell">
+<meta property="og:description" content="Writing by Collin Stilwell: Building an Application Security Program That Actually Works.">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
@@ -57,54 +57,33 @@
 <body>
 <header class="mast">
   <a class="brand" href="index.html"><span class="n">Collin Stilwell</span><span class="r">Security</span><span class="pill mono" id="commit">v2026.09</span></a>
-  <nav aria-label="Site"><a class="pill on" href="work.html">Work</a><a class="pill" href="security.html">Security</a><a class="pill" href="writing.html">Writing</a><a class="pill" href="github.html">GitHub</a><a class="pill" href="about.html">About</a><a class="pill" href="resume.html">Résumé</a><button class="pill" id="theme" type="button" aria-label="Toggle theme" title="Toggle theme (t)">◐</button><button class="pill mono" id="palette-btn" type="button" aria-label="Command palette" title="Command palette (⌘K)">⌘K</button></nav>
+  <nav aria-label="Site"><a class="pill" href="work.html">Work</a><a class="pill" href="security.html">Security</a><a class="pill on" href="writing.html">Writing</a><a class="pill" href="github.html">GitHub</a><a class="pill" href="about.html">About</a><a class="pill" href="resume.html">Résumé</a><button class="pill" id="theme" type="button" aria-label="Toggle theme" title="Toggle theme (t)">◐</button><button class="pill mono" id="palette-btn" type="button" aria-label="Command palette" title="Command palette (⌘K)">⌘K</button></nav>
 </header>
-<main class="page">
+<main class="page cs">
 <div class="lander-head">
-  <div class="mhead rv"><canvas class="matrix" data-text="Work" data-src="assets/lectr.png" aria-label="lectr, decoded into the word Work" role="img"></canvas><span class="hint">click to replay · picture → text</span></div>
-  <p class="eyebrow rv d1">Selected work · 6</p>
-  <h1 class="display rv d1">Things I built<br>because they should exist.</h1>
-  <p class="lede rv d2">Products that run on their own, tools that other engineers install, and a curriculum a company adopted. Every one of them is live.</p>
+  <div class="mhead rv"><canvas class="matrix" data-text="Writing" data-src="assets/post.jpg" aria-label="The essay's cover image, decoded into the word Writing" role="img"></canvas><span class="hint">click to replay · picture → text</span></div>
+  <p class="eyebrow rv d1">Writing · collinsthoughts.substack.com</p>
+  <h1 class="display rv d1">Notes from<br>running the program.</h1>
+  <p class="lede rv d2">One long piece so far, written for the security leads who are still triaging scanners by hand. More as they're earned.</p>
 </div>
-  <div style="height: clamp(28px, 4vw, 56px)"></div>
-  <div class="frame rv d2"><div class="cells">
-<a class="cell" href="lectr.html">
-  <div class="top"><span class="pill mono">web app · case study</span></div>
-  <h2>lectr<span class="arrow">↗</span></h2>
-  <p>Auction intelligence. A 1.1M-lot corpus across 16 houses, a value engine with a published backtest record, and a nightly pipeline that crawls, gates, and ships itself. Every price is traceable to a sale.</p>
-  <div class="foot">TypeScript · Next.js · Cloudflare R2 + Pages · GitHub Actions · Supabase</div>
-</a>
-<a class="cell" href="https://starling-6s1.pages.dev" target="_blank" rel="noopener">
-  <div class="top"><span class="pill mono">web app · powered by lectr</span></div>
-  <h2>Starling<span class="arrow">↗</span></h2>
-  <p>A deep-value eBay deal board. Surfaces Buy It Now listings priced well under what lectr's corpus says they're worth, risk-ranked and evidence-backed.</p>
-  <div class="foot">TypeScript · Cloudflare Pages + R2 · lectr value engine</div>
-</a>
-<a class="cell" href="secmcphub.html">
-  <div class="top"><span class="pill mono">open source · case study</span></div>
-  <h2>SecMCPHub<span class="arrow">↗</span></h2>
-  <p>A security MBR that writes itself. Claude Code skills pull vulnerability, GRC, and incident data over MCP and render one self-contained HTML report: deltas, MTTR, SLA compliance, a weighted risk grade, and attack paths chained across sources.</p>
-  <div class="foot">Claude Code · MCP · HTML · JSON</div>
-</a>
-<a class="cell" href="https://github.com/stilwellc/text2print" target="_blank" rel="noopener">
-  <div class="top"><span class="pill mono">open source · claude code skill</span></div>
-  <h2>text2print<span class="arrow">↗</span></h2>
-  <p>Describe a thing, get a print-ready STL. A Claude Code skill for parametric 3D printing with CadQuery: requirements → design brief → phased build → structural check → slicer verification.</p>
-  <div class="foot">Python · CadQuery · Claude Code</div>
-</a>
-<a class="cell" href="soiree.html">
-  <div class="top"><span class="pill mono">web app · case study</span></div>
-  <h2>Soirée<span class="arrow">↗</span></h2>
-  <p>What's actually happening tonight. 780 experiences across New York, Hoboken and Jersey City, and Philadelphia, 391 of them free, gathered from the sources that post them and sorted by real dates.</p>
-  <div class="foot">Node.js · Cloudflare · scrapers · cron</div>
-</a>
-<a class="cell" href="https://github.com/stilwellc/elixir-secure-coding" target="_blank" rel="noopener">
-  <div class="top"><span class="pill mono">open source · security</span></div>
-  <h2>Elixir security<span class="arrow">↗</span></h2>
-  <p>Semgrep rules for Ash Framework authorization, and the top contributor to Podium's open Elixir secure-coding curriculum.</p>
-  <div class="foot">Elixir · Semgrep · Ash</div>
-</a>
-  </div></div>
+
+  <section class="sec">
+    <div class="k">2026-05-19</div>
+    <div>
+      <h2><a href="https://collinsthoughts.substack.com/p/building-an-application-security" target="_blank" rel="noopener">Building an Application Security Program That Actually Works ↗</a></h2>
+      <p>If an application security program were a chair, its strength would depend on four legs. Remove one and it wobbles; remove two and it collapses. The piece lays out the four, the order to build them in, the AI tooling that makes the program runnable by a small team, and the seven failures that sink programs.</p>
+      <ul>
+        <li><span>Leg 1 · Security by default</span><span class="v">guardrails, not gates</span></li>
+        <li><span>Leg 2 · Reactionary security</span><span class="v">the human pass</span></li>
+        <li><span>Leg 3 · Security by design</span><span class="v">paved roads</span></li>
+        <li><span>Leg 4 · Continuous feedback &amp; metrics</span><span class="v">every override feeds the loop</span></li>
+        <li><span>Build order</span><span class="v">which leg first, and why</span></li>
+        <li><span>Anti-patterns</span><span class="v">seven failures that sink AppSec programs</span></li>
+        <li><span>What this guide doesn't solve</span><span class="v">honest scope</span></li>
+      </ul>
+      <div class="cta" style="margin-top:1.5rem"><a class="pill solid" href="https://collinsthoughts.substack.com/p/building-an-application-security" target="_blank" rel="noopener">Read on Substack</a><a class="pill ghost" href="https://collinsthoughts.substack.com" target="_blank" rel="noopener">Subscribe</a></div>
+    </div>
+  </section>
 </main>
 <footer class="foot">
   <span>© 2026 Collin Stilwell · New Jersey</span>

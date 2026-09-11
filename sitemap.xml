@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://collin-theta.vercel.app/</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://collin-theta.vercel.app/work.html</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://collin-theta.vercel.app/about.html</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://collin-theta.vercel.app/resume.html</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://collin-theta.vercel.app/lectr.html</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://collin-theta.vercel.app/secmcphub.html</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://collin-theta.vercel.app/soiree.html</loc><lastmod>2026-09-10</lastmod></url>
+  <url><loc>https://collin-theta.vercel.app/</loc><lastmod>2026-09-11</lastmod></url>
+  <url><loc>https://collin-theta.vercel.app/work.html</loc><lastmod>2026-09-11</lastmod></url>
+  <url><loc>https://collin-theta.vercel.app/security.html</loc><lastmod>2026-09-11</lastmod></url>
+  <url><loc>https://collin-theta.vercel.app/writing.html</loc><lastmod>2026-09-11</lastmod></url>
+  <url><loc>https://collin-theta.vercel.app/github.html</loc><lastmod>2026-09-11</lastmod></url>
+  <url><loc>https://collin-theta.vercel.app/about.html</loc><lastmod>2026-09-11</lastmod></url>
+  <url><loc>https://collin-theta.vercel.app/resume.html</loc><lastmod>2026-09-11</lastmod></url>
+  <url><loc>https://collin-theta.vercel.app/lectr.html</loc><lastmod>2026-09-11</lastmod></url>
+  <url><loc>https://collin-theta.vercel.app/secmcphub.html</loc><lastmod>2026-09-11</lastmod></url>
+  <url><loc>https://collin-theta.vercel.app/soiree.html</loc><lastmod>2026-09-11</lastmod></url>
 </urlset>

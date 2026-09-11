@@ -33,7 +33,7 @@
 <body>
 <header class="mast">
   <a class="brand" href="index.html"><span class="n">Collin Stilwell</span><span class="r">Security</span><span class="pill mono" id="commit">v2026.09</span></a>
-  <nav aria-label="Site"><a class="pill" href="work.html">Work</a><a class="pill" href="about.html">About</a><a class="pill" href="resume.html">Résumé</a><a class="pill" href="mailto:hello@collin.dev">Email</a><button class="pill" id="theme" type="button" aria-label="Toggle theme" title="Toggle theme">◐</button><button class="pill mono" id="palette-btn" type="button" aria-label="Command palette" title="Command palette (⌘K)">⌘K</button></nav>
+  <nav aria-label="Site"><a class="pill" href="work.html">Work</a><a class="pill" href="security.html">Security</a><a class="pill" href="writing.html">Writing</a><a class="pill" href="github.html">GitHub</a><a class="pill" href="about.html">About</a><a class="pill" href="resume.html">Résumé</a><button class="pill" id="theme" type="button" aria-label="Toggle theme" title="Toggle theme (t)">◐</button><button class="pill mono" id="palette-btn" type="button" aria-label="Command palette" title="Command palette (⌘K)">⌘K</button></nav>
 </header>
 <div class="home">
 <div class="field rv d1"><canvas id="field" aria-label="Collin, decoded" role="img"></canvas><span class="hint" id="field-hint">hover to encrypt · type to rewrite</span></div>
@@ -56,7 +56,7 @@
 </div>
 <div class="pal" id="pal" hidden role="dialog" aria-modal="true" aria-label="Command palette">
   <div class="pal-box">
-    <input id="pal-in" placeholder="Go to… work, about, résumé, lectr, soirée, email, github" autocomplete="off" spellcheck="false">
+    <input id="pal-in" placeholder="Go to… work, security, writing, github, résumé, lectr, soirée, email" autocomplete="off" spellcheck="false">
     <ul id="pal-list"></ul>
     <div class="pal-foot"><span>↑↓ move · ↵ open · esc close</span><span>? for shortcuts</span></div>
   </div>
@@ -68,10 +68,13 @@
       <span><kbd>⌘K</kbd> / <kbd>/</kbd></span><span>command palette</span>
       <span><kbd>g</kbd> <kbd>h</kbd></span><span>home</span>
       <span><kbd>g</kbd> <kbd>w</kbd></span><span>work</span>
+      <span><kbd>g</kbd> <kbd>s</kbd></span><span>security</span>
+      <span><kbd>g</kbd> <kbd>n</kbd></span><span>writing</span>
+      <span><kbd>g</kbd> <kbd>g</kbd></span><span>github</span>
       <span><kbd>g</kbd> <kbd>a</kbd></span><span>about</span>
       <span><kbd>g</kbd> <kbd>r</kbd></span><span>résumé</span>
-      <span><kbd>g</kbd> <kbd>l</kbd></span><span>lectr case study</span>
       <span><kbd>t</kbd></span><span>toggle theme</span>
+      <span><kbd>click</kbd></span><span>on any header: replay picture → text</span>
       <span><kbd>a–z</kbd></span><span>on the home page: type into the letterform</span>
       <span><kbd>?</kbd></span><span>this</span>
     </div>
