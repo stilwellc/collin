@@ -42,8 +42,9 @@ function matrix(c, opts) {
       // cover-fit the picture into the grid, then per-cell luminance
       var p = document.createElement('canvas'); p.width = cols; p.height = rows;
       var pc = p.getContext('2d');
-      var s = Math.max(cols / img.naturalWidth, rows / img.naturalHeight), dw = img.naturalWidth * s, dh = img.naturalHeight * s;
-      pc.drawImage(img, (cols - dw) / 2, (rows - dh) / 2, dw, dh);
+      // contain-fit, anchored left like the text that replaces it
+      var s = Math.min(cols * 0.96 / img.naturalWidth, rows / img.naturalHeight), dw = img.naturalWidth * s, dh = img.naturalHeight * s;
+      pc.drawImage(img, cols * 0.02, (rows - dh) / 2, dw, dh);
       var d = pc.getImageData(0, 0, cols, rows).data; lum = new Float32Array(cols * rows);
       // halftone the FIGURE, not the ground: if the picture is mostly light,
       // draw its dark pixels (a wordmark on paper reads as the wordmark);

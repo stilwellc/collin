@@ -158,3 +158,12 @@ kbd { font-family: var(--mono); font-size: 11px; color: var(--ink); border: 1px 
 .mhead .hint { position: absolute; right: 0; bottom: -18px; font-family: var(--mono); font-size: 11px; color: var(--ink-3); pointer-events: none; }
 .field .hint { position: absolute; right: 0; bottom: -2px; font-family: var(--mono); font-size: 11px; color: var(--ink-3); pointer-events: none; }
 footer.foot a:hover { color: var(--ink); }
+
+/* ── small screens: nav scrolls sideways inside the masthead, page never does ── */
+@media (max-width: 600px) {
+  .mast { overflow: hidden; }
+  .mast nav { overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; flex-shrink: 1; min-width: 0; padding-right: 8px; }
+  .mast nav::-webkit-scrollbar { display: none; }
+  .mast .brand { flex-shrink: 0; }
+  .mhead .hint { display: none; }
+}
