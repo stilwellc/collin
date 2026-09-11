@@ -20,7 +20,8 @@ function matrix(c, opts) {
   var HEX = '0123456789abcdef';
   var dpr = Math.min(2, window.devicePixelRatio || 1);
   var W, H, cols, rows, cell, mask, chars, heat, lum, t0, mx = -1e4, my = -1e4, img = null, word = opts.text, raf = 0;
-  var PIC = 1.6, DISSOLVE = 0.7, RESOLVE = 1.8;                 // seconds per phase
+  var PIC = 2.6, DISSOLVE = 0.7, RESOLVE = 1.8;                 // seconds per phase
+  var DRIFT_X = 0, DRIFT_Y = 0;                                  // picture drift amplitude, in cells
   function ink() { return getComputedStyle(document.body).color; }
   function build() {
     var r = c.getBoundingClientRect();
@@ -30,11 +31,11 @@ function matrix(c, opts) {
     cols = Math.floor(W / cell); rows = Math.floor(H / cell);
     var m = document.createElement('canvas'); m.width = cols; m.height = rows;
     var mc = m.getContext('2d');
-    mc.fillStyle = '#000'; mc.textBaseline = 'middle'; mc.textAlign = 'left';
+    mc.fillStyle = '#000'; mc.textBaseline = 'middle'; mc.textAlign = 'center';
     var fs = rows * 0.92;
     mc.font = '300 ' + fs + 'px Geist, Helvetica, Arial, sans-serif';
     while (mc.measureText(word).width > cols * 0.96 && fs > 8) { fs -= 1; mc.font = '300 ' + fs + 'px Geist, Helvetica, Arial, sans-serif'; }
-    mc.fillText(word, cols * 0.02, rows * 0.54);
+    mc.fillText(word, cols / 2, rows * 0.54);
     var px = mc.getImageData(0, 0, cols, rows).data;
     mask = new Uint8Array(cols * rows); chars = new Array(cols * rows); heat = new Float32Array(cols * rows); lum = null;
     for (var i = 0; i < cols * rows; i++) { mask[i] = px[i * 4 + 3] > 96 ? 1 : 0; chars[i] = HEX[(Math.random() * 16) | 0]; }
@@ -42,9 +43,10 @@ function matrix(c, opts) {
       // cover-fit the picture into the grid, then per-cell luminance
       var p = document.createElement('canvas'); p.width = cols; p.height = rows;
       var pc = p.getContext('2d');
-      // contain-fit, anchored left like the text that replaces it
-      var s = Math.min(cols * 0.96 / img.naturalWidth, rows / img.naturalHeight), dw = img.naturalWidth * s, dh = img.naturalHeight * s;
-      var ox = cols * 0.02, oy = (rows - dh) / 2;
+      // contain-fit, centered like the text that replaces it, with room to drift
+      DRIFT_X = Math.max(2, Math.round(cols * 0.06)); DRIFT_Y = Math.max(1, Math.round(rows * 0.08));
+      var s = Math.min((cols - 2 * DRIFT_X - 2) / img.naturalWidth, (rows - 2 * DRIFT_Y - 2) / img.naturalHeight), dw = img.naturalWidth * s, dh = img.naturalHeight * s;
+      var ox = Math.round((cols - dw) / 2), oy = Math.round((rows - dh) / 2);
       pc.fillStyle = '#fff'; pc.fillRect(0, 0, cols, rows); pc.drawImage(img, ox, oy, dw, dh);
       var d = pc.getImageData(0, 0, cols, rows).data; lum = new Float32Array(cols * rows);
       // cells outside the drawn picture are ground, whatever the polarity
@@ -73,11 +75,14 @@ function matrix(c, opts) {
     var wave = reduce ? 1e9 : (el - tPic - tDis - 0.2) / RESOLVE;   // 0..1 across columns
     var picMix = hasPic ? (el < tPic ? 1 : Math.max(0, 1 - (el - tPic) / tDis)) : 0;   // 1 = picture, 0 = gone
     var R = cell * 4.2, R2 = R * R, flicker = ((now / 60) | 0) % 2 === 0;
+    // the picture wanders on the grid, whole cells at a time, like a sprite
+    var sx = Math.round(DRIFT_X * Math.sin(el * 1.9)), sy = Math.round(DRIFT_Y * Math.sin(el * 3.1 + 1.2));
     for (var y = 0; y < rows; y++) for (var x = 0; x < cols; x++) {
       var i = y * cols + x, cx = x * cell + cell / 2, cy = y * cell + cell / 2;
       ctx.fillStyle = col;
       if (picMix > 0) {
-        var q = cell * 0.86 * lum[i] * picMix;
+        var px = x - sx, py = y - sy, L = (px >= 0 && px < cols && py >= 0 && py < rows) ? lum[py * cols + px] : 0;
+        var q = cell * 0.86 * L * picMix;
         if (q > 0.6) { ctx.globalAlpha = 0.9; ctx.fillRect(cx - q / 2, cy - q / 2, q, q); }
         if (picMix < 1 && flicker && Math.random() < 0.3 * (1 - picMix)) { ctx.globalAlpha = 0.3; ctx.fillText(HEX[(Math.random() * 16) | 0], cx, cy); }
         continue;
@@ -85,7 +90,7 @@ function matrix(c, opts) {
       if (mask[i]) {
         var dx = cx - mx, dy = cy - my, d2 = dx * dx + dy * dy;
         if (d2 < R2) heat[i] = Math.max(heat[i], 1 - d2 / R2);
-        var resolved = wave >= x / cols && heat[i] < 0.08;
+        var resolved = wave >= Math.abs(x - cols / 2) / (cols / 2) && heat[i] < 0.08;
         if (heat[i] > 0) heat[i] -= reduce ? 1 : 0.035;
         if (!resolved && flicker) chars[i] = HEX[(Math.random() * 16) | 0];
         if (resolved) { ctx.globalAlpha = 0.92; var s = cell * 0.62; ctx.fillRect(cx - s / 2, cy - s / 2, s, s); }
