@@ -70,62 +70,37 @@
   <div class="mhead rv"><canvas class="matrix" data-text="Security" data-src="assets/security.svg" aria-label="A row of space invaders and a cannon, decoded into the word Security" role="img"></canvas><span class="hint">click to replay · glyph → text</span></div>
   <p class="eyebrow rv d1">Security · the day job</p>
   <h1 class="display rv d1">Guardrails,<br>not gates.</h1>
-  <p class="lede rv d2">Senior Product Security Engineer at WeightWatchers, rebuilding product security from a compliance function into an engineering one. Before that: founding security at Remedy Meds, three years scaling Thirty Madison through its acquisition, and Podium's payments platform from proof of concept to billions in GPV. I build programs that make the secure path the fast path, and the tooling a small team needs to run them.</p>
+  <p class="lede one rv d2">Product security, built four times from close to nothing. The job is making the secure path the fast path.</p>
 </div>
 
-  <div class="facts rv d3">
-    <div><div class="n">4</div><div class="l">legs of the program</div></div>
-    <div><div class="n">3</div><div class="l">SAST tiers · monitor, comment, block</div></div>
-    <div><div class="n">&lt;5%</div><div class="l">false-positive rate before a rule may block</div></div>
-    <div><div class="n">100%</div><div class="l">of new projects threat-modeled by default</div></div>
+  <p class="sheet-h rv d3">The road</p>
+  <div class="sheet rv d3">
+    <div class="row"><span class="k">2026 –</span><span><span class="t">WeightWatchers</span><span class="d">Senior Product Security Engineer. Product security, from a compliance function to an engineering one.</span></span><span class="v">now</span></div>
+    <div class="row"><span class="k">2025 – 26</span><span><span class="t">Remedy Meds</span><span class="d">Founding security, via the acquisition. ProdSec, CorpSec and privacy from zero.</span></span><span class="v">0 → 1</span></div>
+    <div class="row"><span class="k">2023 – 26</span><span><span class="t">Thirty Madison</span><span class="d">Nurx, Keeps and Cove. A telehealth platform treating over a million patients.</span></span><span class="v">3 years</span></div>
+    <div class="row"><span class="k">2021 – 23</span><span><span class="t">Podium</span><span class="d">Payments from proof of concept to billions in GPV. Built the product security team for about 200 engineers.</span></span><span class="v">tech lead</span></div>
+    <div class="row"><span class="k">2019 – 21</span><span><span class="t">TD</span><span class="d">Enterprise security across global corporate and investment banking.</span></span><span class="v">the bank</span></div>
+    <div class="row"><span class="k">2018</span><span><span class="t">New Jersey State Police</span><span class="d">Network engineering intern at the ROIC, the state's fusion center.</span></span><span class="v">intern</span></div>
   </div>
 
-  <section class="sec">
-    <div class="k">the road</div>
-    <div>
-      <h2>Four startups in a row. Each time, the program was built from close to nothing.</h2>
-      <p>Two years inside a global bank taught me how security is run at scale. Everything since has been the other direction: small teams, fast engineering orgs, and a security function that has to earn its place by making shipping easier.</p>
-      <ul>
-        <li><span><b>WeightWatchers</b> · Senior Product Security Engineer. Rebuilding product security from a compliance function into an engineering one, as WW expands into clinical care and telehealth on AWS and Kubernetes.</span><span class="v">2026 –</span></li>
-        <li><span><b>Remedy Meds</b> · Senior Product Security Engineer II. Founding security, via the Thirty Madison acquisition: product security, corporate security and privacy, from zero.</span><span class="v">2025 – 26</span></li>
-        <li><span><b>Thirty Madison</b> · Senior Product Security Engineer, then II. Three years securing a telehealth platform treating over a million patients across Nurx, Keeps and Cove, through its acquisition.</span><span class="v">2023 – 26</span></li>
-        <li><span><b>Podium</b> · Application Security Engineer, then Tech Lead, Product Security. Joined just before the $201M Series D. Led the secure scaling of the payments and fintech platform from proof of concept to billions in GPV, and built the product security team supporting about 200 engineers.</span><span class="v">2021 – 23</span></li>
-        <li><span><b>TD</b> · Summer Analyst, then Associate, Enterprise Security. Security engineering and AppSec across global corporate and investment banking. Learned how global security is run, then left to build.</span><span class="v">2019 – 21</span></li>
-        <li><span><b>New Jersey State Police</b> · Network engineering intern at the ROIC, the state's fusion center for data and intelligence.</span><span class="v">2018</span></li>
-      </ul>
-    </div>
-  </section>
+  <p class="sheet-h">The program · four legs</p>
+  <div class="sheet">
+    <div class="row"><span class="k">leg 1</span><span><span class="t">Security by default</span><span class="d">Tiered SAST with an AI false-positive filter, auto-merged dependency patches, a threat model for every project at planning.</span></span><span class="v">guardrails</span></div>
+    <div class="row"><span class="k">leg 2</span><span><span class="t">Reactionary security</span><span class="d">The human pass: design review where the default model flags risk, pentest findings, bug bounty, incidents.</span></span><span class="v">small by design</span></div>
+    <div class="row"><span class="k">leg 3</span><span><span class="t">Security by design</span><span class="d">Paved roads. Primitives that make the right thing the easy thing.</span></span><span class="v">primitives</span></div>
+    <div class="row"><span class="k">leg 4</span><span><span class="t">Feedback and metrics</span><span class="d">Every override feeds the loop. Rules earn the right to block with a measured false-positive rate.</span></span><span class="v">&lt;5% FP to block</span></div>
+    <a class="row" href="writing.html"><span class="k">essay</span><span><span class="t">Building an AppSec program that actually works<span class="arrow">→</span></span></span><span class="v">2026-05</span></a>
+  </div>
 
-  <section class="sec">
-    <div class="k">the framework</div>
-    <div>
-      <h2>An AppSec program is a chair. It stands on four legs.</h2>
-      <p>Too many programs still run like it's 2008: triaging scanner output, filing tickets, chasing single vulnerabilities like they're snowflakes. That's project management with extra steps. The mission is to turn security from a blocker into an accelerator, and to fix systemic flaws at scale instead of one bug at a time. I wrote the framework up in full; this is the shape of it.</p>
-      <div class="legs">
-        <div><span class="pill mono">leg 1</span><div class="t">Security by default</div><p>Tiered SAST guardrails with an AI false-positive filter between rule and PR. Custom rules for your own anti-patterns. Dependency policy with auto-merged patches. Threat modeling that happens at planning, for every project, automatically. Paved roads: see a flaw class three times, build the safe primitive and flag the unsafe one.</p></div>
-        <div><span class="pill mono">leg 2</span><div class="t">Reactionary security</div><p>The human pass. Design review for the high-risk projects the default threat model surfaces, pentest findings, bug bounty, incident follow-through. Small by design, because leg 1 keeps most things from ever reaching it.</p></div>
-        <div><span class="pill mono">leg 3</span><div class="t">Security by design</div><p>Secure primitives, reference architectures, and libraries that make the right thing the easy thing: an HTTP client that refuses internal ranges and enforces timeouts, an auth helper that handles tenant scoping.</p></div>
-        <div><span class="pill mono">leg 4</span><div class="t">Continuous feedback &amp; metrics</div><p>Every override is auditable and feeds the loop. Rules earn the right to block with a measured false-positive rate. The program reports on what it changed, not on how many tickets it filed.</p></div>
-      </div>
-      <div class="cta" style="margin-top:1.5rem"><a class="pill ghost" href="writing.html">Read the full write-up →</a></div>
-    </div>
-  </section>
+  <p class="sheet-h">In the open</p>
+  <div class="sheet">
+    <a class="row" href="secmcphub.html"><span class="k">2026</span><span><span class="t">SecMCPHub<span class="arrow">→</span></span><span class="d">A security business review that writes itself, over MCP.</span></span><span class="v">case study</span></a>
+    <a class="row" href="https://github.com/stilwellc/ash-semgrep-rules" target="_blank" rel="noopener"><span class="k">2025</span><span><span class="t">Ash Semgrep rules<span class="arrow">↗</span></span><span class="d">Static analysis for Ash Framework authorization.</span></span><span class="v">github</span></a>
+    <a class="row" href="https://github.com/stilwellc/elixir-secure-coding" target="_blank" rel="noopener"><span class="k">2023</span><span><span class="t">Elixir secure coding<span class="arrow">↗</span></span><span class="d">Top contributor to Podium's open, enterprise-oriented curriculum.</span></span><span class="v">github</span></a>
+    <div class="row"><span class="k">2019 – 20</span><span><span class="t">Brumby Code Checker</span><span class="d">Redundancy scanner for C++, Java and Ada, with Rowan and ASRC Federal for Lockheed Martin systems.</span></span><span class="v">rowan</span></div>
+  </div>
 
-  <section class="sec">
-    <div class="k">in the open</div>
-    <div>
-      <h2>Rules, curricula, and a report that writes itself.</h2>
-      <ul>
-        <li><span><b>SecMCPHub</b> — a security business review generated by Claude Code skills over MCP: vulnerability, GRC and incident data into one self-contained report with CWE-mapped attack paths. <a href="secmcphub.html">Case study →</a></span><span class="v">2026</span></li>
-        <li><span><b>Elixir secure coding</b> — top contributor to Podium's open, enterprise-oriented Elixir security curriculum. <a href="https://github.com/stilwellc/elixir-secure-coding" target="_blank" rel="noopener">Repo ↗</a></span><span class="v">2023</span></li>
-        <li><span><b>Ash Semgrep rules</b> — static-analysis rules for Ash Framework authorization. <a href="https://github.com/stilwellc/ash-semgrep-rules" target="_blank" rel="noopener">Repo ↗</a></span><span class="v">2025</span></li>
-        <li><span><b>NYU Cyber Fellowship</b> — M.S. Cyber Security program; research on stablecoin settlement in e-commerce.</span><span class="v">2021 – 23</span></li>
-        <li><span><b>Brumby Code Checker</b> — a redundancy scanner for C++, Java and Ada built with Rowan University and ASRC Federal for Lockheed Martin systems: a weighted blend of cosine, ordered and longest-common-subsequence similarity.</span><span class="v">2019 – 20</span></li>
-      </ul>
-    </div>
-  </section>
-
-  <div class="cta">
+  <div class="cta" style="margin-top:2.5rem">
     <a class="pill solid" href="mailto:hello@collin.dev">hello@collin.dev</a>
     <a class="pill ghost" href="resume.html">Résumé</a>
     <a class="pill ghost" href="https://www.linkedin.com/in/collin-stilwell/" target="_blank" rel="noopener">LinkedIn</a>

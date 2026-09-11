@@ -70,52 +70,17 @@
   <div class="mhead rv"><canvas class="matrix" data-text="Writing" data-src="assets/writing.svg" aria-label="A keyboard, decoded into the word Writing" role="img"></canvas><span class="hint">click to replay · glyph → text</span></div>
   <p class="eyebrow rv d1">Writing · collinsthoughts.substack.com</p>
   <h1 class="display rv d1">Notes from<br>running the program.</h1>
-  <p class="lede rv d2">One long piece on running an AppSec program, and two short ones from lectr's engine room: a speed rewrite with provably identical output, and the postmortem of a gate I got wrong.</p>
+  <p class="lede one rv d2">One long piece on running an AppSec program, and two short ones from lectr's engine room.</p>
 </div>
 
-  <section class="sec">
-    <div class="k">2026-09-10</div>
-    <div>
-      <h2><a href="nightly.html">130 minutes to 52, without changing a number</a></h2>
-      <p>lectr's nightly had crept past two hours. A profile said the assemble stage was almost entirely two things. Two rewrites, run offline against the full corpus and diffed before merging, brought the run to 52 minutes with byte-identical output.</p>
-      <ul>
-        <li><span>Repeat-sale grouping</span><span class="v">1,660s → 3s</span></li>
-        <li><span>Per-maker indices</span><span class="v">1,700s → 87s</span></li>
-        <li><span>Full nightly</span><span class="v">110–130 min → 52 min</span></li>
-      </ul>
-    </div>
-  </section>
+  <p class="sheet-h rv d3">Essays</p>
+  <div class="sheet rv d3">
+    <a class="row" href="nightly.html"><span class="k">2026-09-10</span><span><span class="t">130 minutes to 52, without changing a number<span class="arrow">→</span></span><span class="d">Two rewrites, diffed against the full corpus before merging. The nightly halved; the output didn't move.</span></span><span class="v">lectr</span></a>
+    <a class="row" href="gate.html"><span class="k">2026-09-09</span><span><span class="t">The gate that wedged the pipeline<span class="arrow">→</span></span><span class="d">A safety gate blocked every publish for a week. What it got wrong, and the delta gate that replaced it.</span></span><span class="v">postmortem</span></a>
+    <a class="row" href="https://collinsthoughts.substack.com/p/building-an-application-security" target="_blank" rel="noopener"><span class="k">2026-05-19</span><span><span class="t">Building an Application Security Program That Actually Works<span class="arrow">↗</span></span><span class="d">Four legs, a build order, and the seven failures that sink programs. Written after four years in startups.</span></span><span class="v">substack</span></a>
+  </div>
 
-  <section class="sec">
-    <div class="k">2026-09-09</div>
-    <div>
-      <h2><a href="gate.html">The gate that wedged the pipeline</a></h2>
-      <p>A safety gate I added to lectr's nightly blocked every publish for a week. Prices froze, 18,797 crawled lots sat unshipped, and it looked from the outside like ingestion had stopped. The postmortem, and the delta gate that replaced it.</p>
-      <ul>
-        <li><span>Nightly publishes blocked</span><span class="v">7</span></li>
-        <li><span>Signatures that tripped it, all old</span><span class="v">82</span></li>
-        <li><span>The rule now</span><span class="v">diff against the last publish</span></li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="sec">
-    <div class="k">2026-05-19</div>
-    <div>
-      <h2><a href="https://collinsthoughts.substack.com/p/building-an-application-security" target="_blank" rel="noopener">Building an Application Security Program That Actually Works ↗</a></h2>
-      <p>Written after four years in startups, with one observation up front: AI has changed a lot about what a small security team can accomplish. If an application security program were a chair, its strength would depend on four legs. Remove one and it wobbles; remove two and it collapses. The piece lays out the four, the order to build them in, the AI tooling that makes the program runnable by a small team, and the seven failures that sink programs.</p>
-      <ul>
-        <li><span>Leg 1 · Security by default</span><span class="v">guardrails, not gates</span></li>
-        <li><span>Leg 2 · Reactionary security</span><span class="v">the human pass</span></li>
-        <li><span>Leg 3 · Security by design</span><span class="v">paved roads</span></li>
-        <li><span>Leg 4 · Continuous feedback &amp; metrics</span><span class="v">every override feeds the loop</span></li>
-        <li><span>Build order</span><span class="v">which leg first, and why</span></li>
-        <li><span>Anti-patterns</span><span class="v">seven failures that sink AppSec programs</span></li>
-        <li><span>What this guide doesn't solve</span><span class="v">honest scope</span></li>
-      </ul>
-      <div class="cta" style="margin-top:1.5rem"><a class="pill solid" href="https://collinsthoughts.substack.com/p/building-an-application-security" target="_blank" rel="noopener">Read on Substack</a><a class="pill ghost" href="https://collinsthoughts.substack.com" target="_blank" rel="noopener">Subscribe</a></div>
-    </div>
-  </section>
+  <div class="cta" style="margin-top:2.5rem"><a class="pill solid" href="https://collinsthoughts.substack.com" target="_blank" rel="noopener">Subscribe on Substack</a><a class="pill ghost" href="security.html">The day job</a></div>
 </main>
 <footer class="foot">
   <span>© 2026 Collin Stilwell · Hoboken, NJ</span>
