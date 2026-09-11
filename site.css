@@ -167,3 +167,42 @@ footer.foot a:hover { color: var(--ink); }
   .mast .brand { flex-shrink: 0; }
   .mhead .hint { display: none; }
 }
+
+/* ── center orientation: the whole site reads down a centre line.
+   Selectors carry a body prefix so they outrank the per-page <style> blocks. ── */
+body .mast { flex-direction: column; justify-content: center; align-items: center; gap: 0.7rem; padding-top: calc(var(--pad) * 0.7); padding-bottom: calc(var(--pad) * 0.5); }
+body .mast nav { justify-content: center; flex-wrap: wrap; }
+body .page { text-align: center; }
+body .page > * { margin-left: auto; margin-right: auto; }
+body .lander-head, body .cs, body .res { margin-left: auto; margin-right: auto; }
+body .statement, body .lede, body .cs .lede, body .prose p, body .sec p, body .sec ul, body .legs p, body .cell p, body .stage { margin-left: auto; margin-right: auto; }
+body .meta, body .actions, body .cta, body .live, body .gh-stats, body footer.foot { justify-content: center; }
+body .meta div span { text-align: center; }
+body .cell { align-items: center; text-align: center; }
+body .cell .top { justify-content: center; width: 100%; }
+body .cell .foot { margin-top: auto; }
+body .ledger .lrow, body .res .lrow { grid-template-columns: 1fr; gap: 0.25rem; justify-items: center; text-align: center; }
+body .lrow .d { margin-left: auto; margin-right: auto; }
+body .sec { grid-template-columns: 1fr; gap: 0.5rem; justify-items: center; }
+body .sec .k { padding-top: 0; }
+body .sec li { grid-template-columns: 1fr; gap: 0.15rem; justify-items: center; }
+body .legs > div { display: flex; flex-direction: column; align-items: center; }
+body .two { grid-template-columns: 1fr; justify-items: center; gap: 2rem; }
+body .facts > div, body .stage > div { text-align: center; }
+body .act .grid { margin-left: auto; margin-right: auto; }
+body .res .head { justify-content: center; flex-direction: column; align-items: center; text-align: center; }
+body .res .contact { text-align: center; }
+body .res .print { display: flex; justify-content: center; }
+body .mhead .hint, body .field .hint { left: 0; right: 0; text-align: center; }
+body .field { justify-content: center; }
+body .field canvas { height: clamp(140px, 34vh, 520px); }
+body .bottom { grid-template-columns: auto auto; justify-content: center; justify-items: center; align-items: center; text-align: center; gap: 0.7rem 2.5rem; padding-top: 1.1rem; padding-bottom: calc(var(--pad) * 0.7); }
+body .bottom .statement { max-width: 36em; }
+body .bottom .statement, body .bottom .live { grid-column: 1 / -1; }
+body .bottom .meta { grid-column: 1; } body .bottom .actions { grid-column: 2; }
+@media (max-width: 760px) { body .bottom { grid-template-columns: 1fr; } body .bottom .meta, body .bottom .actions { grid-column: 1; } }
+h1.display, .cell h2, .sec h2, .legs .t { text-wrap: balance; }
+/* home = one viewport: the masthead sits outside .home, so size the page as a flex column instead of giving .home its own 100svh */
+body:has(> .home) { display: flex; flex-direction: column; min-height: 100svh; }
+body > .home { flex: 1; min-height: 0; grid-template-rows: minmax(0, 1fr) auto; }
+body .bottom { align-content: end; }
