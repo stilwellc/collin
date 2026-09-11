@@ -27,7 +27,7 @@
   .res .print { margin-top: 2rem; }
   @media print {
     :root { --ground: #fff; --ink: #111; --ink-2: #444; --ink-3: #777; --hair: #ddd; --hair-2: #ccc; }
-    .mast, .foot, .print, .pal, .keys, #palette-btn, #theme { display: none !important; }
+    .mast, .foot, .print, .pal, .keys, .mhead, #palette-btn, #theme { display: none !important; }
     body { font-size: 12.5px; }
     .page { padding: 0; }
     .res { max-width: none; }
@@ -43,6 +43,7 @@
   <nav aria-label="Site"><a class="pill" href="work.html">Work</a><a class="pill" href="security.html">Security</a><a class="pill" href="writing.html">Writing</a><a class="pill" href="github.html">GitHub</a><a class="pill" href="about.html">About</a><a class="pill on" href="resume.html">Résumé</a><button class="pill" id="theme" type="button" aria-label="Toggle theme" title="Toggle theme (t)">◐</button><button class="pill mono" id="palette-btn" type="button" aria-label="Command palette" title="Command palette (⌘K)">⌘K</button></nav>
 </header>
 <main class="page res">
+  <div class="mhead rv"><canvas class="matrix" data-text="Résumé" data-src="assets/resume.svg" aria-label="A paper plane, decoded into the word Résumé" role="img"></canvas><span class="hint">click to replay · glyph → text</span></div>
   <div class="head rv">
     <div>
       <p class="eyebrow">Résumé</p>

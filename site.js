@@ -44,18 +44,21 @@ function matrix(c, opts) {
       var pc = p.getContext('2d');
       // contain-fit, anchored left like the text that replaces it
       var s = Math.min(cols * 0.96 / img.naturalWidth, rows / img.naturalHeight), dw = img.naturalWidth * s, dh = img.naturalHeight * s;
-      pc.drawImage(img, cols * 0.02, (rows - dh) / 2, dw, dh);
+      var ox = cols * 0.02, oy = (rows - dh) / 2;
+      pc.fillStyle = '#fff'; pc.fillRect(0, 0, cols, rows); pc.drawImage(img, ox, oy, dw, dh);
       var d = pc.getImageData(0, 0, cols, rows).data; lum = new Float32Array(cols * rows);
+      // cells outside the drawn picture are ground, whatever the polarity
+      var inside = function (j) { var x = j % cols, y = (j / cols) | 0; return x >= ox + 1 && x < ox + dw - 1 && y >= oy + 1 && y < oy + dh - 1; };
       // halftone the FIGURE, not the ground: if the picture is mostly light,
       // draw its dark pixels (a wordmark on paper reads as the wordmark);
       // then stretch to the 5th–95th percentile and push midtones down so the
       // result is a picture made of squares, not a slab.
-      var raw = new Float32Array(cols * rows), mean = 0;
-      for (var j = 0; j < cols * rows; j++) { raw[j] = (d[j*4]*299 + d[j*4+1]*587 + d[j*4+2]*114) / 255000; mean += raw[j]; }
-      mean /= cols * rows; var flip = mean > 0.5;
-      var sorted = Array.prototype.slice.call(raw).sort(function (a, b) { return a - b; });
+      var raw = new Float32Array(cols * rows), mean = 0, nIn = 0, inList = [];
+      for (var j = 0; j < cols * rows; j++) { raw[j] = (d[j*4]*299 + d[j*4+1]*587 + d[j*4+2]*114) / 255000; if (inside(j)) { mean += raw[j]; nIn++; inList.push(raw[j]); } }
+      mean /= Math.max(1, nIn); var flip = mean > 0.5;
+      var sorted = inList.sort(function (a, b) { return a - b; });
       var lo = sorted[Math.floor(sorted.length * 0.05)], hi = sorted[Math.floor(sorted.length * 0.95)], span = Math.max(0.05, hi - lo);
-      for (var k = 0; k < cols * rows; k++) { var v = flip ? 1 - raw[k] : raw[k]; v = (v - (flip ? 1 - hi : lo)) / span; v = Math.min(1, Math.max(0, v)); lum[k] = Math.pow(v, 1.7); }
+      for (var k = 0; k < cols * rows; k++) { if (!inside(k)) { lum[k] = 0; continue; } var v = flip ? 1 - raw[k] : raw[k]; v = (v - (flip ? 1 - hi : lo)) / span; v = Math.min(1, Math.max(0, v)); lum[k] = Math.pow(v, 1.7); }
     }
     t0 = performance.now();
   }
