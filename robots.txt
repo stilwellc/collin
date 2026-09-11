@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://collin-theta.vercel.app/sitemap.xml

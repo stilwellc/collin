@@ -3,6 +3,8 @@
 <head>
 <title>Work — Collin Stilwell</title>
 <meta name="description" content="Selected work by Collin Stilwell: lectr, SecMCPHub, Soirée, Elixir security.">
+<meta property="og:title" content="Work — Collin Stilwell">
+<meta property="og:description" content="Selected work by Collin Stilwell: lectr, SecMCPHub, Soirée, Elixir security.">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
@@ -12,11 +14,14 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Geist+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="site.css">
 <style>@view-transition { navigation: auto; }</style>
+<script>(function(){try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+
+
 </head>
 <body>
 <header class="mast">
   <a class="brand" href="index.html"><span class="n">Collin Stilwell</span><span class="r">Security</span><span class="pill mono" id="commit">v2026.09</span></a>
-  <nav aria-label="Site"><a class="pill on" href="work.html">Work</a><a class="pill" href="about.html">About</a><a class="pill" href="mailto:hello@collin.dev">Email</a></nav>
+  <nav aria-label="Site"><a class="pill on" href="work.html">Work</a><a class="pill" href="about.html">About</a><a class="pill" href="resume.html">Résumé</a><a class="pill" href="mailto:hello@collin.dev">Email</a><button class="pill" id="theme" type="button" aria-label="Toggle theme" title="Toggle theme">◐</button><button class="pill mono" id="palette-btn" type="button" aria-label="Command palette" title="Command palette (⌘K)">⌘K</button></nav>
 </header>
 <main class="page">
   <p class="eyebrow rv">Selected work · 4</p>
@@ -24,27 +29,27 @@
   <div style="height: clamp(28px, 4vw, 56px)"></div>
   <div class="frame rv d2"><div class="cells">
 <a class="cell" href="lectr.html">
-  <div class="top"><span class="pill mono">web app</span></div>
+  <div class="top"><span class="pill mono">web app · case study</span></div>
   <h2>lectr<span class="arrow">↗</span></h2>
   <p>Auction intelligence. A 1.1M-lot corpus across 16 houses, a value engine with a published backtest record, and a nightly pipeline that crawls, gates, and ships itself. Every price is traceable to a sale.</p>
-  <div class="foot">TypeScript · Next.js · Cloudflare R2 + Pages · GitHub Actions · Supabase &nbsp;·&nbsp; case study →</div>
+  <div class="foot">TypeScript · Next.js · Cloudflare R2 + Pages · GitHub Actions · Supabase</div>
 </a>
-<a class="cell" href="https://github.com/stilwellc/SecMCPHub" target="_blank" rel="noopener">
-  <div class="top"><span class="pill mono">open source</span></div>
+<a class="cell" href="secmcphub.html">
+  <div class="top"><span class="pill mono">open source · case study</span></div>
   <h2>SecMCPHub<span class="arrow">↗</span></h2>
-  <p>A security MBR that writes itself. Pulls vulnerability management, GRC, and incident data over MCP; computes MTTR, SLA compliance, and composite risk grades; cross-references findings by CWE and attack path into one self-contained report.</p>
-  <div class="foot">MCP · Claude Code · HTML · JavaScript</div>
+  <p>A security MBR that writes itself. Claude Code skills pull vulnerability, GRC, and incident data over MCP and render one self-contained HTML report: deltas, MTTR, SLA compliance, a weighted risk grade, and attack paths chained across sources.</p>
+  <div class="foot">Claude Code · MCP · HTML · JSON</div>
 </a>
-<a class="cell" href="https://soiree.today" target="_blank" rel="noopener">
-  <div class="top"><span class="pill mono">web app</span></div>
+<a class="cell" href="soiree.html">
+  <div class="top"><span class="pill mono">web app · case study</span></div>
   <h2>Soirée<span class="arrow">↗</span></h2>
-  <p>What's actually happening in New York tonight. Scrapes five sources, normalizes them, sorts by real dates. No account, no feed.</p>
-  <div class="foot">Node.js · PostgreSQL · Cheerio · Cron</div>
+  <p>What's actually happening tonight. 780 experiences across New York, Hoboken and Jersey City, and Philadelphia, 391 of them free, gathered from the sources that post them and sorted by real dates.</p>
+  <div class="foot">Node.js · Cloudflare · scrapers · cron</div>
 </a>
 <a class="cell" href="https://github.com/stilwellc/elixir-secure-coding" target="_blank" rel="noopener">
   <div class="top"><span class="pill mono">open source</span></div>
   <h2>Elixir security<span class="arrow">↗</span></h2>
-  <p>Semgrep rules for Ash Framework authorization, and contributions to the Elixir secure coding training.</p>
+  <p>Semgrep rules for Ash Framework authorization, and the top contributor to Podium's open Elixir secure-coding curriculum.</p>
   <div class="foot">Elixir · Semgrep · Ash</div>
 </a>
   </div></div>
@@ -53,6 +58,29 @@
   <span>© 2026 Collin Stilwell</span>
   <span>hello@collin.dev · github.com/stilwellc · linkedin.com/in/collin-stilwell</span>
 </footer>
+<div class="pal" id="pal" hidden role="dialog" aria-modal="true" aria-label="Command palette">
+  <div class="pal-box">
+    <input id="pal-in" placeholder="Go to… work, about, résumé, lectr, soirée, email, github" autocomplete="off" spellcheck="false">
+    <ul id="pal-list"></ul>
+    <div class="pal-foot"><span>↑↓ move · ↵ open · esc close</span><span>? for shortcuts</span></div>
+  </div>
+</div>
+<div class="keys" id="keys" hidden role="dialog" aria-label="Keyboard shortcuts">
+  <div class="keys-box">
+    <div class="keys-h">Shortcuts</div>
+    <div class="keys-grid">
+      <span><kbd>⌘K</kbd> / <kbd>/</kbd></span><span>command palette</span>
+      <span><kbd>g</kbd> <kbd>h</kbd></span><span>home</span>
+      <span><kbd>g</kbd> <kbd>w</kbd></span><span>work</span>
+      <span><kbd>g</kbd> <kbd>a</kbd></span><span>about</span>
+      <span><kbd>g</kbd> <kbd>r</kbd></span><span>résumé</span>
+      <span><kbd>g</kbd> <kbd>l</kbd></span><span>lectr case study</span>
+      <span><kbd>t</kbd></span><span>toggle theme</span>
+      <span><kbd>a–z</kbd></span><span>on the home page: type into the letterform</span>
+      <span><kbd>?</kbd></span><span>this</span>
+    </div>
+  </div>
+</div>
 <script src="site.js"></script>
 </body>
 </html>

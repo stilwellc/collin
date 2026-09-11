@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Résumé — Collin Stilwell</title>
+<meta name="description" content="Collin Stilwell — résumé. Senior Product Security Engineer at Thirty Madison.">
+<meta property="og:title" content="Résumé — Collin Stilwell">
+<meta property="og:description" content="Collin Stilwell — résumé. Senior Product Security Engineer at Thirty Madison.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='16' fill='%23161616'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='13' fill='%23FCFBFA'%3ECS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="site.css">
+<style>@view-transition { navigation: auto; }</style>
+<script>(function(){try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+
+<style>
+  .res { max-width: 52rem; }
+  .res .head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem 2rem; align-items: end; }
+  .res h1.display { font-size: clamp(2.2rem, 5vw, 3.6rem); }
+  .res .contact { font-family: var(--mono); font-size: 12px; color: var(--ink-2); line-height: 1.8; text-align: right; }
+  .res section { margin-top: clamp(28px, 4vw, 44px); }
+  .res .lrow { grid-template-columns: 9rem minmax(0,1fr); }
+  .res .lrow .d { max-width: none; }
+  .res .print { margin-top: 2rem; }
+  @media print {
+    :root { --ground: #fff; --ink: #111; --ink-2: #444; --ink-3: #777; --hair: #ddd; --hair-2: #ccc; }
+    .mast, .foot, .print, .pal, .keys, #palette-btn, #theme { display: none !important; }
+    body { font-size: 12.5px; }
+    .page { padding: 0; }
+    .res { max-width: none; }
+    .res h1.display { font-size: 28pt; }
+    .res section { margin-top: 18pt; break-inside: avoid; }
+    a::after { content: none; }
+  }
+</style>
+</head>
+<body>
+<header class="mast">
+  <a class="brand" href="index.html"><span class="n">Collin Stilwell</span><span class="r">Security</span><span class="pill mono" id="commit">v2026.09</span></a>
+  <nav aria-label="Site"><a class="pill" href="work.html">Work</a><a class="pill" href="about.html">About</a><a class="pill on" href="resume.html">Résumé</a><a class="pill" href="mailto:hello@collin.dev">Email</a><button class="pill" id="theme" type="button" aria-label="Toggle theme" title="Toggle theme">◐</button><button class="pill mono" id="palette-btn" type="button" aria-label="Command palette" title="Command palette (⌘K)">⌘K</button></nav>
+</header>
+<main class="page res">
+  <div class="head rv">
+    <div>
+      <p class="eyebrow">Résumé</p>
+      <h1 class="display">Collin Stilwell</h1>
+      <p class="statement" style="margin-top:.75rem">Senior Product Security Engineer</p>
+    </div>
+    <div class="contact">hello@collin.dev<br>github.com/stilwellc<br>linkedin.com/in/collin-stilwell<br>collinsthoughts.substack.com</div>
+  </div>
+  <section class="rv d1">
+    <p class="eyebrow">Experience</p>
+    <div class="ledger">
+      <div class="lrow"><div class="k">now</div><div><div class="t">Thirty Madison — Senior Product Security Engineer</div></div></div>
+      <div class="lrow"><div class="k">previously</div><div><div class="t">Podium — Application Security Engineer</div><div class="d">Top contributor to Podium's open Elixir secure-coding curriculum; Semgrep rules for Ash Framework authorization.</div></div></div>
+    </div>
+  </section>
+  <section class="rv d2">
+    <p class="eyebrow">Education</p>
+    <div class="ledger">
+      <div class="lrow"><div class="k">NYU</div><div><div class="t">M.S. Cybersecurity</div><div class="d">Cyber Fellowship</div></div></div>
+    </div>
+  </section>
+  <section class="rv d2">
+    <p class="eyebrow">Selected work</p>
+    <div class="ledger">
+      <div class="lrow"><div class="k">lectr.bid</div><div><div class="t">Auction intelligence platform</div><div class="d">1.1M-lot corpus across 16 auction houses; value engine with a published backtest record; staged nightly pipeline (crawl matrix → assemble → deploy) with three publish gates. Cut the nightly from ~130 to 52 minutes with output-identical rewrites. TypeScript, Next.js, Cloudflare R2/Pages, GitHub Actions, Supabase.</div></div></div>
+      <div class="lrow"><div class="k">SecMCPHub</div><div><div class="t">Automated security MBR dashboard</div><div class="d">Claude Code skills that pull vulnerability-management, GRC, and incident data over MCP and render a single self-contained HTML report: trend deltas, MTTR, SLA compliance, a weighted composite risk grade, CWE-mapped cross-source attack paths.</div></div></div>
+      <div class="lrow"><div class="k">soiree.today</div><div><div class="t">Event aggregator</div><div class="d">780 experiences across NYC, Hoboken/Jersey City, and Philadelphia, 391 free; scraped from the sources that post them, normalized, sorted by real dates. Node.js, Cloudflare.</div></div></div>
+    </div>
+  </section>
+  <section class="rv d3">
+    <p class="eyebrow">Writing</p>
+    <div class="ledger">
+      <div class="lrow"><div class="k">2026-05</div><div><div class="t">Building an Application Security Program That Actually Works</div><div class="d">Substack. A four-legged framework for turning security from a blocking function into an enabler of engineering speed.</div></div></div>
+    </div>
+  </section>
+  <div class="actions print"><button class="pill solid" type="button" onclick="window.print()">Print / save as PDF</button><a class="pill ghost" href="mailto:hello@collin.dev">hello@collin.dev</a></div>
+</main>
+<footer class="foot">
+  <span>© 2026 Collin Stilwell</span>
+  <span>hello@collin.dev · github.com/stilwellc · linkedin.com/in/collin-stilwell</span>
+</footer>
+<div class="pal" id="pal" hidden role="dialog" aria-modal="true" aria-label="Command palette">
+  <div class="pal-box">
+    <input id="pal-in" placeholder="Go to… work, about, résumé, lectr, soirée, email, github" autocomplete="off" spellcheck="false">
+    <ul id="pal-list"></ul>
+    <div class="pal-foot"><span>↑↓ move · ↵ open · esc close</span><span>? for shortcuts</span></div>
+  </div>
+</div>
+<div class="keys" id="keys" hidden role="dialog" aria-label="Keyboard shortcuts">
+  <div class="keys-box">
+    <div class="keys-h">Shortcuts</div>
+    <div class="keys-grid">
+      <span><kbd>⌘K</kbd> / <kbd>/</kbd></span><span>command palette</span>
+      <span><kbd>g</kbd> <kbd>h</kbd></span><span>home</span>
+      <span><kbd>g</kbd> <kbd>w</kbd></span><span>work</span>
+      <span><kbd>g</kbd> <kbd>a</kbd></span><span>about</span>
+      <span><kbd>g</kbd> <kbd>r</kbd></span><span>résumé</span>
+      <span><kbd>g</kbd> <kbd>l</kbd></span><span>lectr case study</span>
+      <span><kbd>t</kbd></span><span>toggle theme</span>
+      <span><kbd>a–z</kbd></span><span>on the home page: type into the letterform</span>
+      <span><kbd>?</kbd></span><span>this</span>
+    </div>
+  </div>
+</div>
+<script src="site.js"></script>
+</body>
+</html>

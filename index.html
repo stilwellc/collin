@@ -4,7 +4,7 @@
 <title>Collin Stilwell</title>
 <meta name="description" content="Collin Stilwell — Senior Product Security Engineer at Thirty Madison. Builder of lectr, SecMCPHub, Soirée.">
 <meta property="og:title" content="Collin Stilwell">
-<meta property="og:description" content="Senior Product Security Engineer. Builder of lectr, SecMCPHub, Soirée.">
+<meta property="og:description" content="Collin Stilwell — Senior Product Security Engineer at Thirty Madison. Builder of lectr, SecMCPHub, Soirée.">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
@@ -14,25 +14,35 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Geist+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="site.css">
 <style>@view-transition { navigation: auto; }</style>
+<script>(function(){try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+
 <style>
   .home { min-height: 100svh; display: grid; grid-template-rows: auto 1fr auto; }
   .field { position: relative; margin: 0 var(--pad); display: flex; align-items: center; min-height: 0; }
-  .field canvas { display: block; width: 100%; height: clamp(200px, 46vh, 540px); }
-  .bottom { padding: var(--pad); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.75rem 3rem; align-items: end; }
+  .field canvas { display: block; width: 100%; height: clamp(160px, 38vh, 520px); cursor: crosshair; }
+  .field .hint { position: absolute; right: 0; bottom: -2px; font-family: var(--mono); font-size: 11px; color: var(--ink-3); pointer-events: none; }
+  .bottom { padding: var(--pad); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.1rem 3rem; align-items: end; }
   .bottom .statement { grid-column: 1 / -1; }
-  .bottom .meta { align-self: end; }
-  @media (max-width: 760px) { .bottom { grid-template-columns: 1fr; } .bottom .actions { justify-self: start; } }
+  .live { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; font-family: var(--mono); font-size: 12px; color: var(--ink-3); }
+  .live b { color: var(--ink); font-weight: 500; }
+  .live .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--ink-3); margin-right: 0.5ch; vertical-align: middle; }
+  .live .dot.on { background: #1FA35A; }
+  @media (max-width: 760px) { .bottom { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
-<div class="home">
 <header class="mast">
   <a class="brand" href="index.html"><span class="n">Collin Stilwell</span><span class="r">Security</span><span class="pill mono" id="commit">v2026.09</span></a>
-  <nav aria-label="Site"><a class="pill" href="work.html">Work</a><a class="pill" href="about.html">About</a><a class="pill" href="mailto:hello@collin.dev">Email</a></nav>
+  <nav aria-label="Site"><a class="pill" href="work.html">Work</a><a class="pill" href="about.html">About</a><a class="pill" href="resume.html">Résumé</a><a class="pill" href="mailto:hello@collin.dev">Email</a><button class="pill" id="theme" type="button" aria-label="Toggle theme" title="Toggle theme">◐</button><button class="pill mono" id="palette-btn" type="button" aria-label="Command palette" title="Command palette (⌘K)">⌘K</button></nav>
 </header>
-<div class="field rv d1"><canvas id="field" aria-label="Collin, decoded" role="img"></canvas></div>
+<div class="home">
+<div class="field rv d1"><canvas id="field" aria-label="Collin, decoded" role="img"></canvas><span class="hint" id="field-hint">hover to encrypt · type to rewrite</span></div>
 <section class="bottom">
   <p class="statement rv d2">Security engineer who builds like a designer. I make the security tools I wish existed, and a few other things because they should exist. <span class="dim">Currently Senior Product Security Engineer at Thirty Madison.</span></p>
+  <div class="live rv d3" id="live" aria-live="polite">
+    <span><span class="dot" id="live-dot"></span>lectr.bid <b id="live-lots">1,128,926</b> lots · <b id="live-sold">1,101,288</b> sold · last crawl <b id="live-when">today</b></span>
+    <span>soiree.today <b>780</b> experiences, <b>391</b> free</span>
+  </div>
   <div class="meta rv d3">
     <div><span>Now</span><span>Thirty Madison</span></div>
     <div><span>Previously</span><span>Podium</span></div>
@@ -43,6 +53,29 @@
     <a class="pill ghost" href="mailto:hello@collin.dev">hello@collin.dev</a>
   </div>
 </section>
+</div>
+<div class="pal" id="pal" hidden role="dialog" aria-modal="true" aria-label="Command palette">
+  <div class="pal-box">
+    <input id="pal-in" placeholder="Go to… work, about, résumé, lectr, soirée, email, github" autocomplete="off" spellcheck="false">
+    <ul id="pal-list"></ul>
+    <div class="pal-foot"><span>↑↓ move · ↵ open · esc close</span><span>? for shortcuts</span></div>
+  </div>
+</div>
+<div class="keys" id="keys" hidden role="dialog" aria-label="Keyboard shortcuts">
+  <div class="keys-box">
+    <div class="keys-h">Shortcuts</div>
+    <div class="keys-grid">
+      <span><kbd>⌘K</kbd> / <kbd>/</kbd></span><span>command palette</span>
+      <span><kbd>g</kbd> <kbd>h</kbd></span><span>home</span>
+      <span><kbd>g</kbd> <kbd>w</kbd></span><span>work</span>
+      <span><kbd>g</kbd> <kbd>a</kbd></span><span>about</span>
+      <span><kbd>g</kbd> <kbd>r</kbd></span><span>résumé</span>
+      <span><kbd>g</kbd> <kbd>l</kbd></span><span>lectr case study</span>
+      <span><kbd>t</kbd></span><span>toggle theme</span>
+      <span><kbd>a–z</kbd></span><span>on the home page: type into the letterform</span>
+      <span><kbd>?</kbd></span><span>this</span>
+    </div>
+  </div>
 </div>
 <script src="site.js"></script>
 </body>
