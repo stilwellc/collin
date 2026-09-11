@@ -15,119 +15,150 @@
 // squares; the rest fall back to a faint dot field. Hover un-resolves cells
 // near the cursor; click replays from the picture. Reduced motion: text only.
 function matrix(c, opts) {
+  // Dot-matrix field with a fluid displacement layer.
+  // The cursor injects velocity into a coarse flow field; the field diffuses and
+  // decays; every cell samples its source (picture luminance or the word mask)
+  // through that displacement, so dashes and squares smear where you move and
+  // settle back when you stop. Pictures render as vertical dashes, words as squares.
   var ctx = c.getContext('2d');
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var HEX = '0123456789abcdef';
   var dpr = Math.min(2, window.devicePixelRatio || 1);
-  var W, H, cols, rows, cell, mask, chars, heat, lum, t0, mx = -1e4, my = -1e4, img = null, word = opts.text, raf = 0;
-  var PIC = 2.6, DISSOLVE = 0.7, RESOLVE = 1.8;                 // seconds per phase
-  var PREV = 1.0, PREV_DIS = 0.5, prevImg = null, lumPrev = null;  // the glyph of the page you came from, if any
-  var rAt, outMask = null, outT = 0, OUT = 0.32;                    // resolve timestamps; the outgoing word during a swap
+  var W, H, cols, rows, cell, mask, maskF, chars, lum, th, t0, img = null, word = opts.text, raf = 0;
+  var vx, vy, tmpx, tmpy, pmx = -1, pmy = -1, pmt = 0, mx = -1e4, my = -1e4;
+  var PIC = 2.8, DISSOLVE = 0.6, RESOLVE = 1.6;                  // seconds per phase
+  var PREV = 1.0, PREV_DIS = 0.45, prevImg = null, lumPrev = null; // the glyph of the page you came from, if any
+  var rAt, outMask = null, outT = 0, OUT = 0.3;
+  var GAIN = 1.6, DECAY = 0.94, DIFF = 0.11, MAXV = 7;         // flow field tuning (cells)
   function backOut(u) { var c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(u - 1, 3) + c1 * Math.pow(u - 1, 2); }
-  var DRIFT_X = 0, DRIFT_Y = 0;                                  // picture drift amplitude, in cells
   function ink() { return getComputedStyle(document.body).color; }
   function build() {
     var r = c.getBoundingClientRect();
     W = Math.max(1, Math.floor(r.width)); H = Math.max(1, Math.floor(r.height));
     c.width = W * dpr; c.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    cell = W < 640 ? 10 : 13;
+    cell = W < 640 ? 9 : 12;
     cols = Math.floor(W / cell); rows = Math.floor(H / cell);
+    var N = cols * rows;
     var m = document.createElement('canvas'); m.width = cols; m.height = rows;
     var mc = m.getContext('2d');
     mc.fillStyle = '#000'; mc.textBaseline = 'middle'; mc.textAlign = 'center';
-    var fs = rows * 0.92;
+    var fs = rows * 0.88;
     mc.font = '300 ' + fs + 'px "Bricolage Grotesque", Geist, Helvetica, Arial, sans-serif';
-    while (mc.measureText(word).width > cols * 0.96 && fs > 8) { fs -= 1; mc.font = '300 ' + fs + 'px "Bricolage Grotesque", Geist, Helvetica, Arial, sans-serif'; }
+    while (mc.measureText(word).width > cols * 0.94 && fs > 8) { fs -= 1; mc.font = '300 ' + fs + 'px "Bricolage Grotesque", Geist, Helvetica, Arial, sans-serif'; }
     mc.fillText(word, cols / 2, rows * 0.54);
     var px = mc.getImageData(0, 0, cols, rows).data;
-    mask = new Uint8Array(cols * rows); chars = new Array(cols * rows); heat = new Float32Array(cols * rows); rAt = new Float32Array(cols * rows); lum = null;
-    for (var i = 0; i < cols * rows; i++) { mask[i] = px[i * 4 + 3] > 96 ? 1 : 0; chars[i] = HEX[(Math.random() * 16) | 0]; }
+    mask = new Uint8Array(N); maskF = new Float32Array(N); chars = new Array(N); rAt = new Float32Array(N); th = new Float32Array(N);
+    vx = new Float32Array(N); vy = new Float32Array(N); tmpx = new Float32Array(N); tmpy = new Float32Array(N);
+    for (var i = 0; i < N; i++) { var a = px[i * 4 + 3] / 255; maskF[i] = a; mask[i] = a > 0.38 ? 1 : 0; chars[i] = HEX[(Math.random() * 16) | 0]; th[i] = Math.random(); }
     lumPrev = prevImg ? halftone(prevImg) : null;
     lum = img ? halftone(img) : null;
     t0 = performance.now();
   }
   function halftone(img) {
-    var lum;
-    {
-      var p = document.createElement('canvas'); p.width = cols; p.height = rows;
-      var pc = p.getContext('2d');
-      // contain-fit, centered like the text that replaces it, with room to drift
-      DRIFT_X = Math.max(2, Math.round(cols * 0.06)); DRIFT_Y = Math.max(1, Math.round(rows * 0.08));
-      var s = Math.min((cols - 2 * DRIFT_X - 2) / img.naturalWidth, (rows - 2 * DRIFT_Y - 2) / img.naturalHeight), dw = img.naturalWidth * s, dh = img.naturalHeight * s;
-      var ox = Math.round((cols - dw) / 2), oy = Math.round((rows - dh) / 2);
-      pc.fillStyle = '#fff'; pc.fillRect(0, 0, cols, rows); pc.drawImage(img, ox, oy, dw, dh);
-      var d = pc.getImageData(0, 0, cols, rows).data; lum = new Float32Array(cols * rows);
-      // cells outside the drawn picture are ground, whatever the polarity
-      var inside = function (j) { var x = j % cols, y = (j / cols) | 0; return x >= ox + 1 && x < ox + dw - 1 && y >= oy + 1 && y < oy + dh - 1; };
-      // halftone the FIGURE, not the ground: if the picture is mostly light,
-      // draw its dark pixels (a wordmark on paper reads as the wordmark);
-      // then stretch to the 5th–95th percentile and push midtones down so the
-      // result is a picture made of squares, not a slab.
-      var raw = new Float32Array(cols * rows), mean = 0, nIn = 0, inList = [];
-      for (var j = 0; j < cols * rows; j++) { raw[j] = (d[j*4]*299 + d[j*4+1]*587 + d[j*4+2]*114) / 255000; if (inside(j)) { mean += raw[j]; nIn++; inList.push(raw[j]); } }
-      mean /= Math.max(1, nIn); var flip = mean > 0.5;
-      var sorted = inList.sort(function (a, b) { return a - b; });
-      var lo = sorted[Math.floor(sorted.length * 0.05)], hi = sorted[Math.floor(sorted.length * 0.95)], span = Math.max(0.05, hi - lo);
-      for (var k = 0; k < cols * rows; k++) { if (!inside(k)) { lum[k] = 0; continue; } var v = flip ? 1 - raw[k] : raw[k]; v = (v - (flip ? 1 - hi : lo)) / span; v = Math.min(1, Math.max(0, v)); lum[k] = Math.pow(v, 1.7); }
+    var p = document.createElement('canvas'); p.width = cols; p.height = rows;
+    var pc = p.getContext('2d');
+    var padX = Math.max(2, Math.round(cols * 0.04)), padY = Math.max(1, Math.round(rows * 0.06));
+    var s = Math.min((cols - 2 * padX) / img.naturalWidth, (rows - 2 * padY) / img.naturalHeight), dw = img.naturalWidth * s, dh = img.naturalHeight * s;
+    var ox = Math.round((cols - dw) / 2), oy = Math.round((rows - dh) / 2);
+    pc.fillStyle = '#fff'; pc.fillRect(0, 0, cols, rows); pc.drawImage(img, ox, oy, dw, dh);
+    var d = pc.getImageData(0, 0, cols, rows).data, out = new Float32Array(cols * rows);
+    var inside = function (j) { var x = j % cols, y = (j / cols) | 0; return x >= ox + 1 && x < ox + dw - 1 && y >= oy + 1 && y < oy + dh - 1; };
+    // halftone the FIGURE: if the picture is mostly light, its dark pixels are the
+    // figure; stretch to the 5th–95th percentile, push midtones down.
+    var raw = new Float32Array(cols * rows), mean = 0, nIn = 0, inList = [];
+    for (var j = 0; j < cols * rows; j++) { raw[j] = (d[j*4]*299 + d[j*4+1]*587 + d[j*4+2]*114) / 255000; if (inside(j)) { mean += raw[j]; nIn++; inList.push(raw[j]); } }
+    mean /= Math.max(1, nIn); var flip = mean > 0.5;
+    inList.sort(function (a, b) { return a - b; });
+    var lo = inList[Math.floor(inList.length * 0.05)] || 0, hi = inList[Math.floor(inList.length * 0.95)] || 1, span = Math.max(0.05, hi - lo);
+    for (var k = 0; k < cols * rows; k++) { if (!inside(k)) { out[k] = 0; continue; } var v = flip ? 1 - raw[k] : raw[k]; v = (v - (flip ? 1 - hi : lo)) / span; v = Math.min(1, Math.max(0, v)); out[k] = Math.pow(v, 1.6); }
+    return out;
+  }
+  // bilinear sample of a cols×rows float field at fractional cell coords
+  function sample(f, x, y) {
+    if (x < 0 || y < 0 || x > cols - 1 || y > rows - 1) return 0;
+    var x0 = x | 0, y0 = y | 0, x1 = Math.min(cols - 1, x0 + 1), y1 = Math.min(rows - 1, y0 + 1), fx = x - x0, fy = y - y0;
+    var a = f[y0 * cols + x0], b = f[y0 * cols + x1], cc = f[y1 * cols + x0], dd = f[y1 * cols + x1];
+    return (a * (1 - fx) + b * fx) * (1 - fy) + (cc * (1 - fx) + dd * fx) * fy;
+  }
+  function stepFlow() {
+    var N = cols * rows;
+    // diffuse (4-neighbour) + decay
+    for (var y = 0; y < rows; y++) for (var x = 0; x < cols; x++) {
+      var i = y * cols + x, l = x > 0 ? i - 1 : i, r = x < cols - 1 ? i + 1 : i, u = y > 0 ? i - cols : i, d = y < rows - 1 ? i + cols : i;
+      tmpx[i] = (vx[i] * (1 - 4 * DIFF) + DIFF * (vx[l] + vx[r] + vx[u] + vx[d])) * DECAY;
+      tmpy[i] = (vy[i] * (1 - 4 * DIFF) + DIFF * (vy[l] + vy[r] + vy[u] + vy[d])) * DECAY;
     }
-    return lum;
+    var t = vx; vx = tmpx; tmpx = t; t = vy; vy = tmpy; tmpy = t;
+  }
+  function inject(cxp, cyp, dxp, dyp) {
+    // cxp,cyp in cells; dxp,dyp = cursor velocity in cells per frame
+    var R = 3.2, R2 = R * R, x0 = Math.max(0, (cxp - R) | 0), x1 = Math.min(cols - 1, (cxp + R) | 0), y0 = Math.max(0, (cyp - R) | 0), y1 = Math.min(rows - 1, (cyp + R) | 0);
+    var mag = Math.hypot(dxp, dyp); if (mag > MAXV) { dxp *= MAXV / mag; dyp *= MAXV / mag; }
+    for (var y = y0; y <= y1; y++) for (var x = x0; x <= x1; x++) {
+      var ddx = x + 0.5 - cxp, ddy = y + 0.5 - cyp, d2 = ddx * ddx + ddy * ddy; if (d2 > R2) continue;
+      var w = (1 - d2 / R2) * GAIN, i = y * cols + x; vx[i] += dxp * w; vy[i] += dyp * w;
+    }
   }
   function frame(now) {
     var el = (now - t0) / 1000;
     ctx.clearRect(0, 0, W, H);
     var col = ink();
     if (outMask) {
-      // the old word scrambles out before the new one builds
       var ou = (now - outT) / 1000 / OUT; if (ou >= 1) { outMask = null; build(); el = 0; }
       else {
         ctx.font = '400 ' + (cell * 0.78) + 'px "Geist Mono", Menlo, monospace'; ctx.textBaseline = 'middle'; ctx.textAlign = 'center'; ctx.fillStyle = col;
-        for (var oy = 0; oy < rows; oy++) for (var ox = 0; ox < cols; ox++) { var oi = oy * cols + ox; if (!outMask[oi]) { ctx.globalAlpha = 0.16; ctx.fillRect(ox * cell + cell / 2 - 0.5, oy * cell + cell / 2 - 0.5, 1, 1); continue; }
+        for (var oy = 0; oy < rows; oy++) for (var ox = 0; ox < cols; ox++) { var oi = oy * cols + ox; if (!outMask[oi]) continue;
           var gone = Math.abs(ox - cols / 2) / (cols / 2) < ou * 1.3; ctx.globalAlpha = gone ? 0.34 * (1 - ou) : 0.92; if (gone) ctx.fillText(HEX[(Math.random() * 16) | 0], ox * cell + cell / 2, oy * cell + cell / 2); else { var os = cell * 0.62; ctx.fillRect(ox * cell + cell / 2 - os / 2, oy * cell + cell / 2 - os / 2, os, os); } }
         ctx.globalAlpha = 1; raf = requestAnimationFrame(frame); return;
       }
     }
+    if (!reduce) stepFlow();
     ctx.font = '400 ' + (cell * 0.78) + 'px "Geist Mono", Menlo, monospace';
-    ctx.textBaseline = 'middle'; ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle'; ctx.textAlign = 'center'; ctx.fillStyle = col;
     var hasPrev = !!lumPrev && !reduce, tPrev = hasPrev ? PREV + PREV_DIS : 0;
     var hasPic = !!lum && !reduce;
     var tPic = hasPic ? PIC : 0, tDis = hasPic ? DISSOLVE : 0;
-    var wave = reduce ? 1e9 : (el - tPrev - tPic - tDis - 0.2) / RESOLVE;   // 0..1 across columns
+    var wave = reduce ? 1e9 : (el - tPrev - tPic - tDis - 0.15) / RESOLVE;   // 0..1 reveal progress of the word
     var picMix, src, printIn = 1;
-    if (hasPrev && el < tPrev) { src = lumPrev; picMix = el < PREV ? 1 : Math.max(0, 1 - (el - PREV) / PREV_DIS); printIn = Math.min(1, el / 0.45); }
-    else { src = lum; var e2 = el - tPrev; picMix = hasPic ? (e2 < tPic ? 1 : Math.max(0, 1 - (e2 - tPic) / tDis)) : 0; printIn = hasPrev ? 1 : Math.min(1, Math.max(0, e2) / 0.45); }   // 1 = picture, 0 = gone
+    if (hasPrev && el < tPrev) { src = lumPrev; picMix = el < PREV ? 1 : Math.max(0, 1 - (el - PREV) / PREV_DIS); printIn = Math.min(1, el / 0.6); }
+    else { src = lum; var e2 = el - tPrev; picMix = hasPic ? (e2 < tPic ? 1 : Math.max(0, 1 - (e2 - tPic) / tDis)) : 0; printIn = hasPrev ? 1 : Math.min(1, Math.max(0, e2) / 0.6); }
     printIn = 1 - Math.pow(1 - printIn, 3);
-    var R = cell * 4.2, R2 = R * R, flicker = ((now / 60) | 0) % 2 === 0;
-    // the picture wanders on the grid, whole cells at a time, like a sprite
-    var sx = Math.round(DRIFT_X * Math.sin(el * 1.9)), sy = Math.round(DRIFT_Y * Math.sin(el * 3.1 + 1.2));
+    var flicker = ((now / 70) | 0) % 2 === 0, t = now / 1000;
+    var amb = picMix > 0 ? 0.22 : 0.05;                          // ambient drift, in cells
+    var dashW = cell * 0.36, sq = cell * 0.62, half = cols / 2, dmax = Math.hypot(half, rows / 2);
     for (var y = 0; y < rows; y++) for (var x = 0; x < cols; x++) {
       var i = y * cols + x, cx = x * cell + cell / 2, cy = y * cell + cell / 2;
-      ctx.fillStyle = col;
+      var ax = amb * Math.sin(y * 0.31 + t * 0.7) * Math.cos(x * 0.17 - t * 0.45), ay = amb * Math.cos(x * 0.29 + t * 0.5 + y * 0.05);
+      var sxp = x - vx[i] - ax, syp = y - vy[i] - ay;
+      var pd = Math.hypot(x - half, y - rows / 2) / dmax;
       if (picMix > 0) {
-        var px = x - sx, py = y - sy, L = (px >= 0 && px < cols && py >= 0 && py < rows) ? src[py * cols + px] : 0;
-        // the picture prints in from the centre outward, then holds
-        var pd = Math.hypot(x - cols / 2, y - rows / 2) / Math.hypot(cols / 2, rows / 2), pin = Math.min(1, Math.max(0, (printIn * 1.35 - pd) / 0.35));
-        var q = cell * 0.86 * L * picMix * pin;
-        if (q > 0.6) { ctx.globalAlpha = 0.9; ctx.fillRect(cx - q / 2, cy - q / 2, q, q); }
-        if (picMix < 1 && flicker && Math.random() < 0.3 * (1 - picMix)) { ctx.globalAlpha = 0.3; ctx.fillText(HEX[(Math.random() * 16) | 0], cx, cy); }
+        var L = sample(src, sxp, syp);
+        // dithered print-in from the centre: each cell has its own threshold
+        var pin = Math.min(1, Math.max(0, (printIn * 1.45 - (0.55 * pd + 0.45 * th[i])) / 0.22));
+        var h = cell * (0.18 + 0.82 * L) * picMix * pin;
+        if (L > 0.05 && h > 0.8) { ctx.globalAlpha = 0.92; ctx.fillRect(cx - dashW / 2, cy - h / 2, dashW, h); }
+        else { ctx.globalAlpha = 0.14; ctx.fillRect(cx - 0.5, cy - 0.5, 1, 1); }
+        if (picMix < 1 && flicker && th[i] > picMix && mask[i]) { ctx.globalAlpha = 0.3; ctx.fillText(HEX[(Math.random() * 16) | 0], cx, cy); }
         continue;
       }
-      if (mask[i]) {
-        var dx = cx - mx, dy = cy - my, d2 = dx * dx + dy * dy;
-        if (d2 < R2) heat[i] = Math.max(heat[i], 1 - d2 / R2);
-        var resolved = wave >= Math.abs(x - cols / 2) / (cols / 2) && heat[i] < 0.08;
-        if (heat[i] > 0) heat[i] -= reduce ? 1 : 0.035;
-        if (!resolved && flicker) chars[i] = HEX[(Math.random() * 16) | 0];
-        if (resolved) { if (!rAt[i]) rAt[i] = now; var ru = Math.min(1, (now - rAt[i]) / 320); ctx.globalAlpha = 0.92; var s = cell * 0.62 * (reduce ? 1 : backOut(ru)); ctx.fillRect(cx - s / 2, cy - s / 2, s, s); }
-        else { rAt[i] = 0; ctx.globalAlpha = 0.24 + 0.14 * Math.sin(now / 160 + i * 0.7); ctx.fillText(chars[i], cx, cy); }
-      } else { ctx.globalAlpha = 0.16; ctx.fillRect(cx - 0.5, cy - 0.5, 1, 1); }
+      var m = sample(maskF, sxp, syp);
+      var resolved = wave >= (0.6 * Math.abs(x - half) / half + 0.4 * th[i]);
+      if (m > 0.3) {
+        if (resolved) { if (!rAt[i]) rAt[i] = now; var ru = Math.min(1, (now - rAt[i]) / 320); var s = sq * (reduce ? 1 : backOut(ru)) * (0.55 + 0.45 * Math.min(1, m)); ctx.globalAlpha = 0.92; ctx.fillRect(cx - s / 2, cy - s / 2, s, s); }
+        else { rAt[i] = 0; if (flicker) chars[i] = HEX[(Math.random() * 16) | 0]; ctx.globalAlpha = 0.24 + 0.14 * Math.sin(now / 160 + i * 0.7); ctx.fillText(chars[i], cx, cy); }
+      } else { rAt[i] = 0; ctx.globalAlpha = 0.14; ctx.fillRect(cx - 0.5, cy - 0.5, 1, 1); }
     }
     ctx.globalAlpha = 1;
     if (!reduce) raf = requestAnimationFrame(frame);
   }
   function play() { build(); cancelAnimationFrame(raf); if (reduce) frame(performance.now()); else raf = requestAnimationFrame(frame); }
   function setWord(w) { word = w; if (mask && !reduce && !outMask) { outMask = mask; outT = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(frame); } else play(); }
-  c.addEventListener('pointermove', function (e) { var r = c.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; });
-  c.addEventListener('pointerleave', function () { mx = my = -1e4; });
+  c.addEventListener('pointermove', function (e) {
+    var r = c.getBoundingClientRect(), x = (e.clientX - r.left) / cell, y = (e.clientY - r.top) / cell, now = performance.now();
+    if (pmx >= 0 && vx) { var dt = Math.max(8, now - pmt) / 16.7; inject(x, y, (x - pmx) / dt, (y - pmy) / dt); }
+    pmx = x; pmy = y; pmt = now; mx = e.clientX - r.left; my = e.clientY - r.top;
+  });
+  c.addEventListener('pointerleave', function () { pmx = pmy = -1; mx = my = -1e4; });
   c.addEventListener('click', function () { play(); });
   var rt; addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(play, 120); });
   function start() {
@@ -138,6 +169,8 @@ function matrix(c, opts) {
     if (!pending) play();
   }
   if (document.fonts && document.fonts.load) Promise.all([document.fonts.load('300 40px "Bricolage Grotesque"'), document.fonts.load('400 12px "Geist Mono"')]).then(start, start); else start();
+  // pause the loop when the canvas is off-screen
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { if (!raf && !reduce) raf = requestAnimationFrame(frame); } else { cancelAnimationFrame(raf); raf = 0; } }); }, { threshold: 0 }).observe(c);
   return { setWord: setWord, replay: play, get word() { return word; } };
 }
 
@@ -166,7 +199,7 @@ document.addEventListener('click', function (e) {
   function stopCycle() { if (cycle) { clearInterval(cycle); cycle = null; } }
   startCycle();
   window.__fieldType = function (e) {
-    if (e.key === 'Escape') { typed = ''; m.setWord(WORDS[wi]); startCycle(); if (hint) hint.textContent = 'hover to encrypt · type to rewrite'; return true; }
+    if (e.key === 'Escape') { typed = ''; m.setWord(WORDS[wi]); startCycle(); if (hint) hint.textContent = 'move the cursor · type to rewrite'; return true; }
     if (e.key === 'Backspace') { typed = typed.slice(0, -1); if (!typed) { m.setWord(WORDS[wi]); startCycle(); } else m.setWord(typed); return true; }
     if (e.key.length === 1 && /[a-zA-Z0-9 .&'-]/.test(e.key) && typed.length < 12) { stopCycle(); typed += e.key; m.setWord(typed); if (hint) hint.textContent = 'esc to reset'; return true; }
     return false;
@@ -321,10 +354,20 @@ document.addEventListener('click', function (e) {
   var blocks = document.querySelectorAll('.sec, .facts, .frame, .legs, .trace, .ledger, .two, .repos, .act, .cta, .prose, #trace-rec');
   var vh = innerHeight, pending = [];
   [].forEach.call(blocks, function (b) { var r = b.getBoundingClientRect(); if (r.top > vh * 0.92) { (b.classList.contains('frame') ? b.querySelector('.cells') || b : b).classList.add('sr'); if (b.classList.contains('frame')) b.classList.add('sr'); pending.push(b); } });
+  function show(b) { if (b.classList.contains('in')) return; b.classList.add('in'); var c = b.querySelector('.cells'); if (c) c.classList.add('in'); countUp(b); }
   if ('IntersectionObserver' in window && pending.length) {
-    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); var c = e.target.querySelector('.cells'); if (c) c.classList.add('in'); countUp(e.target); io.unobserve(e.target); } }); }, { threshold: 0.12 });
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { show(e.target); io.unobserve(e.target); } }); }, { threshold: 0, rootMargin: '0px 0px -6% 0px' });
     pending.forEach(function (b) { io.observe(b); });
   }
+  var st; function sweep() { var vh2 = innerHeight; pending.forEach(function (b) { var r = b.getBoundingClientRect(); if (r.top < vh2 * 0.94 && r.bottom > 0) show(b); }); }
+  addEventListener('scroll', function () { clearTimeout(st); st = setTimeout(sweep, 80); }, { passive: true }); setTimeout(sweep, 1500);
+  // ledes and statements arrive word by word
+  [].forEach.call(document.querySelectorAll('.lede, .statement'), function (p) {
+    if (p.querySelector('a, b, span.dim')) { var dim = p.querySelector('span.dim'); if (!dim) return; }
+    var html = p.innerHTML, parts = html.split(/(<[^>]+>)/g), k = 0;
+    p.innerHTML = parts.map(function (part) { if (!part || part[0] === '<') return part; return part.split(/(\s+)/).map(function (w) { if (!w.trim()) return w; return '<span class="w" style="transition-delay:' + (k++ * 28) + 'ms">' + w + '</span>'; }).join(''); }).join('');
+    p.classList.add('wr'); requestAnimationFrame(function () { requestAnimationFrame(function () { p.classList.add('in'); }); });
+  });
   // big numbers count up the first time they are seen
   [].forEach.call(document.querySelectorAll('.facts'), function (f) { if (pending.indexOf(f) < 0) countUp(f); });
   function countUp(root) {

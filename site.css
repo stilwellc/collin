@@ -298,3 +298,10 @@ body .legs .t { font-size: clamp(1.1rem, 1.5vw, 1.3rem); font-weight: 400; lette
 body .facts .n, body .trow .tb b.big { font-size: clamp(1.5rem, 2.2vw, 2rem); }
 body .sec p { font-size: 16.5px; line-height: 1.55; }
 body .prose p { font-size: 17px; }
+
+/* words arrive one after another */
+@media (prefers-reduced-motion: no-preference) {
+  .wr .w { opacity: 0; transition: opacity .55s ease; }
+  .wr.in .w { opacity: 1; }
+}
+body .mhead canvas.matrix, body .field canvas { cursor: crosshair; }
