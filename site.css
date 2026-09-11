@@ -14,6 +14,7 @@
   --display: "Bricolage Grotesque", "Geist", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --ease: cubic-bezier(.2, .7, .1, 1);
   --pad: clamp(20px, 3.2vw, 44px);
+  --accent: #FF5A1F;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -25,6 +26,7 @@
     --hair-2: #343433;
     --pill: #F2F1EE;
     --pill-ink: #101010;
+    --accent: #FF6B33;
   }
 }
 * { box-sizing: border-box; }
@@ -128,7 +130,7 @@ footer.foot {
 
 /* ── explicit theme (toggle persists in localStorage; system otherwise) ── */
 :root[data-theme="dark"] {
-  --ground: #101010; --ink: #F2F1EE; --ink-2: #9B9B97; --ink-3: #5E5E5B;
+  --accent: #FF6B33; --ground: #101010; --ink: #F2F1EE; --ink-2: #9B9B97; --ink-3: #5E5E5B;
   --hair: #262625; --hair-2: #343433; --pill: #F2F1EE; --pill-ink: #101010;
 }
 :root[data-theme="light"] {
@@ -286,7 +288,7 @@ body .trow .tb .mono { text-wrap: balance; }
 /* ── the pixels are the hero; titles are small ── */
 body .mhead canvas.matrix { height: clamp(260px, 44vh, 560px); }
 body .field canvas { height: clamp(220px, 40vh, 560px); }
-body h1.display, body .res h1.display { font-size: clamp(1.4rem, 2.2vw, 2rem); line-height: 1.2; letter-spacing: -0.015em; font-weight: 400; font-variation-settings: "opsz" 24; }
+body h1.display, body .res h1.display, body .cs h1.display { font-size: clamp(1.4rem, 2.2vw, 2rem); line-height: 1.2; letter-spacing: -0.015em; font-weight: 400; font-variation-settings: "opsz" 24; }
 h1.display.split .ln { display: inline-block; margin-right: 0.28em; }
 body .mhead { margin-bottom: clamp(22px, 3.5vw, 40px); }
 body .eyebrow { margin-bottom: 0.6rem; }

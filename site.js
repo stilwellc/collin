@@ -15,151 +15,161 @@
 // squares; the rest fall back to a faint dot field. Hover un-resolves cells
 // near the cursor; click replays from the picture. Reduced motion: text only.
 function matrix(c, opts) {
-  // Dot-matrix field with a fluid displacement layer.
-  // The cursor injects velocity into a coarse flow field; the field diffuses and
-  // decays; every cell samples its source (picture luminance or the word mask)
-  // through that displacement, so dashes and squares smear where you move and
-  // settle back when you stop. Pictures render as vertical dashes, words as squares.
+  // A line-screen. The canvas is a fine grid (4px cells on desktop); every cell is a
+  // vertical dash whose height follows the source: a photograph's luminance in the
+  // picture phase, the word mask in the text phase. A coarse flow field, driven by
+  // cursor velocity, displaces where each cell samples from, so the screen smears
+  // under the pointer and settles back. Film grain on top.
   var ctx = c.getContext('2d');
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var HEX = '0123456789abcdef';
   var dpr = Math.min(2, window.devicePixelRatio || 1);
-  var W, H, cols, rows, cell, mask, maskF, chars, lum, th, t0, img = null, word = opts.text, raf = 0;
-  var vx, vy, tmpx, tmpy, pmx = -1, pmy = -1, pmt = 0, mx = -1e4, my = -1e4;
-  var PIC = 2.8, DISSOLVE = 0.6, RESOLVE = 1.6;                  // seconds per phase
-  var PREV = 1.0, PREV_DIS = 0.45, prevImg = null, lumPrev = null; // the glyph of the page you came from, if any
-  var rAt, outMask = null, outT = 0, OUT = 0.3;
-  var GAIN = 1.6, DECAY = 0.94, DIFF = 0.11, MAXV = 7;         // flow field tuning (cells)
-  function backOut(u) { var c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(u - 1, 3) + c1 * Math.pow(u - 1, 2); }
-  function ink() { return getComputedStyle(document.body).color; }
+  var W, H, cols, rows, cell, maskF, lum, th, t0, img = null, word = opts.text, raf = 0, showPic = true;
+  var fc, fr, F = 5, vx, vy, tmpx, tmpy, pmx = -1, pmy = -1, pmt = 0;   // flow grid, F fine cells per flow cell
+  var PIC = 3.0, DISSOLVE = 0.7, RESOLVE = 1.5;
+  var PREV = 1.0, PREV_DIS = 0.45, prevImg = null, lumPrev = null;
+  var outMask = null, outT = 0, OUT = 0.35;
+  var GAIN = 1.4, DECAY = 0.94, DIFF = 0.11, MAXV = 2.4;                 // in flow cells
+  var grain = null, gctx = null;
+  function css(v) { return getComputedStyle(document.body).getPropertyValue(v).trim(); }
   function build() {
     var r = c.getBoundingClientRect();
     W = Math.max(1, Math.floor(r.width)); H = Math.max(1, Math.floor(r.height));
     c.width = W * dpr; c.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    cell = W < 640 ? 9 : 12;
+    cell = W < 640 ? 3 : 4;
     cols = Math.floor(W / cell); rows = Math.floor(H / cell);
     var N = cols * rows;
     var m = document.createElement('canvas'); m.width = cols; m.height = rows;
     var mc = m.getContext('2d');
     mc.fillStyle = '#000'; mc.textBaseline = 'middle'; mc.textAlign = 'center';
-    var fs = rows * 0.88;
+    var fs = rows * 0.8;
     mc.font = '300 ' + fs + 'px "Bricolage Grotesque", Geist, Helvetica, Arial, sans-serif';
-    while (mc.measureText(word).width > cols * 0.94 && fs > 8) { fs -= 1; mc.font = '300 ' + fs + 'px "Bricolage Grotesque", Geist, Helvetica, Arial, sans-serif'; }
-    mc.fillText(word, cols / 2, rows * 0.54);
+    while (mc.measureText(word).width > cols * 0.9 && fs > 8) { fs -= 1; mc.font = '300 ' + fs + 'px "Bricolage Grotesque", Geist, Helvetica, Arial, sans-serif'; }
+    mc.fillText(word, cols / 2, rows * 0.53);
     var px = mc.getImageData(0, 0, cols, rows).data;
-    mask = new Uint8Array(N); maskF = new Float32Array(N); chars = new Array(N); rAt = new Float32Array(N); th = new Float32Array(N);
-    vx = new Float32Array(N); vy = new Float32Array(N); tmpx = new Float32Array(N); tmpy = new Float32Array(N);
-    for (var i = 0; i < N; i++) { var a = px[i * 4 + 3] / 255; maskF[i] = a; mask[i] = a > 0.38 ? 1 : 0; chars[i] = HEX[(Math.random() * 16) | 0]; th[i] = Math.random(); }
+    maskF = new Float32Array(N); th = new Float32Array(N);
+    for (var i = 0; i < N; i++) { maskF[i] = px[i * 4 + 3] / 255; th[i] = Math.random(); }
+    fc = Math.ceil(cols / F) + 1; fr = Math.ceil(rows / F) + 1;
+    vx = new Float32Array(fc * fr); vy = new Float32Array(fc * fr); tmpx = new Float32Array(fc * fr); tmpy = new Float32Array(fc * fr);
     lumPrev = prevImg ? halftone(prevImg) : null;
-    lum = img ? halftone(img) : null;
+    lum = (img && showPic) ? halftone(img) : null;
+    if (!grain) { grain = document.createElement('canvas'); grain.width = grain.height = 256; gctx = grain.getContext('2d'); var gd = gctx.createImageData(256, 256); for (var g = 0; g < gd.data.length; g += 4) { var v = 128 + (Math.random() * 90 - 45) | 0; gd.data[g] = gd.data[g + 1] = gd.data[g + 2] = v; gd.data[g + 3] = 255; } gctx.putImageData(gd, 0, 0); }
     t0 = performance.now();
   }
   function halftone(img) {
     var p = document.createElement('canvas'); p.width = cols; p.height = rows;
-    var pc = p.getContext('2d');
-    var padX = Math.max(2, Math.round(cols * 0.04)), padY = Math.max(1, Math.round(rows * 0.06));
+    var pc = p.getContext('2d'); pc.imageSmoothingEnabled = true; pc.imageSmoothingQuality = 'high';
+    var padX = Math.max(1, Math.round(cols * 0.03)), padY = Math.max(1, Math.round(rows * 0.05));
     var s = Math.min((cols - 2 * padX) / img.naturalWidth, (rows - 2 * padY) / img.naturalHeight), dw = img.naturalWidth * s, dh = img.naturalHeight * s;
     var ox = Math.round((cols - dw) / 2), oy = Math.round((rows - dh) / 2);
     pc.fillStyle = '#fff'; pc.fillRect(0, 0, cols, rows); pc.drawImage(img, ox, oy, dw, dh);
     var d = pc.getImageData(0, 0, cols, rows).data, out = new Float32Array(cols * rows);
-    var inside = function (j) { var x = j % cols, y = (j / cols) | 0; return x >= ox + 1 && x < ox + dw - 1 && y >= oy + 1 && y < oy + dh - 1; };
-    // halftone the FIGURE: if the picture is mostly light, its dark pixels are the
-    // figure; stretch to the 5th–95th percentile, push midtones down.
+    var inside = function (j) { var x = j % cols, y = (j / cols) | 0; return x >= ox && x < ox + dw && y >= oy && y < oy + dh; };
     var raw = new Float32Array(cols * rows), mean = 0, nIn = 0, inList = [];
     for (var j = 0; j < cols * rows; j++) { raw[j] = (d[j*4]*299 + d[j*4+1]*587 + d[j*4+2]*114) / 255000; if (inside(j)) { mean += raw[j]; nIn++; inList.push(raw[j]); } }
-    mean /= Math.max(1, nIn); var flip = mean > 0.5;
+    mean /= Math.max(1, nIn); var flip = mean > 0.5;               // light picture → draw its darks
     inList.sort(function (a, b) { return a - b; });
-    var lo = inList[Math.floor(inList.length * 0.05)] || 0, hi = inList[Math.floor(inList.length * 0.95)] || 1, span = Math.max(0.05, hi - lo);
-    for (var k = 0; k < cols * rows; k++) { if (!inside(k)) { out[k] = 0; continue; } var v = flip ? 1 - raw[k] : raw[k]; v = (v - (flip ? 1 - hi : lo)) / span; v = Math.min(1, Math.max(0, v)); out[k] = Math.pow(v, 1.6); }
+    var lo = inList[Math.floor(inList.length * 0.03)] || 0, hi = inList[Math.floor(inList.length * 0.97)] || 1, span = Math.max(0.05, hi - lo);
+    for (var k = 0; k < cols * rows; k++) { if (!inside(k)) { out[k] = 0; continue; } var v = flip ? 1 - raw[k] : raw[k]; v = (v - (flip ? 1 - hi : lo)) / span; v = Math.min(1, Math.max(0, v)); out[k] = Math.pow(v, 1.25); }
     return out;
   }
-  // bilinear sample of a cols×rows float field at fractional cell coords
   function sample(f, x, y) {
     if (x < 0 || y < 0 || x > cols - 1 || y > rows - 1) return 0;
-    var x0 = x | 0, y0 = y | 0, x1 = Math.min(cols - 1, x0 + 1), y1 = Math.min(rows - 1, y0 + 1), fx = x - x0, fy = y - y0;
+    var x0 = x | 0, y0 = y | 0, x1 = x0 + 1 < cols ? x0 + 1 : x0, y1 = y0 + 1 < rows ? y0 + 1 : y0, fx = x - x0, fy = y - y0;
     var a = f[y0 * cols + x0], b = f[y0 * cols + x1], cc = f[y1 * cols + x0], dd = f[y1 * cols + x1];
     return (a * (1 - fx) + b * fx) * (1 - fy) + (cc * (1 - fx) + dd * fx) * fy;
   }
+  function flowAt(f, x, y) {   // bilinear on the coarse grid, x,y in fine cells
+    var gx = x / F, gy = y / F, x0 = gx | 0, y0 = gy | 0, x1 = x0 + 1 < fc ? x0 + 1 : x0, y1 = y0 + 1 < fr ? y0 + 1 : y0, fx = gx - x0, fy = gy - y0;
+    return (f[y0 * fc + x0] * (1 - fx) + f[y0 * fc + x1] * fx) * (1 - fy) + (f[y1 * fc + x0] * (1 - fx) + f[y1 * fc + x1] * fx) * fy;
+  }
   function stepFlow() {
-    var N = cols * rows;
-    // diffuse (4-neighbour) + decay
-    for (var y = 0; y < rows; y++) for (var x = 0; x < cols; x++) {
-      var i = y * cols + x, l = x > 0 ? i - 1 : i, r = x < cols - 1 ? i + 1 : i, u = y > 0 ? i - cols : i, d = y < rows - 1 ? i + cols : i;
+    for (var y = 0; y < fr; y++) for (var x = 0; x < fc; x++) {
+      var i = y * fc + x, l = x > 0 ? i - 1 : i, r = x < fc - 1 ? i + 1 : i, u = y > 0 ? i - fc : i, d = y < fr - 1 ? i + fc : i;
       tmpx[i] = (vx[i] * (1 - 4 * DIFF) + DIFF * (vx[l] + vx[r] + vx[u] + vx[d])) * DECAY;
       tmpy[i] = (vy[i] * (1 - 4 * DIFF) + DIFF * (vy[l] + vy[r] + vy[u] + vy[d])) * DECAY;
     }
     var t = vx; vx = tmpx; tmpx = t; t = vy; vy = tmpy; tmpy = t;
   }
-  function inject(cxp, cyp, dxp, dyp) {
-    // cxp,cyp in cells; dxp,dyp = cursor velocity in cells per frame
-    var R = 3.2, R2 = R * R, x0 = Math.max(0, (cxp - R) | 0), x1 = Math.min(cols - 1, (cxp + R) | 0), y0 = Math.max(0, (cyp - R) | 0), y1 = Math.min(rows - 1, (cyp + R) | 0);
+  function inject(gxp, gyp, dxp, dyp) {   // in flow cells
+    var R = 2.6, R2 = R * R, x0 = Math.max(0, (gxp - R) | 0), x1 = Math.min(fc - 1, (gxp + R) | 0), y0 = Math.max(0, (gyp - R) | 0), y1 = Math.min(fr - 1, (gyp + R) | 0);
     var mag = Math.hypot(dxp, dyp); if (mag > MAXV) { dxp *= MAXV / mag; dyp *= MAXV / mag; }
     for (var y = y0; y <= y1; y++) for (var x = x0; x <= x1; x++) {
-      var ddx = x + 0.5 - cxp, ddy = y + 0.5 - cyp, d2 = ddx * ddx + ddy * ddy; if (d2 > R2) continue;
-      var w = (1 - d2 / R2) * GAIN, i = y * cols + x; vx[i] += dxp * w; vy[i] += dyp * w;
+      var ddx = x + 0.5 - gxp, ddy = y + 0.5 - gyp, d2 = ddx * ddx + ddy * ddy; if (d2 > R2) continue;
+      var w = (1 - d2 / R2) * GAIN, i = y * fc + x; vx[i] += dxp * w; vy[i] += dyp * w;
     }
   }
+  var A = null, B = null;
   function frame(now) {
     var el = (now - t0) / 1000;
     ctx.clearRect(0, 0, W, H);
-    var col = ink();
+    var inkCol = css('color') || '#161616', accent = css('--accent') || '#FF5A1F';
     if (outMask) {
       var ou = (now - outT) / 1000 / OUT; if (ou >= 1) { outMask = null; build(); el = 0; }
       else {
-        ctx.font = '400 ' + (cell * 0.78) + 'px "Geist Mono", Menlo, monospace'; ctx.textBaseline = 'middle'; ctx.textAlign = 'center'; ctx.fillStyle = col;
-        for (var oy = 0; oy < rows; oy++) for (var ox = 0; ox < cols; ox++) { var oi = oy * cols + ox; if (!outMask[oi]) continue;
-          var gone = Math.abs(ox - cols / 2) / (cols / 2) < ou * 1.3; ctx.globalAlpha = gone ? 0.34 * (1 - ou) : 0.92; if (gone) ctx.fillText(HEX[(Math.random() * 16) | 0], ox * cell + cell / 2, oy * cell + cell / 2); else { var os = cell * 0.62; ctx.fillRect(ox * cell + cell / 2 - os / 2, oy * cell + cell / 2 - os / 2, os, os); } }
-        ctx.globalAlpha = 1; raf = requestAnimationFrame(frame); return;
+        ctx.fillStyle = inkCol; ctx.globalAlpha = 0.9; ctx.beginPath();
+        var half0 = cols / 2, sw = cell * 0.7;
+        for (var oy = 0; oy < rows; oy++) for (var ox = 0; ox < cols; ox++) { var oi = oy * cols + ox; if (outMask[oi] < 0.4) continue; var gone = Math.abs(ox - half0) / half0 < ou * 1.25; if (gone) { if (th[oi] < 0.25 * (1 - ou)) ctx.rect(ox * cell + cell * 0.25, oy * cell + cell * 0.25, cell * 0.5, cell * 0.5); } else ctx.rect(ox * cell + (cell - sw) / 2, oy * cell + (cell - sw) / 2, sw, sw); }
+        ctx.fill(); ctx.globalAlpha = 1; raf = requestAnimationFrame(frame); return;
       }
     }
     if (!reduce) stepFlow();
-    ctx.font = '400 ' + (cell * 0.78) + 'px "Geist Mono", Menlo, monospace';
-    ctx.textBaseline = 'middle'; ctx.textAlign = 'center'; ctx.fillStyle = col;
     var hasPrev = !!lumPrev && !reduce, tPrev = hasPrev ? PREV + PREV_DIS : 0;
     var hasPic = !!lum && !reduce;
     var tPic = hasPic ? PIC : 0, tDis = hasPic ? DISSOLVE : 0;
-    var wave = reduce ? 1e9 : (el - tPrev - tPic - tDis - 0.15) / RESOLVE;   // 0..1 reveal progress of the word
+    var wave = reduce ? 1e9 : (el - tPrev - tPic - tDis - 0.1) / RESOLVE;
     var picMix, src, printIn = 1;
-    if (hasPrev && el < tPrev) { src = lumPrev; picMix = el < PREV ? 1 : Math.max(0, 1 - (el - PREV) / PREV_DIS); printIn = Math.min(1, el / 0.6); }
-    else { src = lum; var e2 = el - tPrev; picMix = hasPic ? (e2 < tPic ? 1 : Math.max(0, 1 - (e2 - tPic) / tDis)) : 0; printIn = hasPrev ? 1 : Math.min(1, Math.max(0, e2) / 0.6); }
+    if (hasPrev && el < tPrev) { src = lumPrev; picMix = el < PREV ? 1 : Math.max(0, 1 - (el - PREV) / PREV_DIS); printIn = Math.min(1, el / 0.7); }
+    else { src = lum; var e2 = el - tPrev; picMix = hasPic ? (e2 < tPic ? 1 : Math.max(0, 1 - (e2 - tPic) / tDis)) : 0; printIn = hasPrev ? 1 : Math.min(1, Math.max(0, e2) / 0.7); }
     printIn = 1 - Math.pow(1 - printIn, 3);
-    var flicker = ((now / 70) | 0) % 2 === 0, t = now / 1000;
-    var amb = picMix > 0 ? 0.22 : 0.05;                          // ambient drift, in cells
-    var dashW = cell * 0.36, sq = cell * 0.62, half = cols / 2, dmax = Math.hypot(half, rows / 2);
-    for (var y = 0; y < rows; y++) for (var x = 0; x < cols; x++) {
-      var i = y * cols + x, cx = x * cell + cell / 2, cy = y * cell + cell / 2;
-      var ax = amb * Math.sin(y * 0.31 + t * 0.7) * Math.cos(x * 0.17 - t * 0.45), ay = amb * Math.cos(x * 0.29 + t * 0.5 + y * 0.05);
-      var sxp = x - vx[i] - ax, syp = y - vy[i] - ay;
-      var pd = Math.hypot(x - half, y - rows / 2) / dmax;
-      if (picMix > 0) {
-        var L = sample(src, sxp, syp);
-        // dithered print-in from the centre: each cell has its own threshold
-        var pin = Math.min(1, Math.max(0, (printIn * 1.45 - (0.55 * pd + 0.45 * th[i])) / 0.22));
-        var h = cell * (0.18 + 0.82 * L) * picMix * pin;
-        if (L > 0.05 && h > 0.8) { ctx.globalAlpha = 0.92; ctx.fillRect(cx - dashW / 2, cy - h / 2, dashW, h); }
-        else { ctx.globalAlpha = 0.14; ctx.fillRect(cx - 0.5, cy - 0.5, 1, 1); }
-        if (picMix < 1 && flicker && th[i] > picMix && mask[i]) { ctx.globalAlpha = 0.3; ctx.fillText(HEX[(Math.random() * 16) | 0], cx, cy); }
-        continue;
-      }
-      var m = sample(maskF, sxp, syp);
-      var resolved = wave >= (0.6 * Math.abs(x - half) / half + 0.4 * th[i]);
-      if (m > 0.3) {
-        if (resolved) { if (!rAt[i]) rAt[i] = now; var ru = Math.min(1, (now - rAt[i]) / 320); var s = sq * (reduce ? 1 : backOut(ru)) * (0.55 + 0.45 * Math.min(1, m)); ctx.globalAlpha = 0.92; ctx.fillRect(cx - s / 2, cy - s / 2, s, s); }
-        else { rAt[i] = 0; if (flicker) chars[i] = HEX[(Math.random() * 16) | 0]; ctx.globalAlpha = 0.24 + 0.14 * Math.sin(now / 160 + i * 0.7); ctx.fillText(chars[i], cx, cy); }
-      } else { rAt[i] = 0; ctx.globalAlpha = 0.14; ctx.fillRect(cx - 0.5, cy - 0.5, 1, 1); }
+    var t = now / 1000, half = cols / 2, dmax = Math.hypot(half, rows / 2);
+    // ambient drift, separable so it is cheap: ax = A[y]·B[x]
+    if (!A || A.length !== rows) { A = new Float32Array(rows); B = new Float32Array(cols); }
+    var amb = picMix > 0 ? 0.9 : 0.25;
+    for (var yy = 0; yy < rows; yy++) A[yy] = amb * Math.sin(yy * 0.09 + t * 0.7);
+    for (var xx = 0; xx < cols; xx++) B[xx] = Math.cos(xx * 0.05 - t * 0.45);
+    var dashW = Math.max(1.2, cell * 0.55), sq = cell * 0.7;
+    // picture: dashes in the accent colour
+    if (picMix > 0) {
+      ctx.fillStyle = accent; ctx.globalAlpha = 0.95 * Math.min(1, picMix * 1.2); ctx.beginPath();
+      for (var y = 0; y < rows; y++) { var ay = A[y]; for (var x = 0; x < cols; x++) {
+        var i = y * cols + x, ax = ay * B[x];
+        var sxp = x - flowAt(vx, x, y) * F - ax, syp = y - flowAt(vy, x, y) * F - ax * 0.4;
+        var L = sample(src, sxp, syp); if (L < 0.06) continue;
+        var pd = Math.hypot(x - half, y - rows / 2) / dmax;
+        var pin = Math.min(1, Math.max(0, (printIn * 1.5 - (0.5 * pd + 0.5 * th[i])) / 0.2)); if (pin <= 0) continue;
+        var h = cell * (0.2 + 0.9 * L) * pin * (picMix < 1 ? (th[i] < picMix ? 1 : 0) : 1); if (h < 0.5) continue;
+        ctx.rect(x * cell + (cell - dashW) / 2, y * cell + (cell - h) / 2, dashW, h);
+      } }
+      ctx.fill();
     }
+    // word: squares in ink, resolving with a dithered wave; unresolved cells flicker as static
+    if (picMix < 1) {
+      ctx.fillStyle = inkCol; ctx.globalAlpha = 0.92 * (1 - picMix); ctx.beginPath(); var st = []; 
+      for (var y2 = 0; y2 < rows; y2++) { var ay2 = A[y2]; for (var x2 = 0; x2 < cols; x2++) {
+        var i2 = y2 * cols + x2, ax2 = ay2 * B[x2];
+        var sx2 = x2 - flowAt(vx, x2, y2) * F - ax2, sy2 = y2 - flowAt(vy, x2, y2) * F - ax2 * 0.4;
+        var m = sample(maskF, sx2, sy2); if (m < 0.3) continue;
+        var resolved = wave >= (0.6 * Math.abs(x2 - half) / half + 0.4 * th[i2]);
+        if (resolved) { var s2 = sq * (0.6 + 0.4 * Math.min(1, m)); ctx.rect(x2 * cell + (cell - s2) / 2, y2 * cell + (cell - s2) / 2, s2, s2); }
+        else if (((now / 90) | 0) % 2 === (i2 & 1)) st.push(i2);
+      } }
+      ctx.fill();
+      if (st.length) { ctx.globalAlpha = 0.35 * (1 - picMix); ctx.beginPath(); for (var k = 0; k < st.length; k++) { var si = st[k], sxq = si % cols, syq = (si / cols) | 0; ctx.rect(sxq * cell + cell * 0.3, syq * cell + cell * 0.3, cell * 0.4, cell * 0.4); } ctx.fill(); }
+    }
+    // grain
+    if (grain && !reduce) { ctx.globalAlpha = 0.22; ctx.globalCompositeOperation = 'source-atop'; var gx0 = -((Math.random() * 256) | 0), gy0 = -((Math.random() * 256) | 0); for (var gy = gy0; gy < H; gy += 256) for (var gx = gx0; gx < W; gx += 256) ctx.drawImage(grain, gx, gy); ctx.globalCompositeOperation = 'source-over'; }
     ctx.globalAlpha = 1;
     if (!reduce) raf = requestAnimationFrame(frame);
   }
   function play() { build(); cancelAnimationFrame(raf); if (reduce) frame(performance.now()); else raf = requestAnimationFrame(frame); }
-  function setWord(w) { word = w; if (mask && !reduce && !outMask) { outMask = mask; outT = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(frame); } else play(); }
+  function setWord(w) { word = w; showPic = false; if (maskF && !reduce && !outMask) { outMask = maskF; outT = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(frame); } else play(); }
   c.addEventListener('pointermove', function (e) {
-    var r = c.getBoundingClientRect(), x = (e.clientX - r.left) / cell, y = (e.clientY - r.top) / cell, now = performance.now();
+    var r = c.getBoundingClientRect(), x = (e.clientX - r.left) / (cell * F), y = (e.clientY - r.top) / (cell * F), now = performance.now();
     if (pmx >= 0 && vx) { var dt = Math.max(8, now - pmt) / 16.7; inject(x, y, (x - pmx) / dt, (y - pmy) / dt); }
-    pmx = x; pmy = y; pmt = now; mx = e.clientX - r.left; my = e.clientY - r.top;
+    pmx = x; pmy = y; pmt = now;
   });
-  c.addEventListener('pointerleave', function () { pmx = pmy = -1; mx = my = -1e4; });
-  c.addEventListener('click', function () { play(); });
+  c.addEventListener('pointerleave', function () { pmx = pmy = -1; });
+  c.addEventListener('click', function () { showPic = true; play(); });
   var rt; addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(play, 120); });
   function start() {
     var pending = 0;
@@ -169,7 +179,6 @@ function matrix(c, opts) {
     if (!pending) play();
   }
   if (document.fonts && document.fonts.load) Promise.all([document.fonts.load('300 40px "Bricolage Grotesque"'), document.fonts.load('400 12px "Geist Mono"')]).then(start, start); else start();
-  // pause the loop when the canvas is off-screen
   if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { if (!raf && !reduce) raf = requestAnimationFrame(frame); } else { cancelAnimationFrame(raf); raf = 0; } }); }, { threshold: 0 }).observe(c);
   return { setWord: setWord, replay: play, get word() { return word; } };
 }
@@ -194,7 +203,7 @@ document.addEventListener('click', function (e) {
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var WORDS = ['Collin', 'Stilwell', 'Security'], wi = 0, typed = '', cycle = null;
   var hint = document.getElementById('field-hint');
-  var m = matrix(c, { text: WORDS[0], prev: PREV_GLYPH });
+  var m = matrix(c, { text: WORDS[0], src: 'assets/collin.jpg', prev: PREV_GLYPH });
   function startCycle() { if (reduce || cycle) return; cycle = setInterval(function () { wi = (wi + 1) % WORDS.length; m.setWord(WORDS[wi]); }, 10000); }
   function stopCycle() { if (cycle) { clearInterval(cycle); cycle = null; } }
   startCycle();
