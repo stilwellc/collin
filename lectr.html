@@ -53,6 +53,19 @@
   .cta { margin-top: clamp(40px, 6vw, 88px); display: flex; flex-wrap: wrap; gap: 0.6rem; }
   pre.code { margin: 0.5rem 0 1rem; padding: 14px 16px; border: 1px solid var(--hair); border-radius: 12px; font-family: var(--mono); font-size: 12.5px; line-height: 1.6; color: var(--ink-2); overflow-x: auto; max-width: 40em; }
   pre.code b { color: var(--ink); font-weight: 500; }
+  .trace { border: 1px solid var(--hair); border-radius: 14px; overflow: hidden; max-width: 46em; margin: 1rem auto 0; text-align: center; }
+  .trow { padding: 16px 18px; border-bottom: 1px solid var(--hair); }
+  .trow .tl { font-family: var(--mono); font-size: 12px; color: var(--ink-3); margin-bottom: 0.5rem; }
+  .trow .tb { display: flex; flex-direction: column; gap: 0.3rem; align-items: center; color: var(--ink-2); }
+  .trow .tb b { color: var(--ink); font-weight: 500; }
+  .trow .tb b.big { font-weight: 300; font-size: clamp(1.8rem, 3.4vw, 3rem); letter-spacing: -0.03em; line-height: 1; }
+  .trow .tb .mono { font-family: var(--mono); font-size: 12px; color: var(--ink-3); }
+  .trow .tb a { color: var(--ink); }
+  .trace ul.tb { list-style: none; margin: 0; padding: 0; max-width: none; }
+  .trace ul.tb li { border-top: 1px solid var(--hair); padding: 0.45rem 0; }
+  .trace ul.tb li:first-child { border-top: 0; }
+  .trace ul.tb li:last-child { border-bottom: 0; }
+  .trace .basis { margin: 0; padding: 12px 18px; font-family: var(--mono); font-size: 12px; color: var(--ink-3); }
 </style>
 </head>
 <body>
@@ -119,6 +132,45 @@
         <li><span>Assemble stage</span><span class="v">71–95 min → 33 min</span></li>
         <li><span>Full nightly, weekday</span><span class="v">110–130 min → 52 min</span></li>
       </ul>
+    </div>
+  </section>
+
+
+  <section class="sec" id="trace">
+    <div class="k">one lot, traced</div>
+    <div>
+      <h2>Every number here points at a sale.</h2>
+      <p>One live lot, the engine's call on it, and the realized prices the call is made of. The comps, the graded record and the backtest below are read from lectr.bid when this page loads; if that fails you see the September 10 snapshot and it says so.</p>
+      <div class="trace">
+        <div class="trow lot">
+          <div class="tl">the lot</div>
+          <div class="tb"><b>George Nakashima · Conoid chairs, set of six</b><span class="mono">Wright · Modern Design · lot 115 · <span id="trace-when">closes 2026-09-16</span> · estimate $25,000–$35,000, hammer basis</span><span class="mono"><a href="https://www.wright20.com/auctions/2026/09/modern-design/115" target="_blank" rel="noopener">the lot at Wright ↗</a> · <a href="https://lectr.bid/lot/wright-308259~" target="_blank" rel="noopener">on lectr ↗</a></span></div>
+        </div>
+        <div class="trow call">
+          <div class="tl">the call</div>
+          <div class="tb"><b class="big">$40,960</b><span class="mono">comp value, all-in · band $25,887 – $70,164 · below comparable market, moderate</span><span class="mono">confidence high · 86 comps in the pool · 93% of them sold · same model realized before: $20,000, Rago, 2019-01-20</span></div>
+        </div>
+        <div class="trow comps">
+          <div class="tl">the comps <span id="trace-comps-src">· snapshot 2026-09-10</span></div>
+          <ul class="tb" id="trace-comps"><li><span>Rago · 2019-01-20</span><span class="v">$20,000</span></li><li><span>Rago · 2020-05-13</span><span class="v">$27,500</span></li><li><span>Rago · 2021-01-22</span><span class="v">$40,000</span></li><li><span>Wright · 2021-06-10</span><span class="v">$33,800</span></li><li><span>Wright · 2021-10-28</span><span class="v">$35,000</span></li><li><span>Rago · 2023-05-12</span><span class="v">$40,320</span></li><li><span>Wright · 2026-05-13</span><span class="v">$57,600</span></li><li><span>Sotheby's · 2026-06-01</span><span class="v">$40,960</span></li><li><span>Wright · 2002-12-08</span><span class="v">$43,700</span></li><li><span>Wright · 2013-10-17</span><span class="v">$26,250</span></li></ul>
+        </div>
+        <p class="basis">All-in realized vs hammer-basis estimate: the gap carries the buyer's premium by design.</p>
+      </div>
+
+      <h2 style="margin-top:clamp(28px,4vw,48px)">The record, graded.</h2>
+      <p>Calls are written down before the hammer and graded after it. The five most recent graded calls, then the backtest across the whole corpus. <span class="mono" id="trace-rec-src">Snapshot 2026-09-10.</span></p>
+      <ul id="trace-rec">
+        <li><span>Bob Ross signed MTV oil on canvas · Goldin · called 2026-08-24</span><span class="v">called $110,620 → realized $97,600</span></li>
+        <li><span>1995 Playboy Chromium refractor #85, PSA 10 · Goldin · called 2026-08-24</span><span class="v">called $38,026 → realized $23,790</span></li>
+        <li><span>1989 Rotten to the Core #26, PSA 10 · Goldin · called 2026-08-24</span><span class="v">called $830 → realized $1,332</span></li>
+        <li><span>Nirvana "Phantom" ticket stub, PSA 8 · Goldin · called 2026-08-24</span><span class="v">called $899 → realized $275</span></li>
+      </ul>
+      <div class="facts" id="trace-bt" style="margin-top:1.25rem">
+        <div><div class="n" id="bt-flag-n">38,786</div><div class="l">lots the engine flagged, graded</div></div>
+        <div><div class="n" id="bt-flag-perf">+41%</div><div class="l">their median result vs estimate · unflagged <span id="bt-unflag-perf">+16%</span></div></div>
+        <div><div class="n" id="bt-flag-beat">65%</div><div class="l">beat the high estimate · unflagged <span id="bt-unflag-beat">46%</span></div></div>
+        <div><div class="n" id="bt-graded">987</div><div class="l">graded calls in the vs-bid lane</div></div>
+      </div>
     </div>
   </section>
 

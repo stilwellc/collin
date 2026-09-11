@@ -260,3 +260,35 @@ document.addEventListener('click', function (e) {
     grid.innerHTML = out;
   }).catch(function () {});
 })();
+
+// lectr case study: one lot traced, read live from lectr.bid (CORS * on the data files)
+(function () {
+  if (!document.getElementById('trace')) return;
+  var ID = 'wright-308259~', SALE = '2026-09-16';
+  var usd = function (n) { return '$' + Math.round(n).toLocaleString('en-US'); };
+  var today = new Date().toISOString().slice(0, 10);
+  var when = document.getElementById('trace-when'); if (when && today > SALE) when.textContent = 'closed ' + SALE;
+  var j = function (u) { return fetch(u, { cache: 'no-store' }).then(function (r) { if (!r.ok) throw 0; return r.json(); }); };
+  j('https://lectr.bid/data/ray/comp-evidence.json').then(function (ce) {
+    var rows = ce.byLot && ce.byLot[ID]; if (!rows || !rows.length) return;
+    document.getElementById('trace-comps').innerHTML = rows.map(function (c) { return '<li><span>' + c.h + ' · ' + c.d + '</span><span class="v">' + usd(c.p) + '</span></li>'; }).join('');
+    document.getElementById('trace-comps-src').textContent = '· live · generated ' + (ce.generatedAt || '').slice(0, 10);
+  }).catch(function () {});
+  j('https://lectr.bid/data/ray/receipts.json').then(function (rc) {
+    var rows = (rc.rows || []).filter(function (r) { return r.p && r.r; }).slice(0, 5); if (!rows.length) return;
+    document.getElementById('trace-rec').innerHTML = rows.map(function (r) {
+      var t = r.t.length > 64 ? r.t.slice(0, 62) + '…' : r.t;
+      return '<li><span>' + t + ' · ' + r.h + ' · called ' + r.d + '</span><span class="v">called ' + usd(r.p) + ' → realized ' + usd(r.r) + '</span></li>';
+    }).join('');
+    var g = rc.record && rc.record.vsbid && rc.record.vsbid.graded; if (g) document.getElementById('bt-graded').textContent = g.toLocaleString('en-US');
+    document.getElementById('trace-rec-src').textContent = 'Live from lectr.bid, generated ' + (rc.generatedAt || '') + '.';
+  }).catch(function () {});
+  j('https://lectr.bid/data/ray/backtest.json').then(function (bt) {
+    var f = bt.flagged, u = bt.unflagged; if (!f || !u) return;
+    document.getElementById('bt-flag-n').textContent = f.n.toLocaleString('en-US');
+    document.getElementById('bt-flag-perf').textContent = (f.medianPerfPct >= 0 ? '+' : '') + f.medianPerfPct + '%';
+    document.getElementById('bt-unflag-perf').textContent = (u.medianPerfPct >= 0 ? '+' : '') + u.medianPerfPct + '%';
+    document.getElementById('bt-flag-beat').textContent = f.beatHighPct + '%';
+    document.getElementById('bt-unflag-beat').textContent = u.beatHighPct + '%';
+  }).catch(function () {});
+})();
