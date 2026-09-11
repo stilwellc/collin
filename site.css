@@ -282,3 +282,19 @@ body, .pill, .cell, .frame, .legs, .trace, .ledger, .lrow, .sec li, footer.foot,
 body .trace ul.tb { display: block; width: 100%; }
 body .trace ul.tb li { padding: 0.5rem 0; }
 body .trow .tb .mono { text-wrap: balance; }
+
+/* ── the pixels are the hero; titles are small ── */
+body .mhead canvas.matrix { height: clamp(260px, 44vh, 560px); }
+body .field canvas { height: clamp(220px, 40vh, 560px); }
+body h1.display, body .res h1.display { font-size: clamp(1.4rem, 2.2vw, 2rem); line-height: 1.2; letter-spacing: -0.015em; font-weight: 400; font-variation-settings: "opsz" 24; }
+h1.display.split .ln { display: inline-block; margin-right: 0.28em; }
+body .mhead { margin-bottom: clamp(22px, 3.5vw, 40px); }
+body .eyebrow { margin-bottom: 0.6rem; }
+body .lede, body .cs .lede { font-size: clamp(16px, 1.25vw, 18px) !important; margin-top: 0.75rem; }
+body .statement { font-size: clamp(17px, 1.35vw, 19px); }
+body .sec h2 { font-size: clamp(1.2rem, 1.7vw, 1.5rem); letter-spacing: -0.015em; line-height: 1.2; font-weight: 400; font-variation-settings: "opsz" 24; }
+body .cell h2 { font-size: clamp(1.25rem, 1.7vw, 1.5rem); font-weight: 400; letter-spacing: -0.015em; font-variation-settings: "opsz" 24; }
+body .legs .t { font-size: clamp(1.1rem, 1.5vw, 1.3rem); font-weight: 400; letter-spacing: -0.01em; }
+body .facts .n, body .trow .tb b.big { font-size: clamp(1.5rem, 2.2vw, 2rem); }
+body .sec p { font-size: 16.5px; line-height: 1.55; }
+body .prose p { font-size: 17px; }
