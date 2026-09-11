@@ -342,3 +342,7 @@ body figure.plate.print figcaption b { color: var(--ink); font-weight: 500; font
 body figure.plate.print figcaption .note { color: var(--ink-3); font-size: 14px; }
 body figure.plate.print figcaption .v { font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.04em; margin-top: 0.2rem; }
 @media (max-width: 760px) { body .plates, body .pairs { grid-template-columns: 1fr; } }
+
+/* home: one sentence, one line under it, three pills */
+body .bottom .statement { font-size: clamp(20px, 1.9vw, 26px); max-width: 24em; }
+body .bottom .sub { margin: 0; max-width: 34em; font-size: 15.5px; line-height: 1.5; color: var(--ink-2); text-wrap: pretty; }
