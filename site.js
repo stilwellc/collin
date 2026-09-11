@@ -162,7 +162,7 @@ document.addEventListener('click', function (e) {
   var WORDS = ['Collin', 'Stilwell', 'Security'], wi = 0, typed = '', cycle = null;
   var hint = document.getElementById('field-hint');
   var m = matrix(c, { text: WORDS[0], prev: PREV_GLYPH });
-  function startCycle() { if (reduce || cycle) return; cycle = setInterval(function () { wi = (wi + 1) % WORDS.length; m.setWord(WORDS[wi]); }, 7000); }
+  function startCycle() { if (reduce || cycle) return; cycle = setInterval(function () { wi = (wi + 1) % WORDS.length; m.setWord(WORDS[wi]); }, 10000); }
   function stopCycle() { if (cycle) { clearInterval(cycle); cycle = null; } }
   startCycle();
   window.__fieldType = function (e) {

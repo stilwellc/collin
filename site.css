@@ -170,51 +170,75 @@ footer.foot a:hover { color: var(--ink); }
   .mhead .hint { display: none; }
 }
 
-/* ── center orientation: the whole site reads down a centre line.
-   Selectors carry a body prefix so they outrank the per-page <style> blocks. ── */
+/* ── centre orientation, with discipline.
+   Two widths only: --col for reading, --wide for framed blocks, so every hairline
+   starts and ends on the same lines. Headings, ledes and numbers sit on the centre
+   line; running text and list rows are left-aligned inside the centred column. ── */
+:root { --col: 44rem; --wide: 60rem; }
 body .mast { flex-direction: column; justify-content: center; align-items: center; gap: 0.7rem; padding-top: calc(var(--pad) * 0.7); padding-bottom: calc(var(--pad) * 0.5); }
 body .mast nav { justify-content: center; flex-wrap: wrap; }
 body .page { text-align: center; }
-body .page > * { margin-left: auto; margin-right: auto; }
-body .lander-head, body .cs, body .res { margin-left: auto; margin-right: auto; }
-body .statement, body .lede, body .cs .lede, body .prose p, body .sec p, body .sec ul, body .legs p, body .cell p, body .stage { margin-left: auto; margin-right: auto; }
+body .page > *, body .lander-head, body .cs, body .res { max-width: var(--wide); margin-left: auto; margin-right: auto; }
+body .statement, body .lede, body .cs .lede, body .prose, body .prose p, body .sec p, body .sec ul, body .legs p, body .ledger, body .two { max-width: var(--col); margin-left: auto; margin-right: auto; }
+body .lede, body .cs .lede { max-width: 38em; }
+body .facts, body .frame, body .legs, body .trace, body .stage, body .act, body .repos { max-width: var(--wide); margin-left: auto; margin-right: auto; }
 body .meta, body .actions, body .cta, body .live, body .gh-stats, body footer.foot { justify-content: center; }
-body .meta div span { text-align: center; }
-body .cell { align-items: center; text-align: center; }
-body .cell .top { justify-content: center; width: 100%; }
-body .cell .foot { margin-top: auto; }
-body .ledger .lrow, body .res .lrow { grid-template-columns: 1fr; gap: 0.25rem; justify-items: center; text-align: center; }
-body .lrow .d { margin-left: auto; margin-right: auto; }
+/* reading text: left-aligned, centred column */
+body .sec p, body .prose p, body .legs p, body .cell p, body .lrow .d { text-align: left; text-wrap: pretty; }
+body .sec > div { width: 100%; }
+/* list rows read as a table: text left, value right */
 body .sec { grid-template-columns: 1fr; gap: 0.5rem; justify-items: center; }
 body .sec .k { padding-top: 0; }
-body .sec li { grid-template-columns: 1fr; gap: 0.15rem; justify-items: center; }
-body .legs > div { display: flex; flex-direction: column; align-items: center; }
-body .two { grid-template-columns: 1fr; justify-items: center; gap: 2rem; }
+body .sec ul { width: 100%; }
+body .sec li { grid-template-columns: minmax(0, 1fr) auto; gap: 1.5rem; align-items: baseline; text-align: left; justify-items: start; }
+body .sec li .v { justify-self: end; text-align: right; white-space: nowrap; }
+/* ledgers: label column, text column */
+body .ledger .lrow, body .res .lrow { grid-template-columns: 8.5rem minmax(0, 1fr); gap: 1.5rem; justify-items: start; text-align: left; align-items: baseline; }
+body .lrow .k { padding-top: 0.2em; }
+body .lrow .d { margin-left: 0; }
+/* cards and legs: content left inside a centred frame */
+body .cell { align-items: stretch; text-align: left; }
+body .cell .top { justify-content: space-between; width: auto; }
+body .legs > div { display: flex; flex-direction: column; align-items: flex-start; text-align: left; }
 body .facts > div, body .stage > div { text-align: center; }
+body .two { grid-template-columns: 1fr; justify-items: stretch; gap: 2.5rem; }
 body .act .grid { margin-left: auto; margin-right: auto; }
 body .res .head { justify-content: center; flex-direction: column; align-items: center; text-align: center; }
 body .res .contact { text-align: center; }
 body .res .print { display: flex; justify-content: center; }
 body .mhead .hint, body .field .hint { left: 0; right: 0; text-align: center; }
-body .field { justify-content: center; }
-body .field canvas { height: clamp(140px, 34vh, 520px); }
-body .bottom { grid-template-columns: auto auto; justify-content: center; justify-items: center; align-items: center; text-align: center; gap: 0.7rem 2.5rem; padding-top: 1.1rem; padding-bottom: calc(var(--pad) * 0.7); }
-body .bottom .statement { max-width: 36em; }
-body .bottom .statement, body .bottom .live { grid-column: 1 / -1; }
-body .bottom .meta { grid-column: 1; } body .bottom .actions { grid-column: 2; }
-@media (max-width: 760px) { body .bottom { grid-template-columns: 1fr; } body .bottom .meta, body .bottom .actions { grid-column: 1; } }
-h1.display, .cell h2, .sec h2, .legs .t { text-wrap: balance; }
-/* home = one viewport: the masthead sits outside .home, so size the page as a flex column instead of giving .home its own 100svh */
+/* the traced lot */
+body .trace { max-width: var(--col); }
+body .trow .tb { align-items: center; }
+body .trace ul.tb li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1rem; text-align: left; }
+body .trace ul.tb li .v { text-align: right; }
+/* header proportions: the glyph is an overture, the headline is the hero */
+body .mhead canvas.matrix { height: clamp(140px, 22vh, 250px); }
+body h1.display { font-size: clamp(2.6rem, 6.2vw, 5.6rem); line-height: 0.96; }
+body .sec { margin-top: clamp(44px, 6.5vw, 88px); }
+body .sec h2 { font-size: clamp(1.6rem, 2.6vw, 2.3rem); margin-bottom: 0.9rem; }
+body .facts .n { font-size: clamp(1.9rem, 3vw, 2.8rem); }
+body .facts .l { text-wrap: balance; }
+/* home = one viewport: the masthead sits outside .home, so size the page as a flex column */
 body:has(> .home) { display: flex; flex-direction: column; min-height: 100svh; }
 body > .home { flex: 1; min-height: 0; grid-template-rows: minmax(0, 1fr) auto; }
-body .bottom { align-content: end; }
+body .field { justify-content: center; }
+body .field canvas { height: clamp(150px, 32vh, 460px); }
+body .bottom { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1rem; padding-top: 0.75rem; padding-bottom: calc(var(--pad) * 0.8); align-content: end; }
+body .bottom .statement { max-width: 34em; }
+body .bottom .meta { font-family: var(--mono); font-size: 12px; color: var(--ink-3); gap: 0.4rem 0.6rem; letter-spacing: 0.04em; }
+body .bottom .meta div { display: flex; gap: 0.5ch; }
+body .bottom .meta div span { display: inline; }
+body .bottom .meta div span + span { color: var(--ink-2); }
+body .bottom .meta div + div::before { content: "·"; margin-right: 0.6rem; color: var(--ink-3); }
+h1.display, .cell h2, .sec h2, .legs .t { text-wrap: balance; }
 
 /* ── type: the display face carries every heading and big number ── */
 .sec h2, .legs .t, .res h1.display, .keys-h { font-family: var(--display); font-variation-settings: "opsz" 48; }
 .sec h2 { font-size: clamp(1.8rem, 3vw, 2.7rem); letter-spacing: -0.025em; line-height: 1.02; font-weight: 300; margin-bottom: 1rem; }
 .legs .t { font-size: clamp(1.5rem, 2.5vw, 2.15rem); letter-spacing: -0.02em; }
 .facts .n, .trow .tb b.big { font-family: var(--display); font-weight: 300; font-variant-numeric: tabular-nums; font-variation-settings: "opsz" 96; letter-spacing: -0.03em; font-size: clamp(2rem, 3.8vw, 3.4rem); }
-.lede, .cs .lede { font-size: clamp(19px, 1.75vw, 24px) !important; font-weight: 300; line-height: 1.38; }
+.lede, .cs .lede { font-size: clamp(18px, 1.5vw, 21px) !important; font-weight: 300; line-height: 1.42; }
 .sec p { font-size: 18px; line-height: 1.55; }
 .legs p { font-size: 16px; line-height: 1.5; }
 .cell p { font-size: 16.5px; line-height: 1.5; }
@@ -254,3 +278,7 @@ body, .pill, .cell, .frame, .legs, .trace, .ledger, .lrow, .sec li, footer.foot,
   @keyframes vtOut { to { opacity: 0; transform: translateY(-6px); } }
   @keyframes vtIn { from { opacity: 0; transform: translateY(12px); } }
 }
+/* traced lot: the comp rows fill the frame */
+body .trace ul.tb { display: block; width: 100%; }
+body .trace ul.tb li { padding: 0.5rem 0; }
+body .trow .tb .mono { text-wrap: balance; }
