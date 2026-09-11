@@ -22,6 +22,8 @@ function matrix(c, opts) {
   var W, H, cols, rows, cell, mask, chars, heat, lum, t0, mx = -1e4, my = -1e4, img = null, word = opts.text, raf = 0;
   var PIC = 2.6, DISSOLVE = 0.7, RESOLVE = 1.8;                 // seconds per phase
   var PREV = 1.0, PREV_DIS = 0.5, prevImg = null, lumPrev = null;  // the glyph of the page you came from, if any
+  var rAt, outMask = null, outT = 0, OUT = 0.32;                    // resolve timestamps; the outgoing word during a swap
+  function backOut(u) { var c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(u - 1, 3) + c1 * Math.pow(u - 1, 2); }
   var DRIFT_X = 0, DRIFT_Y = 0;                                  // picture drift amplitude, in cells
   function ink() { return getComputedStyle(document.body).color; }
   function build() {
@@ -34,11 +36,11 @@ function matrix(c, opts) {
     var mc = m.getContext('2d');
     mc.fillStyle = '#000'; mc.textBaseline = 'middle'; mc.textAlign = 'center';
     var fs = rows * 0.92;
-    mc.font = '300 ' + fs + 'px Geist, Helvetica, Arial, sans-serif';
-    while (mc.measureText(word).width > cols * 0.96 && fs > 8) { fs -= 1; mc.font = '300 ' + fs + 'px Geist, Helvetica, Arial, sans-serif'; }
+    mc.font = '300 ' + fs + 'px "Bricolage Grotesque", Geist, Helvetica, Arial, sans-serif';
+    while (mc.measureText(word).width > cols * 0.96 && fs > 8) { fs -= 1; mc.font = '300 ' + fs + 'px "Bricolage Grotesque", Geist, Helvetica, Arial, sans-serif'; }
     mc.fillText(word, cols / 2, rows * 0.54);
     var px = mc.getImageData(0, 0, cols, rows).data;
-    mask = new Uint8Array(cols * rows); chars = new Array(cols * rows); heat = new Float32Array(cols * rows); lum = null;
+    mask = new Uint8Array(cols * rows); chars = new Array(cols * rows); heat = new Float32Array(cols * rows); rAt = new Float32Array(cols * rows); lum = null;
     for (var i = 0; i < cols * rows; i++) { mask[i] = px[i * 4 + 3] > 96 ? 1 : 0; chars[i] = HEX[(Math.random() * 16) | 0]; }
     lumPrev = prevImg ? halftone(prevImg) : null;
     lum = img ? halftone(img) : null;
@@ -74,15 +76,26 @@ function matrix(c, opts) {
     var el = (now - t0) / 1000;
     ctx.clearRect(0, 0, W, H);
     var col = ink();
+    if (outMask) {
+      // the old word scrambles out before the new one builds
+      var ou = (now - outT) / 1000 / OUT; if (ou >= 1) { outMask = null; build(); el = 0; }
+      else {
+        ctx.font = '400 ' + (cell * 0.78) + 'px "Geist Mono", Menlo, monospace'; ctx.textBaseline = 'middle'; ctx.textAlign = 'center'; ctx.fillStyle = col;
+        for (var oy = 0; oy < rows; oy++) for (var ox = 0; ox < cols; ox++) { var oi = oy * cols + ox; if (!outMask[oi]) { ctx.globalAlpha = 0.16; ctx.fillRect(ox * cell + cell / 2 - 0.5, oy * cell + cell / 2 - 0.5, 1, 1); continue; }
+          var gone = Math.abs(ox - cols / 2) / (cols / 2) < ou * 1.3; ctx.globalAlpha = gone ? 0.34 * (1 - ou) : 0.92; if (gone) ctx.fillText(HEX[(Math.random() * 16) | 0], ox * cell + cell / 2, oy * cell + cell / 2); else { var os = cell * 0.62; ctx.fillRect(ox * cell + cell / 2 - os / 2, oy * cell + cell / 2 - os / 2, os, os); } }
+        ctx.globalAlpha = 1; raf = requestAnimationFrame(frame); return;
+      }
+    }
     ctx.font = '400 ' + (cell * 0.78) + 'px "Geist Mono", Menlo, monospace';
     ctx.textBaseline = 'middle'; ctx.textAlign = 'center';
     var hasPrev = !!lumPrev && !reduce, tPrev = hasPrev ? PREV + PREV_DIS : 0;
     var hasPic = !!lum && !reduce;
     var tPic = hasPic ? PIC : 0, tDis = hasPic ? DISSOLVE : 0;
     var wave = reduce ? 1e9 : (el - tPrev - tPic - tDis - 0.2) / RESOLVE;   // 0..1 across columns
-    var picMix, src;
-    if (hasPrev && el < tPrev) { src = lumPrev; picMix = el < PREV ? 1 : Math.max(0, 1 - (el - PREV) / PREV_DIS); }
-    else { src = lum; var e2 = el - tPrev; picMix = hasPic ? (e2 < tPic ? 1 : Math.max(0, 1 - (e2 - tPic) / tDis)) : 0; }   // 1 = picture, 0 = gone
+    var picMix, src, printIn = 1;
+    if (hasPrev && el < tPrev) { src = lumPrev; picMix = el < PREV ? 1 : Math.max(0, 1 - (el - PREV) / PREV_DIS); printIn = Math.min(1, el / 0.45); }
+    else { src = lum; var e2 = el - tPrev; picMix = hasPic ? (e2 < tPic ? 1 : Math.max(0, 1 - (e2 - tPic) / tDis)) : 0; printIn = hasPrev ? 1 : Math.min(1, Math.max(0, e2) / 0.45); }   // 1 = picture, 0 = gone
+    printIn = 1 - Math.pow(1 - printIn, 3);
     var R = cell * 4.2, R2 = R * R, flicker = ((now / 60) | 0) % 2 === 0;
     // the picture wanders on the grid, whole cells at a time, like a sprite
     var sx = Math.round(DRIFT_X * Math.sin(el * 1.9)), sy = Math.round(DRIFT_Y * Math.sin(el * 3.1 + 1.2));
@@ -91,7 +104,9 @@ function matrix(c, opts) {
       ctx.fillStyle = col;
       if (picMix > 0) {
         var px = x - sx, py = y - sy, L = (px >= 0 && px < cols && py >= 0 && py < rows) ? src[py * cols + px] : 0;
-        var q = cell * 0.86 * L * picMix;
+        // the picture prints in from the centre outward, then holds
+        var pd = Math.hypot(x - cols / 2, y - rows / 2) / Math.hypot(cols / 2, rows / 2), pin = Math.min(1, Math.max(0, (printIn * 1.35 - pd) / 0.35));
+        var q = cell * 0.86 * L * picMix * pin;
         if (q > 0.6) { ctx.globalAlpha = 0.9; ctx.fillRect(cx - q / 2, cy - q / 2, q, q); }
         if (picMix < 1 && flicker && Math.random() < 0.3 * (1 - picMix)) { ctx.globalAlpha = 0.3; ctx.fillText(HEX[(Math.random() * 16) | 0], cx, cy); }
         continue;
@@ -102,15 +117,15 @@ function matrix(c, opts) {
         var resolved = wave >= Math.abs(x - cols / 2) / (cols / 2) && heat[i] < 0.08;
         if (heat[i] > 0) heat[i] -= reduce ? 1 : 0.035;
         if (!resolved && flicker) chars[i] = HEX[(Math.random() * 16) | 0];
-        if (resolved) { ctx.globalAlpha = 0.92; var s = cell * 0.62; ctx.fillRect(cx - s / 2, cy - s / 2, s, s); }
-        else { ctx.globalAlpha = 0.34; ctx.fillText(chars[i], cx, cy); }
+        if (resolved) { if (!rAt[i]) rAt[i] = now; var ru = Math.min(1, (now - rAt[i]) / 320); ctx.globalAlpha = 0.92; var s = cell * 0.62 * (reduce ? 1 : backOut(ru)); ctx.fillRect(cx - s / 2, cy - s / 2, s, s); }
+        else { rAt[i] = 0; ctx.globalAlpha = 0.24 + 0.14 * Math.sin(now / 160 + i * 0.7); ctx.fillText(chars[i], cx, cy); }
       } else { ctx.globalAlpha = 0.16; ctx.fillRect(cx - 0.5, cy - 0.5, 1, 1); }
     }
     ctx.globalAlpha = 1;
     if (!reduce) raf = requestAnimationFrame(frame);
   }
   function play() { build(); cancelAnimationFrame(raf); if (reduce) frame(performance.now()); else raf = requestAnimationFrame(frame); }
-  function setWord(w) { word = w; play(); }
+  function setWord(w) { word = w; if (mask && !reduce && !outMask) { outMask = mask; outT = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(frame); } else play(); }
   c.addEventListener('pointermove', function (e) { var r = c.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; });
   c.addEventListener('pointerleave', function () { mx = my = -1e4; });
   c.addEventListener('click', function () { play(); });
@@ -122,7 +137,7 @@ function matrix(c, opts) {
     if (opts.src) { pending++; img = new Image(); img.onload = done; img.onerror = function () { img = null; done(); }; img.src = opts.src; }
     if (!pending) play();
   }
-  if (document.fonts && document.fonts.load) Promise.all([document.fonts.load('300 40px Geist'), document.fonts.load('400 12px "Geist Mono"')]).then(start, start); else start();
+  if (document.fonts && document.fonts.load) Promise.all([document.fonts.load('300 40px "Bricolage Grotesque"'), document.fonts.load('400 12px "Geist Mono"')]).then(start, start); else start();
   return { setWord: setWord, replay: play, get word() { return word; } };
 }
 
@@ -291,4 +306,34 @@ document.addEventListener('click', function (e) {
     document.getElementById('bt-flag-beat').textContent = f.beatHighPct + '%';
     document.getElementById('bt-unflag-beat').textContent = u.beatHighPct + '%';
   }).catch(function () {});
+})();
+
+// ── entrance + scroll motion (skipped entirely under reduced motion) ──
+(function () {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  // headline lines rise one after another
+  [].forEach.call(document.querySelectorAll('h1.display'), function (h) {
+    var lines = h.innerHTML.split(/<br\s*\/?>/i); if (!lines.length) return;
+    h.innerHTML = lines.map(function (l, i) { return '<span class="ln"><span class="li" style="animation-delay:' + (140 + i * 120) + 'ms">' + l + '</span></span>'; }).join('');
+    h.classList.remove('rv', 'd1'); h.classList.add('split');
+  });
+  // below-the-fold blocks reveal on scroll; anything already in view is left alone
+  var blocks = document.querySelectorAll('.sec, .facts, .frame, .legs, .trace, .ledger, .two, .repos, .act, .cta, .prose, #trace-rec');
+  var vh = innerHeight, pending = [];
+  [].forEach.call(blocks, function (b) { var r = b.getBoundingClientRect(); if (r.top > vh * 0.92) { (b.classList.contains('frame') ? b.querySelector('.cells') || b : b).classList.add('sr'); if (b.classList.contains('frame')) b.classList.add('sr'); pending.push(b); } });
+  if ('IntersectionObserver' in window && pending.length) {
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); var c = e.target.querySelector('.cells'); if (c) c.classList.add('in'); countUp(e.target); io.unobserve(e.target); } }); }, { threshold: 0.12 });
+    pending.forEach(function (b) { io.observe(b); });
+  }
+  // big numbers count up the first time they are seen
+  [].forEach.call(document.querySelectorAll('.facts'), function (f) { if (pending.indexOf(f) < 0) countUp(f); });
+  function countUp(root) {
+    [].forEach.call(root.querySelectorAll('.facts .n, .n'), function (n) {
+      if (n.dataset.counted) return; n.dataset.counted = '1';
+      var m = /^([^\d]*)([\d,]+)(.*)$/.exec(n.textContent.trim()); if (!m || /→/.test(n.textContent)) return;
+      var target = parseInt(m[2].replace(/,/g, ''), 10), pre = m[1], post = m[3], t0 = performance.now(), D = 1100, comma = m[2].indexOf(',') >= 0;
+      n.style.fontVariantNumeric = 'tabular-nums';
+      (function tick(now) { var u = Math.min(1, (now - t0) / D); u = 1 - Math.pow(1 - u, 4); var v = Math.round(target * u); n.textContent = pre + (comma ? v.toLocaleString('en-US') : String(v)) + post; if (u < 1) requestAnimationFrame(tick); })(t0);
+    });
+  }
 })();

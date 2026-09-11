@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>OG card renderer</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300&family=Geist+Mono:wght@400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..500&family=Geist:wght@300;400;500&family=Geist+Mono:wght@400;500&display=swap">
 <style>
   html, body { margin: 0; background: #FCFBFA; }
   canvas { display: block; width: 1200px; height: 630px; }
@@ -38,8 +38,8 @@
   function wordMask(text, x0, w) {
     var m = document.createElement('canvas'); m.width = cols; m.height = rows; var mc = m.getContext('2d');
     mc.fillStyle = '#000'; mc.textBaseline = 'middle'; mc.textAlign = 'center';
-    var fs = rows * 0.7; mc.font = '300 ' + fs + 'px Geist, Helvetica, Arial, sans-serif';
-    while (mc.measureText(text).width > w * 0.94 && fs > 6) { fs -= 1; mc.font = '300 ' + fs + 'px Geist, Helvetica, Arial, sans-serif'; }
+    var fs = rows * 0.7; mc.font = '300 ' + fs + 'px "Bricolage Grotesque", Geist, Helvetica, Arial, sans-serif';
+    while (mc.measureText(text).width > w * 0.94 && fs > 6) { fs -= 1; mc.font = '300 ' + fs + 'px "Bricolage Grotesque", Geist, Helvetica, Arial, sans-serif'; }
     mc.fillText(text, x0 + w / 2, rows * 0.52);
     var px = mc.getImageData(0, 0, cols, rows).data, mask = new Uint8Array(cols * rows);
     for (var i = 0; i < cols * rows; i++) mask[i] = px[i * 4 + 3] > 96 ? 1 : 0;
@@ -62,7 +62,7 @@
     document.title = 'ready';
   }
   function go() { if (!src) return draw(null); var img = new Image(); img.onload = function () { draw(img); }; img.onerror = function () { draw(null); }; img.src = src; }
-  if (document.fonts && document.fonts.load) Promise.all([document.fonts.load('300 40px Geist'), document.fonts.load('400 15px "Geist Mono"')]).then(go, go); else go();
+  if (document.fonts && document.fonts.load) Promise.all([document.fonts.load('300 40px "Bricolage Grotesque"'), document.fonts.load('400 15px "Geist Mono"')]).then(go, go); else go();
 })();
 </script>
 </body>
