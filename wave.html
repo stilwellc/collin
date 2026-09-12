@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Wave panel — Collin Stilwell</title>
+<meta name="description" content="A parametric slat wall panel for behind the desk: 48 × 14 inches, twelve printed tiles, three builds, every tile downloadable.">
+<meta property="og:title" content="Wave panel">
+<meta property="og:description" content="A parametric slat wall panel for behind the desk: 48 × 14 inches, twelve printed tiles, three builds, every tile downloadable.">
+<meta charset="utf-8">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stilwellc.github.io/me/wave">
+<meta property="og:image" content="https://stilwellc.github.io/me/assets/og/wave.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://stilwellc.github.io/me/assets/og/wave.png">
+<link rel="canonical" href="https://stilwellc.github.io/me/wave">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='16' fill='%23161616'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='13' fill='%23FCFBFA'%3ECS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..500&family=Geist:wght@300;400;500&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="site.css">
+<style>@view-transition { navigation: auto; }</style>
+<script>(function(){try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<style>
+  .cs { max-width: 62rem; }
+  .lede { font-size: clamp(18px, 1.6vw, 22px); font-weight: 300; line-height: 1.4; max-width: 34em; margin: 1.25rem 0 0; color: var(--ink); text-wrap: pretty; }
+  .facts { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); margin-top: clamp(28px,4vw,56px); border-top: 1px solid var(--hair); }
+  @media (max-width: 760px) { .facts { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+  .facts > div { padding: clamp(14px,2vw,24px); border-right: 1px solid var(--hair); border-bottom: 1px solid var(--hair); }
+  .facts > div:nth-child(4n) { border-right: 0; }
+  @media (max-width: 760px) { .facts > div:nth-child(2n) { border-right: 0; } }
+  .facts .n { font-weight: 300; font-size: clamp(1.8rem, 3.4vw, 3rem); letter-spacing: -0.03em; line-height: 1; }
+  .facts .l { font-family: var(--mono); font-size: 12px; color: var(--ink-3); margin-top: 0.6rem; }
+  .sec { margin-top: clamp(40px, 6vw, 88px); display: grid; grid-template-columns: 11rem minmax(0,1fr); gap: 2rem; }
+  @media (max-width: 760px) { .sec { grid-template-columns: 1fr; gap: 0.75rem; } }
+  .sec .k { font-family: var(--mono); font-size: 12px; color: var(--ink-3); padding-top: 0.5rem; }
+  .sec h2 { margin: 0 0 0.9rem; font-weight: 300; letter-spacing: -0.03em; font-size: clamp(1.6rem, 2.8vw, 2.4rem); line-height: 1.05; }
+  .sec p { margin: 0 0 1rem; max-width: 40em; color: var(--ink-2); font-size: 17px; text-wrap: pretty; }
+  .sec p b { color: var(--ink); font-weight: 500; }
+  .sec ul { margin: 0; padding: 0; list-style: none; max-width: 40em; }
+  .sec li { padding: 0.7rem 0; border-top: 1px solid var(--hair); color: var(--ink-2); display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 1rem; }
+  .sec li:last-child { border-bottom: 1px solid var(--hair); }
+  .sec li .v { font-family: var(--mono); font-size: 12px; color: var(--ink); white-space: nowrap; }
+  .stage { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); border: 1px solid var(--hair); border-radius: 14px; overflow: hidden; max-width: 46em; }
+  @media (max-width: 640px) { .stage { grid-template-columns: 1fr; } }
+  .stage > div { padding: 16px 18px; border-right: 1px solid var(--hair); }
+  .stage > div:last-child { border-right: 0; }
+  @media (max-width: 640px) { .stage > div { border-right: 0; border-bottom: 1px solid var(--hair); } .stage > div:last-child { border-bottom: 0; } }
+  .stage .t { font-weight: 500; }
+  .stage .d { font-family: var(--mono); font-size: 12px; color: var(--ink-3); margin-top: 0.35rem; }
+  .cta { margin-top: clamp(40px, 6vw, 88px); display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  pre.code { margin: 0.5rem 0 1rem; padding: 14px 16px; border: 1px solid var(--hair); border-radius: 12px; font-family: var(--mono); font-size: 12.5px; line-height: 1.6; color: var(--ink-2); overflow-x: auto; max-width: 40em; }
+  pre.code b { color: var(--ink); font-weight: 500; }
+  .legs { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); border: 1px solid var(--hair); border-radius: 14px; overflow: hidden; }
+  @media (max-width: 760px) { .legs { grid-template-columns: 1fr; } }
+  .legs > div { padding: clamp(16px,2.2vw,26px); border-right: 1px solid var(--hair); border-bottom: 1px solid var(--hair); }
+  .legs > div:nth-child(2n) { border-right: 0; }
+  @media (max-width: 760px) { .legs > div { border-right: 0; } }
+  .legs .t { font-weight: 300; font-size: clamp(1.4rem, 2.4vw, 2rem); letter-spacing: -0.03em; line-height: 1.05; margin: 0.4rem 0 0.6rem; }
+  .legs p { margin: 0; color: var(--ink-2); font-size: 15.5px; max-width: 34em; text-wrap: pretty; }
+</style>
+</head>
+<body>
+<header class="mast">
+  <a class="brand" href="index.html"><span class="n">Collin Stilwell</span><span class="r">Security</span><span class="pill mono" id="commit">v2026.09</span></a>
+  <nav aria-label="Site"><a class="pill" href="work.html">Work</a><a class="pill on" href="physical.html">Physical</a><a class="pill" href="security.html">Security</a><a class="pill" href="writing.html">Writing</a><a class="pill" href="github.html">GitHub</a><a class="pill" href="about.html">About</a><a class="pill" href="resume.html">Résumé</a><button class="pill" id="theme" type="button" aria-label="Toggle theme" title="Toggle theme (t)">◐</button><button class="pill mono" id="palette-btn" type="button" aria-label="Command palette" title="Command palette (⌘K)">⌘K</button></nav>
+</header>
+<main class="page cs">
+<div class="lander-head">
+  <div class="mhead rv"><canvas class="matrix" data-text="Wave" data-src="assets/physical/wave/tasteful/run.jpg" aria-label="The full wave panel render, decoded into the word Wave" role="img"></canvas><span class="hint">click to replay · picture → text</span></div>
+  <p class="eyebrow rv d1"><a href="physical.html">Physical</a> · wall panel</p>
+  <h1 class="display rv d1">Wave panel</h1>
+  <p class="lede one rv d2">A parametric slat relief for behind the desk, 48 by 14 inches, printed as twelve tiles and painted as one object. Three builds, every tile downloadable.</p>
+</div>
+
+  <p class="sheet-h">Tasteful</p>
+  <div class="sheet"><div class="row"><span class="k">run</span><span class="t">48 × 14 in · 6 × 2 tiles of 203 × 178 mm</span></div><div class="row"><span class="k">slats</span><span class="t">9 per tile · 22.6 mm pitch · 6.4 → 4.8 mm, printed hollow</span></div><div class="row"><span class="k">crests</span><span class="t">knife edge · 45° flanks following the wave</span></div><div class="row"><span class="k">wave</span><span class="t">two ridges + swell, short wave, diagonal wave, vertical ripple · peaks on the flanks · calm behind the monitor · ends taper into the wall</span></div><div class="row"><span class="k">print</span><span class="t">0.8 mm nozzle · 0.32 mm · 1 wall · 12% · ≈ 2 kg PLA+</span></div></div>
+  <div class="wave-view" data-build="tasteful">
+    <figure class="plate wide"><img data-role="img" src="assets/physical/wave/tasteful/run.jpg" alt="Tasteful build, full run render"><figcaption data-role="cap">Full run · 12 tiles</figcaption></figure>
+    <div class="wave-ctl">
+      <label>Tile <select data-role="sel"><option value="-1">Full run</option><option value="0">row 0 · col 0</option><option value="1">row 0 · col 1</option><option value="2">row 0 · col 2</option><option value="3">row 0 · col 3</option><option value="4">row 0 · col 4</option><option value="5">row 0 · col 5</option><option value="6">row 1 · col 0</option><option value="7">row 1 · col 1</option><option value="8">row 1 · col 2</option><option value="9">row 1 · col 3</option><option value="10">row 1 · col 4</option><option value="11">row 1 · col 5</option></select></label>
+      <a class="pill mono" data-role="dl" href="#" hidden download>Download STL</a>
+    </div>
+  </div>
+
+  <p class="sheet-h">Lightweight</p>
+  <div class="sheet"><div class="row"><span class="k">run</span><span class="t">50 × 20 in · 5 × 2 tiles of 250 mm</span></div><div class="row"><span class="k">slats</span><span class="t">14 per tile · 17.9 mm pitch · 6 → 4.5 mm, printed hollow</span></div><div class="row"><span class="k">back</span><span class="t">lattice, ribs under every slat</span></div><div class="row"><span class="k">print</span><span class="t">0.4 mm nozzle · 2 walls · 15% · ≈ 2.8 kg</span></div></div>
+  <div class="wave-view" data-build="light">
+    <figure class="plate wide"><img data-role="img" src="assets/physical/wave/light/run.jpg" alt="Lightweight build, full run render"><figcaption data-role="cap">Full run · 10 tiles</figcaption></figure>
+    <div class="wave-ctl">
+      <label>Tile <select data-role="sel"><option value="-1">Full run</option><option value="0">row 0 · col 0</option><option value="1">row 0 · col 1</option><option value="2">row 0 · col 2</option><option value="3">row 0 · col 3</option><option value="4">row 0 · col 4</option><option value="5">row 1 · col 0</option><option value="6">row 1 · col 1</option><option value="7">row 1 · col 2</option><option value="8">row 1 · col 3</option><option value="9">row 1 · col 4</option></select></label>
+      <a class="pill mono" data-role="dl" href="#" hidden download>Download STL</a>
+    </div>
+  </div>
+
+  <p class="sheet-h">Original</p>
+  <div class="sheet"><div class="row"><span class="k">run</span><span class="t">50 × 20 in · 5 × 2 tiles of 250 mm</span></div><div class="row"><span class="k">slats</span><span class="t">20 per tile · 12.5 mm pitch · 3.6 → 2.4 mm solid</span></div><div class="row"><span class="k">back</span><span class="t">full plate</span></div><div class="row"><span class="k">print</span><span class="t">0.4 mm nozzle · ≈ 6 kg — the one that was too expensive</span></div></div>
+  <div class="wave-view" data-build="v1">
+    <figure class="plate wide"><img data-role="img" src="assets/physical/wave/v1/run.jpg" alt="Original build, full run render"><figcaption data-role="cap">Full run · 10 tiles</figcaption></figure>
+    <div class="wave-ctl">
+      <label>Tile <select data-role="sel"><option value="-1">Full run</option><option value="0">row 0 · col 0</option><option value="1">row 0 · col 1</option><option value="2">row 0 · col 2</option><option value="3">row 0 · col 3</option><option value="4">row 0 · col 4</option><option value="5">row 1 · col 0</option><option value="6">row 1 · col 1</option><option value="7">row 1 · col 2</option><option value="8">row 1 · col 3</option><option value="9">row 1 · col 4</option></select></label>
+      <a class="pill mono" data-role="dl" href="#" hidden download>Download STL</a>
+    </div>
+  </div>
+
+  <div class="cta" style="margin-top:2.5rem"><a class="pill solid" href="physical.html">← Physical</a><a class="pill ghost" href="prints.html">The prints</a></div>
+<script>
+(function () {
+  var TILES = {"v1": [{"id": "r0_c0", "stl": "assets/physical/wave/v1/wave_tile_r0_c0.stl", "img": "assets/physical/wave/v1/r0_c0.jpg", "kb": 533}, {"id": "r0_c1", "stl": "assets/physical/wave/v1/wave_tile_r0_c1.stl", "img": "assets/physical/wave/v1/r0_c1.jpg", "kb": 521}, {"id": "r0_c2", "stl": "assets/physical/wave/v1/wave_tile_r0_c2.stl", "img": "assets/physical/wave/v1/r0_c2.jpg", "kb": 461}, {"id": "r0_c3", "stl": "assets/physical/wave/v1/wave_tile_r0_c3.stl", "img": "assets/physical/wave/v1/r0_c3.jpg", "kb": 533}, {"id": "r0_c4", "stl": "assets/physical/wave/v1/wave_tile_r0_c4.stl", "img": "assets/physical/wave/v1/r0_c4.jpg", "kb": 533}, {"id": "r1_c0", "stl": "assets/physical/wave/v1/wave_tile_r1_c0.stl", "img": "assets/physical/wave/v1/r1_c0.jpg", "kb": 511}, {"id": "r1_c1", "stl": "assets/physical/wave/v1/wave_tile_r1_c1.stl", "img": "assets/physical/wave/v1/r1_c1.jpg", "kb": 520}, {"id": "r1_c2", "stl": "assets/physical/wave/v1/wave_tile_r1_c2.stl", "img": "assets/physical/wave/v1/r1_c2.jpg", "kb": 533}, {"id": "r1_c3", "stl": "assets/physical/wave/v1/wave_tile_r1_c3.stl", "img": "assets/physical/wave/v1/r1_c3.jpg", "kb": 533}, {"id": "r1_c4", "stl": "assets/physical/wave/v1/wave_tile_r1_c4.stl", "img": "assets/physical/wave/v1/r1_c4.jpg", "kb": 533}], "light": [{"id": "r0_c0", "stl": "assets/physical/wave/light/wave_tile_r0_c0.stl", "img": "assets/physical/wave/light/r0_c0.jpg", "kb": 428}, {"id": "r0_c1", "stl": "assets/physical/wave/light/wave_tile_r0_c1.stl", "img": "assets/physical/wave/light/r0_c1.jpg", "kb": 420}, {"id": "r0_c2", "stl": "assets/physical/wave/light/wave_tile_r0_c2.stl", "img": "assets/physical/wave/light/r0_c2.jpg", "kb": 378}, {"id": "r0_c3", "stl": "assets/physical/wave/light/wave_tile_r0_c3.stl", "img": "assets/physical/wave/light/r0_c3.jpg", "kb": 428}, {"id": "r0_c4", "stl": "assets/physical/wave/light/wave_tile_r0_c4.stl", "img": "assets/physical/wave/light/r0_c4.jpg", "kb": 428}, {"id": "r1_c0", "stl": "assets/physical/wave/light/wave_tile_r1_c0.stl", "img": "assets/physical/wave/light/r1_c0.jpg", "kb": 412}, {"id": "r1_c1", "stl": "assets/physical/wave/light/wave_tile_r1_c1.stl", "img": "assets/physical/wave/light/r1_c1.jpg", "kb": 419}, {"id": "r1_c2", "stl": "assets/physical/wave/light/wave_tile_r1_c2.stl", "img": "assets/physical/wave/light/r1_c2.jpg", "kb": 428}, {"id": "r1_c3", "stl": "assets/physical/wave/light/wave_tile_r1_c3.stl", "img": "assets/physical/wave/light/r1_c3.jpg", "kb": 428}, {"id": "r1_c4", "stl": "assets/physical/wave/light/wave_tile_r1_c4.stl", "img": "assets/physical/wave/light/r1_c4.jpg", "kb": 428}], "tasteful": [{"id": "r0_c0", "stl": "assets/physical/wave/tasteful/wave_tile_r0_c0.stl", "img": "assets/physical/wave/tasteful/r0_c0.jpg", "kb": 276}, {"id": "r0_c1", "stl": "assets/physical/wave/tasteful/wave_tile_r0_c1.stl", "img": "assets/physical/wave/tasteful/r0_c1.jpg", "kb": 299}, {"id": "r0_c2", "stl": "assets/physical/wave/tasteful/wave_tile_r0_c2.stl", "img": "assets/physical/wave/tasteful/r0_c2.jpg", "kb": 299}, {"id": "r0_c3", "stl": "assets/physical/wave/tasteful/wave_tile_r0_c3.stl", "img": "assets/physical/wave/tasteful/r0_c3.jpg", "kb": 299}, {"id": "r0_c4", "stl": "assets/physical/wave/tasteful/wave_tile_r0_c4.stl", "img": "assets/physical/wave/tasteful/r0_c4.jpg", "kb": 299}, {"id": "r0_c5", "stl": "assets/physical/wave/tasteful/wave_tile_r0_c5.stl", "img": "assets/physical/wave/tasteful/r0_c5.jpg", "kb": 275}, {"id": "r1_c0", "stl": "assets/physical/wave/tasteful/wave_tile_r1_c0.stl", "img": "assets/physical/wave/tasteful/r1_c0.jpg", "kb": 273}, {"id": "r1_c1", "stl": "assets/physical/wave/tasteful/wave_tile_r1_c1.stl", "img": "assets/physical/wave/tasteful/r1_c1.jpg", "kb": 299}, {"id": "r1_c2", "stl": "assets/physical/wave/tasteful/wave_tile_r1_c2.stl", "img": "assets/physical/wave/tasteful/r1_c2.jpg", "kb": 299}, {"id": "r1_c3", "stl": "assets/physical/wave/tasteful/wave_tile_r1_c3.stl", "img": "assets/physical/wave/tasteful/r1_c3.jpg", "kb": 299}, {"id": "r1_c4", "stl": "assets/physical/wave/tasteful/wave_tile_r1_c4.stl", "img": "assets/physical/wave/tasteful/r1_c4.jpg", "kb": 299}, {"id": "r1_c5", "stl": "assets/physical/wave/tasteful/wave_tile_r1_c5.stl", "img": "assets/physical/wave/tasteful/r1_c5.jpg", "kb": 274}]};
+  document.querySelectorAll('.wave-view').forEach(function (v) {
+    var key = v.dataset.build, img = v.querySelector('[data-role=img]'), cap = v.querySelector('[data-role=cap]'), sel = v.querySelector('[data-role=sel]'), dl = v.querySelector('[data-role=dl]'), run = img.getAttribute('src');
+    sel.addEventListener('change', function () {
+      var i = parseInt(sel.value, 10);
+      if (i < 0) { img.src = run; cap.textContent = 'Full run · ' + TILES[key].length + ' tiles'; dl.hidden = true; return; }
+      var t = TILES[key][i]; img.src = t.img; cap.textContent = t.id.replace('_', ' · ') + ' · ' + t.kb + ' KB'; dl.href = t.stl; dl.hidden = false;
+    });
+  });
+})();
+</script>
+</main>
+<footer class="foot">
+  <span>© 2026 Collin Stilwell · Hoboken, NJ</span>
+  <span><a href="mailto:hello@collin.dev">hello@collin.dev</a> · <a href="https://github.com/stilwellc" target="_blank" rel="noopener">github.com/stilwellc</a> · <a href="https://www.linkedin.com/in/collin-stilwell/" target="_blank" rel="noopener">linkedin</a> · <a href="resume.html">résumé</a></span>
+</footer>
+<div class="pal" id="pal" hidden role="dialog" aria-modal="true" aria-label="Command palette">
+  <div class="pal-box">
+    <input id="pal-in" placeholder="Go to… work, security, writing, github, résumé, lectr, soirée, email" autocomplete="off" spellcheck="false">
+    <ul id="pal-list"></ul>
+    <div class="pal-foot"><span>↑↓ move · ↵ open · esc close</span><span>? for shortcuts</span></div>
+  </div>
+</div>
+<div class="keys" id="keys" hidden role="dialog" aria-label="Keyboard shortcuts">
+  <div class="keys-box">
+    <div class="keys-h">Shortcuts</div>
+    <div class="keys-grid">
+      <span><kbd>⌘K</kbd> / <kbd>/</kbd></span><span>command palette</span>
+      <span><kbd>g</kbd> <kbd>h</kbd></span><span>home</span>
+      <span><kbd>g</kbd> <kbd>w</kbd></span><span>work</span>
+      <span><kbd>g</kbd> <kbd>s</kbd></span><span>security</span>
+      <span><kbd>g</kbd> <kbd>n</kbd></span><span>writing</span>
+      <span><kbd>g</kbd> <kbd>g</kbd></span><span>github</span>
+      <span><kbd>g</kbd> <kbd>a</kbd></span><span>about</span>
+      <span><kbd>g</kbd> <kbd>r</kbd></span><span>résumé</span>
+      <span><kbd>t</kbd></span><span>toggle theme</span>
+      <span><kbd>click</kbd></span><span>on any header: replay picture → text</span>
+      <span><kbd>a–z</kbd></span><span>on the home page: type into the letterform</span>
+      <span><kbd>?</kbd></span><span>this</span>
+    </div>
+  </div>
+</div>
+<script src="site.js"></script>
+</body>
+</html>
