@@ -346,3 +346,15 @@ body figure.plate.print figcaption .v { font-family: var(--mono); font-size: 11p
 /* home: one sentence, one line under it, three pills */
 body .bottom .statement { font-size: clamp(20px, 1.9vw, 26px); max-width: 24em; }
 body .bottom .sub { margin: 0; max-width: 34em; font-size: 15.5px; line-height: 1.5; color: var(--ink-2); text-wrap: pretty; }
+
+/* ── about: the full record ── */
+body .jobs { max-width: var(--col); margin: 0 auto; border-top: 1px solid var(--hair); text-align: left; }
+body .job { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: 1.25rem; padding: 1.1rem 0; border-bottom: 1px solid var(--hair); }
+body .job .k { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); padding-top: 0.35em; }
+body .job h3 { margin: 0; font-size: 16.5px; font-weight: 500; letter-spacing: -0.005em; color: var(--ink); line-height: 1.35; }
+body .job h3 .role { font-weight: 400; color: var(--ink-2); }
+body .job .loc { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; color: var(--ink-3); margin: 0.25rem 0 0.55rem; }
+body .job ul.pts { list-style: none; margin: 0; padding: 0; }
+body .job ul.pts li { position: relative; padding-left: 1.1rem; margin: 0.28rem 0; color: var(--ink-2); font-size: 15px; line-height: 1.5; text-wrap: pretty; }
+body .job ul.pts li::before { content: ""; position: absolute; left: 0; top: 0.72em; width: 0.5rem; height: 1px; background: var(--ink-3); }
+@media (max-width: 600px) { body .job { grid-template-columns: 1fr; gap: 0.3rem; } }

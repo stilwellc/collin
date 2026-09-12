@@ -360,7 +360,7 @@ document.addEventListener('click', function (e) {
     h.classList.remove('rv', 'd1'); h.classList.add('split');
   });
   // below-the-fold blocks reveal on scroll; anything already in view is left alone
-  var blocks = document.querySelectorAll('.sec, .facts, .frame, .legs, .trace, .ledger, .two, .repos, .act, .cta, .prose, #trace-rec, .sheet, .room, .plates, .pairs, figure.plate.wide');
+  var blocks = document.querySelectorAll('.sec, .facts, .frame, .legs, .trace, .ledger, .two, .repos, .act, .cta, .prose, #trace-rec, .sheet, .room, .plates, .pairs, figure.plate.wide, .jobs');
   var vh = innerHeight, pending = [];
   [].forEach.call(blocks, function (b) { var r = b.getBoundingClientRect(); if (r.top > vh * 0.92) { (b.classList.contains('frame') ? b.querySelector('.cells') || b : b).classList.add('sr'); if (b.classList.contains('frame')) b.classList.add('sr'); pending.push(b); } });
   function show(b) { if (b.classList.contains('in')) return; b.classList.add('in'); var c = b.querySelector('.cells'); if (c) c.classList.add('in'); countUp(b); }
